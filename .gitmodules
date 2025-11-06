@@ -16,3 +16,6 @@
 [submodule "n00plicate"]
 	path = n00plicate
 	url = https://github.com/IAmJonoBo/n00plicate.git
+[submodule "n00tropic"]
+	path = n00tropic
+	url = https://github.com/IAmJonoBo/n00tropic.git

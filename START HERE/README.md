@@ -10,15 +10,15 @@
 
 ## Repository map
 
-| Repo | Role | Start here |
-| --- | --- | --- |
-| `1. Cerebrum Docs/` | Shared ADRs, release manifests, Renovate/Trunk policy | `1. Cerebrum Docs/README.md` |
-| `n00-cortex/` | Canonical schemas, data catalogs, Docusaurus docs | `n00-cortex/START HERE/README.md` |
-| `n00-frontiers/` | Frontier delivery templates, notebooks, CLI | `n00-frontiers/START HERE/README.md` |
-| `n00t/` | MCP control centre + automation host | `n00t/START HERE/README.md` |
-| `n00plicate/` | Multi-runtime design system + token orchestrator | `n00plicate/START HERE/README.md` |
-| `n00-school/` | Training pipelines, evaluation lab | `n00-school/START HERE/README.md` |
-| `START HERE/` (this folder) | Orientation for the federated workspace | This file |
+| Repo                | Role                                                                | Start here                              |
+| ------------------- | ------------------------------------------------------------------- | --------------------------------------- |
+| `1. Cerebrum Docs/` | Workspace governance, ADRs, shared tooling policy                   | `1. Cerebrum Docs/START HERE/README.md` |
+| `n00-frontiers/`    | Defines frontier-grade delivery standards and templates             | `n00-frontiers/START HERE/README.md`    |
+| `n00-cortex/`       | System-of-record schemas + rule enforcement derived from frontiers  | `n00-cortex/START HERE/README.md`       |
+| `n00tropic/`        | Flagship generator/service; orchestrates briefs → scaffolded assets | `n00tropic/START HERE/README.md`        |
+| `n00t/`             | MCP control centre + automation host                                | `n00t/START HERE/README.md`             |
+| `n00plicate/`       | Platform-agnostic design system + token orchestrator                | `n00plicate/START HERE/README.md`       |
+| `n00-school/`       | Training lab for agents & evaluation pipelines                      | `n00-school/START HERE/README.md`       |
 
 ## Workspace automation checklist
 
