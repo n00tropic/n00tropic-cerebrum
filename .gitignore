@@ -7,3 +7,24 @@ stuff/
 .secrets/
 n00-dashboard/.build/
 n00-dashboard/.swiftpm/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Node / tooling
+node_modules/
+.trunk/
+dist/
+build/
+
+# Local envs
+.venv/
+venv/
+env/
+.env
+*.env
