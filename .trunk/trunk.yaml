@@ -43,6 +43,11 @@ lint:
     - taplo@0.10.0
     - trufflehog@3.90.13
     - yamllint@1.37.1
+  custom:
+    - name: workspace-health
+      description: Ensure submodules are clean/aligned before pushing.
+      run: .dev/automation/scripts/workspace-health.sh --strict-submodules
+      files: ["**/*"]
   disabled:
     - markdownlint # Replaced with markdownlint-cli2
 actions:
@@ -51,3 +56,6 @@ actions:
     - trunk-check-pre-push
     - trunk-fmt-pre-commit
     - trunk-upgrade-available
+tools:
+  enabled:
+    - mypy@1.18.2

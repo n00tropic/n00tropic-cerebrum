@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Report and optionally repair workspace/submodule health for n00tropic-cerebrum."""
+"""Report workspace + submodule health, with optional repair hooks."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import json
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Sequence
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -51,14 +51,8 @@ class RepoStatus:
         }
 
 
-def run_git(args: List[str], cwd: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", *args],
-        cwd=cwd,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
+def run_git(args: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(["git", *args], cwd=cwd, text=True, capture_output=True, check=False)
 
 
 def parse_status(output: str) -> Dict[str, object]:
@@ -68,12 +62,11 @@ def parse_status(output: str) -> Dict[str, object]:
     upstream = None
     for line in output.splitlines():
         if line.startswith("# branch.ab"):
-            # format: # branch.ab +<ahead> -<behind>
             try:
                 _, _, payload = line.partition("ab ")
-                ahead_str, behind_str = payload.split()
-                ahead = int(ahead_str)
-                behind = int(behind_str)
+                ahead_token, behind_token = payload.split()
+                ahead = int(ahead_token)
+                behind = int(behind_token)
             except ValueError:
                 continue
         elif line.startswith("# branch.head"):
@@ -82,13 +75,7 @@ def parse_status(output: str) -> Dict[str, object]:
             upstream = line.split()[-1]
         elif not line.startswith("#"):
             dirty.append(line)
-    return {
-        "dirty": dirty,
-        "ahead": ahead,
-        "behind": behind,
-        "branch": branch,
-        "upstream": upstream,
-    }
+    return {"dirty": dirty, "ahead": ahead, "behind": behind, "branch": branch, "upstream": upstream}
 
 
 def collect_repo_status(name: str, path: Path) -> RepoStatus:
@@ -104,7 +91,7 @@ def collect_repo_status(name: str, path: Path) -> RepoStatus:
         dirty_lines=list(data["dirty"]),
         branch=data["branch"],
         upstream=data["upstream"],
-        head=head,
+        head=head or "HEAD",
     )
 
 
@@ -125,86 +112,135 @@ def parse_gitmodules(path: Path) -> List[Dict[str, str]]:
     return modules
 
 
-def autofix_workspace(root: Path) -> List[str]:
-    commands = [
-        ["git", "submodule", "sync", "--recursive"],
-        ["git", "submodule", "update", "--init", "--recursive"],
-    ]
+def _run_command(cmd: Sequence[str], cwd: Path) -> List[str]:
+    completed = subprocess.run(cmd, cwd=cwd, text=True, capture_output=True, check=False)
     logs: List[str] = []
-    for cmd in commands:
-        result = subprocess.run(
-            cmd, cwd=root, text=True, capture_output=True, check=False
-        )
-        if result.stdout:
-            logs.append(result.stdout.strip())
-        if result.stderr:
-            logs.append(result.stderr.strip())
+    if completed.stdout:
+        logs.append(completed.stdout.strip())
+    if completed.stderr:
+        logs.append(completed.stderr.strip())
+    if completed.returncode != 0:
+        logs.append(f"Command {' '.join(cmd)} exited with {completed.returncode}")
     return [line for line in logs if line]
 
 
+def sync_submodules(root: Path) -> List[str]:
+    logs: List[str] = []
+    logs.extend(_run_command(["git", "submodule", "sync", "--recursive"], root))
+    logs.extend(_run_command(["git", "submodule", "update", "--init", "--recursive"], root))
+    return logs
+
+
+def sync_trunk_configs(root: Path) -> List[str]:
+    script = root / ".dev" / "automation" / "scripts" / "sync-trunk.py"
+    if not script.exists():
+        return [f"sync-trunk script missing at {script}"]
+    return _run_command(["python3", str(script), "--pull"], root)
+
+
+def run_meta_check(root: Path) -> List[str]:
+    script = root / ".dev" / "automation" / "scripts" / "meta-check.sh"
+    if not script.exists():
+        return [f"meta-check script missing at {script}"]
+    return _run_command(["bash", str(script)], root)
+
+
+def run_repo_commands(entries: Sequence[str], modules: List[Dict[str, str]]) -> List[str]:
+    logs: List[str] = []
+    for entry in entries:
+        if ":" not in entry:
+            logs.append(f"Invalid repo-cmd '{entry}'. Use repo:command format.")
+            continue
+        repo_name, raw = entry.split(":", 1)
+        repo_path = next((ROOT / mod.get("path", mod["name"]) for mod in modules if mod.get("name") == repo_name), None)
+        if repo_path is None or not repo_path.exists():
+            logs.append(f"Repo '{repo_name}' not found for repo-cmd")
+            continue
+        logs.extend(_run_command(["bash", "-lc", raw], repo_path))
+    return logs
+
+
 def build_report(args: argparse.Namespace) -> Dict[str, object]:
-    if args.autofix:
-        autofix_workspace(ROOT)
     modules = parse_gitmodules(ROOT / ".gitmodules")
+    logs: List[str] = []
+    if args.fix_all or args.sync_submodules:
+        logs.extend(sync_submodules(ROOT))
+    if args.fix_all or args.sync_trunk:
+        logs.extend(sync_trunk_configs(ROOT))
+    if args.run_meta_check:
+        logs.extend(run_meta_check(ROOT))
+    if args.repo_cmd:
+        logs.extend(run_repo_commands(args.repo_cmd, modules))
     report: Dict[str, object] = {
         "root": collect_repo_status("workspace", ROOT),
-        "submodules": [],
+        "submodules": [
+            collect_repo_status(module["name"], ROOT / module.get("path", module["name"]))
+            for module in modules
+            if (ROOT / module.get("path", module["name"])).exists()
+        ],
+        "logs": logs,
     }
-    sub_statuses: List[RepoStatus] = []
-    for module in modules:
-        path = ROOT / module.get("path", module["name"])
-        if not path.exists():
-            continue
-        sub_statuses.append(collect_repo_status(module["name"], path))
-    report["submodules"] = sub_statuses
     return report
 
 
-def emit(report: Dict[str, object], json_mode: bool) -> None:
+def emit(report: Dict[str, object], args: argparse.Namespace) -> int:
     root_status: RepoStatus = report["root"]
     subs: List[RepoStatus] = report["submodules"]
     dirty_subs = [repo for repo in subs if not repo.clean or repo.ahead or repo.behind]
-    print(
-        f"workspace: {root_status.summary()} (branch {root_status.branch}, HEAD {root_status.head})"
-    )
+
+    print(f"workspace: {root_status.summary()} (branch {root_status.branch}, HEAD {root_status.head})")
     if root_status.dirty_lines:
         print("  root changes:")
         for line in root_status.dirty_lines[:10]:
             print(f"    {line}")
+    if report["logs"]:
+        print("helper logs:")
+        for line in report["logs"]:
+            print(f"  {line}")
     if dirty_subs:
         print(f"submodules needing attention: {len(dirty_subs)}/{len(subs)}")
         for repo in dirty_subs:
-            print(
-                f"- {repo.name}: {repo.summary()} (branch {repo.branch}, HEAD {repo.head})"
-            )
+            print(f"- {repo.name}: {repo.summary()} (branch {repo.branch}, HEAD {repo.head})")
             for line in repo.dirty_lines[:5]:
                 print(f"    {line}")
     else:
         print("all submodules clean")
-    if json_mode:
+
+    if args.json:
         payload = {
             "root": root_status.as_dict(),
             "submodules": [repo.as_dict() for repo in subs],
+            "logs": report["logs"],
         }
         print(json.dumps(payload, indent=2, sort_keys=True))
 
+    strict_root = args.strict_root or args.strict
+    strict_subs = args.strict_submodules or args.strict
+    exit_code = 0
+    if strict_root and (not root_status.clean or root_status.ahead or root_status.behind):
+        exit_code = 1
+    if strict_subs and dirty_subs:
+        exit_code = 1
+    return exit_code
+
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Workspace health checker for the federated polyrepo."
-    )
-    parser.add_argument(
-        "--json", action="store_true", help="Emit JSON payload after human summary."
-    )
-    parser.add_argument(
-        "--autofix",
-        action="store_true",
-        help="Sync & init submodules before reporting.",
-    )
+    parser = argparse.ArgumentParser(description="Workspace health checker for the federated polyrepo.")
+    parser.add_argument("--json", action="store_true", help="Emit JSON payload after human summary.")
+    parser.add_argument("--sync-submodules", action="store_true", help="Sync & init submodules before reporting.")
+    parser.add_argument("--sync-trunk", action="store_true", help="Run sync-trunk.py --pull before reporting.")
+    parser.add_argument("--run-meta-check", action="store_true", help="Invoke meta-check automation before reporting.")
+    parser.add_argument("--repo-cmd", action="append", default=[], help="Run custom command inside a repo (format repo:command). May repeat.")
+    parser.add_argument("--strict", action="store_true", help="Exit non-zero when root/submodules are dirty or diverged.")
+    parser.add_argument("--strict-root", action="store_true", help="Exit non-zero when workspace root is dirty or diverged.")
+    parser.add_argument("--strict-submodules", action="store_true", help="Exit non-zero when any submodule is dirty or diverged.")
+    parser.add_argument("--fix-all", action="store_true", help="Run all helper hooks (submodule + trunk sync) before reporting.")
+    parser.add_argument("--autofix", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.autofix:
+        args.sync_submodules = True
     report = build_report(args)
-    emit(report, args.json)
-    return 0
+    return emit(report, args)
 
 
 if __name__ == "__main__":

@@ -116,6 +116,7 @@ Automation executions append telemetry to `.dev/automation/artifacts/automation/
 
 - **Plan in public**: Capture cross-repo decisions in `1. Cerebrum Docs/ADR/` and link to repo-specific ADRs.
 - **Keep repos pristine**: Use `.dev/` directories for scratch assets and avoid committing generated artefacts.
+- **Run the workspace maintenance loop**: Follow `1. Cerebrum Docs/WORKSPACE_MAINTENANCE.md` to run `workspace-health`, `meta-check`, and project preflights before every PR or release.
 - **Version discipline**: Update `n00-cortex/data/toolchain-manifest.json` first when bumping runtimes so Renovate presets and generators stay aligned.
 - **Release sequencing**: Tag repos independently, then run `workspace-release.sh` to snapshot versions and update documentation.
 - **Security hygiene**: Run `pip-audit -r n00-frontiers/requirements.txt` (or rely on `meta-check`) before shipping templates.
