@@ -162,6 +162,18 @@ Operational outputs live in the shared filesystem at `/Volumes/APFS Space/n00tro
 6. Run baseline checks: `./.dev/automation/scripts/meta-check.sh` followed by repo-specific health commands.
 7. Explore `1. Cerebrum Docs/` for ADRs, Renovate setup, and onboarding guides.
 
+## Script Index
+
+The `script_index.md` file provides an automatically generated, organized catalog of all scripts across the n00tropic polyrepo. This index is optimized for agents and developers to quickly locate and understand available scripts.
+
+### Usage
+
+- **View Index**: Open `script_index.md` to browse scripts by category.
+- **Update Index**: Run `python3 generate_script_index.py` to regenerate the index after adding new scripts.
+- **Dynamic Registration**: New scripts are automatically detected and categorized when the index is updated.
+
+The index includes executable files and scripts with common extensions (.sh, .py, .js, etc.), organized by their containing directory for easy navigation.
+
 By keeping the repos loosely coupled yet automation-aware, the Cerebrum workspace lets contributors evolve generators, docs, and agents without tripping over each other's toolchains while still sharing a coherent release pulse.
 
 > ❗️ Do not run `git init` in `/Volumes/APFS Space/n00tropic`. The organisational root is intentionally non-versioned; all contributions should originate from this repository or its submodules.
