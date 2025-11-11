@@ -162,6 +162,38 @@ Operational outputs live in the shared filesystem at `/Volumes/APFS Space/n00tro
 6. Run baseline checks: `./.dev/automation/scripts/meta-check.sh` followed by repo-specific health commands.
 7. Explore `1. Cerebrum Docs/` for ADRs, Renovate setup, and onboarding guides.
 
+### Docs development (Antora with pnpm)
+
+We prefer `pnpm` for local development of the Antora documentation and workspace scripts. To get started with docs:
+
+1. Prepare `pnpm` via corepack (this installs the correct pnpm distribution for your environment):
+
+```bash
+corepack enable
+corepack prepare pnpm@latest --activate
+```
+
+2. Install workspace dependencies:
+
+```bash
+pnpm install
+```
+
+3. Build the documentation using the local Antora installation in the `n00plicate` submodule:
+
+```bash
+cd n00plicate
+pnpm install
+pnpm exec antora antora-playbook.yml
+```
+
+4. View the generated site:
+
+```bash
+open build/site/index.html
+```
+
+
 ## Script Index
 
 The `script_index.md` file provides an automatically generated, organized catalog of all scripts across the n00tropic polyrepo. This index is optimized for agents and developers to quickly locate and understand available scripts.
