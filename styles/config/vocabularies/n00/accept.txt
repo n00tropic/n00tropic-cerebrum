@@ -70,3 +70,11 @@ discoverability
 touchpoints
 stdout
 scaffolded
+configs
+libs
+automations
+Timesheets
+READMEs
+middleware
+config
+hoc

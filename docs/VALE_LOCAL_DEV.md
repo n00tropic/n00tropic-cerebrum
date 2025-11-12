@@ -1,157 +1,49 @@
 # Vale local development guide
 
-This repository uses Vale for doc linting. CI uses Google & Microsoft styles; the `n00` style keeps local runs lightweight.
-
-Commands
-
-- Sync styles: `vale sync`
-- Local dev run: `VALE_LOCAL=1 make validate-docs`
-- Full run (CI-like): `vale --output=JSON --ignore-syntax docs > artifacts/vale-full.json`
-- Generate triage: `pnpm -s docs:vale-triage`
-- Apply safe fixes: `pnpm -s docs:fix-style`
-- Generate spell counts: `pnpm -s docs:generate-spelling-counts`
-- Suggest whitelists: `pnpm -s docs:vale-whitelist-candidates`
-
-Notes
-
-- Add vocabulary entries to `styles/config/vocabularies/n00/accept.txt` and run `vale sync` to make them effective in full runs.
-- The triage script parse Vale's JSON even if Vale exits non-zero and writes `artifacts/vale-triage.json`.
-
-# Vale local development guide
-
-This repository uses Vale for documentation linting. The CI uses Google and Microsoft style packs, but a small local style `n00` reduces noise for local work.
+This repository uses Vale for documentation linting. CI uses Google and Microsoft styles; to keep local runs
+faster and less noisy we provide a small local style `n00` that focuses on the checks that matter for day-to-day
+work and allows fast iteration.
 
 Quick commands
 
-- vale sync — Refresh installed style packs and ensure Verd or other packages are present
-- VALE_LOCAL=1 make validate-docs — Run the local n00 style to check docs locally
-- vale --output=JSON --ignore-syntax docs > artifacts/vale-full.json — Run CI-like full Vale check and write JSON results
+- vale sync — Refresh installed style packs and ensure local vocabulary is loaded
+- VALE_LOCAL=1 make validate-docs — Run the lightweight `n00` checks (recommended while authoring)
+- vale --output=JSON --ignore-syntax docs > artifacts/vale-full.json — Run a full CI-like check and write JSON to
+  artifacts/vale-full.json
 
 Developer helpers
 
-- pnpm -s docs:vale-triage — Parse the latest JSON and create a triage report grouped by file/check
-- pnpm -s docs:fix-style — Apply a set of safe, low-risk editorial normalizations to docs
-- pnpm -s docs:generate-spelling-counts — Produce a JSON with Vale.Spelling token counts
-- pnpm -s docs:vale-whitelist-candidates — Produce a text file of candidate whitelist tokens for review
+- pnpm -s docs:vale-triage — Parse the full run JSON and create a triage report grouped by file and check. The
+  triage report is written to artifacts/vale-triage.json.
+- pnpm -s docs:fix-style — Apply a small set of safe editorial normalizations to `.adoc` files (commas, spacing,
+  ellipses and other low-risk normalizations).
+- pnpm -s docs:generate-spelling-counts — Produce a JSON with Vale.Spelling token counts to guide whitelist
+  decisions.
+- pnpm -s docs:vale-whitelist-candidates — Produce a shortlist of high-frequency tokens for review (candidates
+  for whitelisting).
 
 Notes
 
-- Add project acronyms and tooling names into `styles/config/vocabularies/n00/accept.txt`. Then run `vale sync` and the full Vale run to verify the change reduces noise.
-- The triage script handles Vale's non-zero exit codes and still parses the JSON output, which is saved to `artifacts/vale-triage.json`.
+- Add project acronyms and tooling names into styles/config/vocabularies/n00/accept.txt and run vale sync.
+- Use the triage report to prioritise fixes and to identify tokens worth whitelisting.
 
-Next steps
+Markdown / AsciiDoc linting
 
-- We can curate the high-frequency tokens and add them to the `n00` vocabulary or tweak copy to resolve true spelling issues. If you want, I can create a PR with a curated whitelist and a small set of safe fixes.
+- The repository contains a config.markdownlint-cli2.jsonc file tuned for AsciiDoc. It relaxes rules for long
+  table lines, inline HTML, bare URLs, and other AsciiDoc-specific cases.
+- To lint AsciiDoc files with the repository config, run:
 
-# Vale local development guide
+  pnpm -s exec markdownlint-cli2 --config config.markdownlint-cli2.jsonc "docs/\*_/_.adoc"
 
-This repository uses Vale for documentation linting. The CI uses Google and Microsoft style packs, but there is a small, conservative local style `n00` that keeps local runs developer-friendly.
+Best practices
 
-How to run locally
+- Prefer using the `n00` local run while writing. Run the full CI-style Vale check (Google/Microsoft styles) to
+  confirm final issues before a PR.
+- Curate whitelists intentionally. Prefer whitelisting true project names / acronyms (e.g., `ERPNext`, `Algolia`,
+  `pnpm`) rather than whitelisting typos.
+- If you want to preview the editorial patches applied by docs:fix-style, run:
 
-- Sync official styles and refresh local vocabulary:
-  - vale sync
-- Run the local dev checks using the lightweight `n00` style:
-  - VALE_LOCAL=1 make validate-docs
-- Run a full CI-like Vale run (downloads Google/Microsoft styles):
-  - vale --output=JSON --ignore-syntax docs > artifacts/vale-full.json
+  node scripts/fix-docs-style.mjs --pattern "docs/\*_/_.adoc" --dry-run
 
-Helpful developer scripts
-
-- Run the triage report (parses artifacts/vale-full.json and summarises check totals per file):
-  - pnpm -s docs:vale-triage
-- Apply a set of safe editorial normalizations (commas, spacing, ellipses, etc.) across docs:
-  - pnpm -s docs:fix-style
-- Generate a JSON of Vale.Spelling token counts and a shortlist of suggested whitelist tokens for manual review:
-  - pnpm -s docs:generate-spelling-counts
-  - pnpm -s docs:vale-whitelist-candidates
-
-Notes
-
-- The `n00` vocabulary is at `styles/config/vocabularies/n00/accept.txt`. It uses the Vale 'Vocab' system; add project-specific acronyms and tooling names here to reduce Vale.Spelling noise.
-- We intentionally keep the CI checks (Google, Microsoft) as the authoritative gate; use the triage script to prioritise fixes and decide which tokens to whitelist or edit editorially.
-- The triage script now handles Vale's non-zero exit code and will still parse the JSON output to produce a report.
-
-If you'd like, I can open a PR that: (1) curates a small set of high-frequency tokens to whitelist, (2) adds a selected set of editorial fixes (safe, non-controversial edits), and (3) re-runs Vale to confirm the impact.
-
-# Vale local development guide
-
-This project uses Vale for documentation linting. Core style packs (Google and Microsoft) are used in CI, but a lightweight local "n00" style is available for developers to run Vale safely during local edits and triage.
-
-Quick commands:
-
-- Sync official styles and refresh local vocabulary:
-  - vale sync
-- Run a local (developer-friendly) Vale run with the `n00` style:
-  - VALE_LOCAL=1 make validate-docs
-- Run a full/CI Vale run (official Google / Microsoft rules):
-  - vale --output=JSON --ignore-syntax docs > artifacts/vale-full.json
-- Generate a triage report (full run):
-  - pnpm -s docs:vale-triage
-- Automatically apply a set of safe editorial style fixes:
-  - pnpm -s docs:fix-style
-- Generate spelling token counts and suggested whitelist candidates for review:
-  - pnpm -s docs:generate-spelling-counts
-  - pnpm -s docs:vale-whitelist-candidates
-
-Note about Markdown/AsciiDoc linting:
-
-- There's a repository-level `config.markdownlint-cli2.jsonc` file which relaxes a
-  few markdown rules for AsciiDoc files (line length, bare URLs, inline HTML, and
-  emphasis/heading style differences). This reduces false positives for AsciiDoc
-  pages. To run markdown linting with the repo configuration, use:
-  - pnpm -s exec markdownlint-cli2 --config config.markdownlint-cli2.jsonc "docs/\*_/_.adoc"
-
-Notes:
-
-- The `n00` vocabulary is located at `styles/config/vocabularies/n00/accept.txt`. Add project-specific acronyms or tooling names there to reduce irrelevant Vale.Spelling flags during full runs.
-- The triage script now parses Vale's JSON output even when Vale exits with a non-zero code (finds issues). The triage report can be found at `artifacts/vale-triage.json`.
-- If you add new tokens to the vocabulary, run `vale sync` and re-run tests for changes to apply.
-
-If you'd like help adding a curated spelling whitelist or applying editorial corrections, run `pnpm -s docs:generate-spelling-counts` and then `pnpm -s docs:vale-whitelist-candidates` to produce a ready-to-review list.
-
-- Run a full/CI Vale run (official Google / Microsoft rules):
-- vale --output=JSON --ignore-syntax docs > artifacts/vale-full.json
-- Generate a triage report (full run):
-- pnpm -s docs:vale-triage
-- Automatically apply a set of safe editorial style fixes:
-- pnpm -s docs:fix-style
-- Generate spelling token counts and suggested whitelist candidates for review:
-- pnpm -s docs:generate-spelling-counts
-- pnpm -s docs:vale-whitelist-candidates
-
-Notes:
-
-- The `n00` vocabulary is located at `styles/config/vocabularies/n00/accept.txt`. Add project-specific acronyms or tooling names there to reduce irrelevant Vale.Spelling flags during full runs.
-- The triage script now parses Vale's JSON output even when Vale exits with a non-zero code (finds issues). The triage report can be found at `artifacts/vale-triage.json`.
-- If you add new tokens to the vocabulary, run `vale sync` and re-run tests for changes to apply.
-
-If you'd like help adding a curated spelling whitelist or applying editorial corrections, run `pnpm -s docs:generate-spelling-counts` and then `pnpm -s docs:vale-whitelist-candidates` to produce a ready-to-review list.
-
-# Vale local development guide
-
-This project uses Vale for documentation linting. Core style packs (Google and Microsoft) are used in CI, but a lightweight local "n00" style is available for developers to run Vale safely during local edits and triage.
-
-Quick commands:
-
-- Sync official styles and refresh local vocabulary:
-  - vale sync
-- Run a local (developer-friendly) Vale run with the `n00` style:
-  - VALE_LOCAL=1 make validate-docs
-- Run a full/CI Vale run (official Google / Microsoft rules):
-  - vale --output=JSON --ignore-syntax docs > artifacts/vale-full.json
-- Generate a triage report (full run):
-  - pnpm -s docs:vale-triage
-- Automatically apply a set of safe editorial style fixes:
-  - pnpm -s docs:fix-style
-- Generate spelling token counts and suggested whitelist candidates for review:
-  - pnpm -s docs:generate-spelling-counts
-  - pnpm -s docs:vale-whitelist-candidates
-
-Notes:
-
-- The `n00` vocabulary is located at `styles/config/vocabularies/n00/accept.txt`. Add project-specific acronyms or tooling names there to reduce irrelevant Vale.Spelling flags during full runs.
-- The triage script now parses Vale's JSON output even when Vale exits with a non-zero code (finds issues). The triage report can be found at `artifacts/vale-triage.json`.
-- If you add new tokens to the vocabulary, run `vale sync` and re-run tests for changes to apply.
-
-If you'd like help adding a curated spelling whitelist or applying editorial corrections, run `pnpm -s docs:generate-spelling-counts` and then `pnpm -s docs:vale-whitelist-candidates` to produce a ready-to-review list.
+If you'd like help, I can prepare a short PR that (1) curates a whitelist, (2) applies small editorial fixes across
+a subset of pages, and (3) re-runs the full Vale check to show the impact.

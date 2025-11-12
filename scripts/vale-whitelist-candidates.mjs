@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 
 const p = "artifacts/vale-spelling-token-counts.json";
 if (!fs.existsSync(p)) {
@@ -17,7 +17,7 @@ if (fs.existsSync("styles/n00/vocab.txt")) {
 // Read Terms.yml tokens
 if (fs.existsSync("styles/n00/Terms.yml")) {
   const txt = fs.readFileSync("styles/n00/Terms.yml", "utf8");
-  const tokens = [...txt.matchAll(/"([^\"]+)"/g)].map((m) => m[1]);
+  const tokens = [...txt.matchAll(/"([^"]+)"/g)].map((m) => m[1]);
   for (const t of tokens) existing.add(t);
 }
 // Read .vale.ini TokenIgnores
@@ -34,8 +34,16 @@ if (fs.existsSync(".vale.ini")) {
   }
 }
 
-// Threshold: show tokens with count >= 3
-const threshold = 3;
+// Threshold: show tokens with count >= N (default 3)
+let threshold = 3;
+const args = process.argv.slice(2);
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === "--threshold" && args[i + 1]) {
+    const v = parseInt(args[i + 1], 10);
+    if (!isNaN(v)) threshold = v;
+    i++;
+  }
+}
 const candidates = counts.filter(
   (c) => c.count >= threshold && !existing.has(c.term),
 );
@@ -50,7 +58,7 @@ if (candidates.length === 0) {
 const out = candidates.map((c) => `${c.term}  # ${c.count}`);
 fs.writeFileSync(
   "artifacts/vale-whitelist-suggestions.txt",
-  out.join("\n") + "\n",
+  `${out.join("\n")}\n`,
 );
 console.log(
   "Wrote artifacts/vale-whitelist-suggestions.txt with",

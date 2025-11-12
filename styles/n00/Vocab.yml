@@ -1,3 +1,4 @@
+---
 extends: existence
 message: "Allow project-specific words and acronyms in content"
 link: ""
@@ -47,3 +48,5 @@ tokens:
   - asciidoc
   - Tools
   - Repo
+---
+
