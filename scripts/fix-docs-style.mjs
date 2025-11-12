@@ -45,6 +45,9 @@ for (const f of files) {
   s = s.replace(/\.\.\.+/g, "…");
   // Normalize 'ad-hoc' to 'ad hoc' (style choice) – 'ad-hoc' often flagged
   s = s.replace(/\bad-?hoc\b/gi, "ad hoc");
+  // Normalize underscore emphasis used for simple words like _no_ or _not_ to plain words
+  s = s.replace(/\b_no_\b/g, "no");
+  s = s.replace(/\b_not_\b/g, "not");
   // Normalize multiple spaces to single space (avoid code-blocks where possible)
   s = s.replace(/([^\S\n]){2,}/g, " ");
   if (s !== original) {

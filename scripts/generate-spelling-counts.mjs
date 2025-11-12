@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 
 const p = "artifacts/vale-full.json";
 if (!fs.existsSync(p)) {

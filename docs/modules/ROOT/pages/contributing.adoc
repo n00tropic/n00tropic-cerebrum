@@ -6,18 +6,24 @@
 
 == Overview
 
-The n00 Cerebrum documentation uses https://docs.antora.org/[Antora] to build a multi-repository documentation site. All documentation follows the https://diataxis.fr/[Diátaxis framework] for structured technical documentation.
+The n00 Cerebrum documentation uses https://docs.antora.org/[Antora] to build a
+multi-repository documentation site. All documentation follows the
+https://diataxis.fr/[Diátaxis framework] for structured technical documentation.
 
 == Diátaxis Framework
 
 Diátaxis divides documentation into four distinct modes:
 
-* **Tutorial** - Learning-oriented, greenfield walk-throughs (e.g., provisioning frontier workspaces)
-* **How-to Guide** - Task-oriented, focused jobs with clear outcomes (e.g., running ERPNext exports)
-* **Reference** - Information-oriented, exhaustive configuration, API schemas, CLI flags
-* **Explanation** - Understanding-oriented, architecture notes, ADRs, and rationale
-
-When creating or editing documentation, always classify your content according to these modes.
+* **Tutorial** - Learning-oriented, greenfield walk-throughs (e.g., provisioning
+ frontier workspaces)
+* **How-to Guide** - Task-oriented, focused jobs with clear outcomes (e.g.,
+ running ERPNext exports)
+* **Reference** - Information-oriented, exhaustive configuration, API schemas, CLI
+ flags
+* **Explanation** - Understanding-oriented, architecture notes, ADRs, and
+ rationale
+When creating or editing documentation, always classify your content according
+to these modes.
 
 == Page Requirements
 
@@ -103,7 +109,6 @@ Factor repeated content into partials under `docs/modules/ROOT/partials/`:
 * Avoid gerunds in headings (enforced by Vale)
 * Use code blocks for commands and outputs
 * Include examples and screenshots where helpful
-
 == CI/CD Checks
 
 All documentation PRs are validated against:
@@ -113,7 +118,6 @@ All documentation PRs are validated against:
 * **Attribute checks** - Validates presence of `:page-tags:` and `:reviewed:`
 * **DangerJS** - PR policy enforcement
 * **Antora build** - Ensures the site builds successfully
-
 == Local Development
 
 === Building the Docs
@@ -121,7 +125,8 @@ All documentation PRs are validated against:
 [source,bash]
 ----
 # Install Antora and extensions
-npm i -g @antora/CLI@latest @antora/site-generator@latest @antora/lunr-extension@latest
+npm i -g @antora/CLI@latest @antora/site-generator@latest
+@antora/lunr-extension@latest
 
 # Build the site
 npx antora-playbook.yml
@@ -153,7 +158,8 @@ lychee --config .lychee.toml 'docs/**/*.adoc'
 
 == Navigation Structure
 
-Update `docs/modules/ROOT/nav.adoc` when adding new pages. Organize navigation hierarchically using Antora's xref syntax:
+Update `docs/modules/ROOT/nav.adoc` when adding new pages. Organize navigation
+hierarchically using Antora's xref syntax:
 
 [source,asciidoc]
 ----
@@ -207,7 +213,6 @@ This provides three tools:
 * `search(query)` - Full-text search
 * `get_page(id)` - Retrieve page content
 * `list_tags()` - List all available tags
-
 == Questions and Support
 
 For questions about documentation:
