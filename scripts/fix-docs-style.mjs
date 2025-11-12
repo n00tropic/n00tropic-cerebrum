@@ -1,7 +1,21 @@
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "node:fs";
+import process from "node:process";
 import { glob } from "glob";
 
-const files = await glob("docs/**/*.adoc");
+// Accept an optional pattern and a dry-run flag
+const args = process.argv.slice(2);
+let pattern = "docs/**/*.adoc";
+let dryRun = false;
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === "--pattern" && args[i + 1]) {
+    pattern = args[i + 1];
+    i++;
+  }
+  if (args[i] === "--dry-run") {
+    dryRun = true;
+  }
+}
+const files = await glob(pattern);
 let changed = 0;
 for (const f of files) {
   let s = readFileSync(f, "utf8");
@@ -20,7 +34,7 @@ for (const f of files) {
   // Normalize GUIDELINES: convert backtick code markers with repeated words like 'pandoc pandoc' inside code to single
   s = s.replace(/`([Pp]andoc)\s+\1`/g, "`$1`");
   // Move commas within quotes for short words (e.g., "foo", -> "foo,")
-  s = s.replace(/"([\w\-\.\/]+)",/g, '"$1,"');
+  s = s.replace(/"([\w-./]+)",/g, '"$1,"');
   // Replace i.e. -> that is (safe rewrite)
   s = s.replace(/\bi\.e\.\b/gi, "that is");
   // Normalize CLI to 'CLI' in sentences, but avoid code blocks: we avoid touching inline code (best effort)
@@ -34,9 +48,13 @@ for (const f of files) {
   // Normalize multiple spaces to single space (avoid code-blocks where possible)
   s = s.replace(/([^\S\n]){2,}/g, " ");
   if (s !== original) {
-    writeFileSync(f, s, "utf8");
+    if (dryRun) {
+      console.log("Would patch", f);
+    } else {
+      writeFileSync(f, s, "utf8");
+      console.log("Patched", f);
+    }
     changed++;
-    console.log("Patched", f);
   }
 }
 console.log("Changed files:", changed);
