@@ -52,3 +52,12 @@ Best practices
 
 If you'd like help, I can prepare a short PR that (1) curates a whitelist, (2) applies small editorial fixes across
 a subset of pages, and (3) re-runs the full Vale check to show the impact.
+
+CI and validation hooks
+
+- The repository includes a workspace-level health check that runs Python formatting and linting across the
+  workspace. You can run it locally by invoking the pnpm script:
+
+  pnpm run lint:python
+
+  And the workspace CI runs this script automatically as part of the `workspace-health` workflow.
