@@ -27,6 +27,7 @@ onboarding
 toolchain
 toolchains
 Toolchain
+rollout
 untracked
 system_version
 monorepo
