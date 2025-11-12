@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 DIR=$(cd "$(dirname "$0")/../../.." && pwd)
+TRUNK_BIN="${TRUNK_BIN:-$HOME/.trunk/bin/trunk}"
+echo "Using trunk binary at: $TRUNK_BIN"
+export VALE_LOCAL=1
+export VALE_CONFIG="$DIR/.vale.local.ini"
+echo "VALE_CONFIG=$VALE_CONFIG"
 cd "$DIR"
 
 REPOS=(
@@ -21,12 +26,12 @@ for repo in "${REPOS[@]}"; do
     echo "\n== Running trunk check in $repo =="
     pushd "$repo" >/dev/null
     # Ensure subrepo trunk config exists
-    if [ -d ".trunk" ]; then
+      if [ -d ".trunk" ]; then
       echo "Using local .trunk/trunk.yaml for $repo"
-      trunk check --no-spinner --json > "$DIR/$ARTIFACTS_DIR/$repo.json" || FAILED=1
+      "$TRUNK_BIN" check --no-spinner --json > "$DIR/$ARTIFACTS_DIR/$repo.json" || FAILED=1
     else
       echo "No .trunk found in $repo; running trunk check with default settings"
-      trunk check --no-spinner --json > "$DIR/$ARTIFACTS_DIR/$repo.json" || FAILED=1
+  "$TRUNK_BIN" check --no-spinner --json > "$DIR/$ARTIFACTS_DIR/$repo.json" || FAILED=1
     fi
     popd >/dev/null
   else
