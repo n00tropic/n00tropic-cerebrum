@@ -55,6 +55,13 @@ jobs:
           files: docs
       - name: Vale triage artifacts
         run: pnpm run docs:vale-triage || true
+      - name: Generate spelling counts
+        run: pnpm run docs:generate-spelling-counts || true
+      - name: Upload spelling counts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vale-spelling-counts
+          path: artifacts/vale-spelling-token-counts.json
       - name: Link check
         uses: lycheeverse/lychee-action@v2
         with:
@@ -63,6 +70,15 @@ jobs:
             'docs/**/*.md' '**/*.html'
       - name: Attr checks
         run: node scripts/check-attrs.mjs
+      - name: Vale triage artifacts
+        run: pnpm run docs:vale-triage || true
+      - name: Spelling counts
+        run: pnpm run docs:generate-spelling-counts || true
+      - name: Upload spelling counts
+        uses: actions/upload-artifact@v3
+        with:
+          name: vale-spelling-counts
+          path: artifacts/vale-spelling-token-counts.json
       - name: Build Antora (CI playbook)
         run: |
           cd n00plicate
