@@ -42,23 +42,112 @@ if (entries.length === 0) {
   process.exit(0);
 }
 
+const args = process.argv.slice(2);
+let doFix = false;
+let doRuffFix = false;
+if (args.includes("--fix")) doFix = true;
+if (args.includes("--fix-ruff")) doRuffFix = true;
 let overallOk = true;
 for (const p of entries) {
   const dir =
     p.replace("/pyproject.toml", "").replace("pyproject.toml", ".") || ".";
   console.log("\n== Running Python linters in", dir);
   let ok = true;
-  // isort check
-  ok =
-    run(
-      "python",
-      ["-m", "isort", "--profile", "black", "--check-only", "."],
-      dir,
-    ) && ok;
-  // black check
-  ok = run("python", ["-m", "black", "--check", "."], dir) && ok;
-  // ruff check
-  ok = run("python", ["-m", "ruff", "check", "."], dir) && ok;
+  // isort: run fix if requested; otherwise check only
+  if (doFix) {
+    ok =
+      run(
+        "python",
+        [
+          "-m",
+          "isort",
+          "--profile",
+          "black",
+          ".",
+          "--skip",
+          ".cache",
+          "--skip",
+          "node_modules",
+          "--skip",
+          ".trunk",
+        ],
+        dir,
+      ) && ok;
+  } else {
+    ok =
+      run(
+        "python",
+        [
+          "-m",
+          "isort",
+          "--profile",
+          "black",
+          "--check-only",
+          ".",
+          "--skip",
+          ".cache",
+          "--skip",
+          "node_modules",
+          "--skip",
+          ".trunk",
+        ],
+        dir,
+      ) && ok;
+  }
+  // black: run fix if requested; otherwise check only
+  if (doFix) {
+    ok =
+      run(
+        "python",
+        ["-m", "black", ".", "--exclude", "(node_modules|\\.cache|\\.trunk)"],
+        dir,
+      ) && ok;
+  } else {
+    ok =
+      run(
+        "python",
+        [
+          "-m",
+          "black",
+          "--check",
+          ".",
+          "--exclude",
+          "(node_modules|\\.cache|\\.trunk)",
+        ],
+        dir,
+      ) && ok;
+  }
+  // ruff check: optionally attempt an auto-fix (conservative)
+  if (doRuffFix) {
+    ok =
+      run(
+        "python",
+        [
+          "-m",
+          "ruff",
+          "check",
+          "--fix",
+          ".",
+          "--exclude",
+          "node_modules,/.cache/,.trunk",
+        ],
+        dir,
+      ) && ok;
+  } else {
+    ok =
+      run(
+        "python",
+        [
+          "-m",
+          "ruff",
+          "check",
+          ".",
+          "--exclude",
+          "node_modules,/.cache/,.trunk",
+        ],
+        dir,
+      ) && ok;
+  }
   overallOk = overallOk && ok;
 }
 

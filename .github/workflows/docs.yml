@@ -4,24 +4,24 @@ on:
     branches:
       - main
     paths:
-      - "docs/**"
-      - "n00-frontiers/docs/**"
-      - "n00-cortex/docs/**"
-      - "n00t/docs/**"
-      - "antora-playbook.yml"
-      - "antora-playbook.ci.yml"
-      - "Makefile"
-      - "scripts/**"
+      - docs/**
+      - n00-frontiers/docs/**
+      - n00-cortex/docs/**
+      - n00t/docs/**
+      - antora-playbook.yml
+      - antora-playbook.ci.yml
+      - Makefile
+      - scripts/**
   pull_request:
     paths:
-      - "docs/**"
-      - "n00-frontiers/docs/**"
-      - "n00-cortex/docs/**"
-      - "n00t/docs/**"
-      - "antora-playbook.yml"
-      - "antora-playbook.ci.yml"
-      - "Makefile"
-      - "scripts/**"
+      - docs/**
+      - n00-frontiers/docs/**
+      - n00-cortex/docs/**
+      - n00t/docs/**
+      - antora-playbook.yml
+      - antora-playbook.ci.yml
+      - Makefile
+      - scripts/**
 permissions: {}
 jobs:
   build-validate:
@@ -96,7 +96,13 @@ jobs:
         run: |
           VALE_LOCAL=1 vale --output=JSON --ignore-syntax docs > artifacts/vale-full.json || true
       - name: Generate Term candidates
-        run: pnpm run docs:vale-terms-candidates -- --threshold 2 --output artifacts/vale-terms-token-counts.json --json artifacts/vale-full.json || true
+        run: pnpm run docs:vale-terms-candidates -- --threshold 2 --output artifacts/vale-terms-token-counts.json --json artifacts/vale-full.json --oxford || true
+      - name: Python lint (auto fix safe changes)
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.10"
+      - name: Run lint-python script (fix mode)
+        run: pnpm run lint:python:fix || true
       - name: Upload terms counts
         uses: actions/upload-artifact@v4
         with:
