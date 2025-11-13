@@ -7,9 +7,9 @@ set -euo pipefail
 echo "Scanning package.json scripts for forwarded pnpm flags..."
 
 for f in $(git ls-files "**/package.json"); do
-	if rg -q --hidden --no-ignore-vcs --glob '!node_modules' "(--workspace-concurrency|--reporter|--filter\\s|--filter='|--if-present)" "$f"; then
-		echo "[WARN] $f contains possibly forwarded pnpm flags in scripts:"
-		rg -n --hidden --no-ignore-vcs --glob '!node_modules' "(--workspace-concurrency|--reporter|--filter\\s|--filter='|--filter=\"|--if-present)" "$f" || true
+	if rg -q --hidden --no-ignore-vcs --glob '!node_modules' "(--workspace-concurrency|--reporter|--filter\\s|--filter='|--if-present)" "${f}"; then
+		echo "[WARN] ${f} contains possibly forwarded pnpm flags in scripts:"
+		rg -n --hidden --no-ignore-vcs --glob '!node_modules' "(--workspace-concurrency|--reporter|--filter\\s|--filter='|--filter=\"|--if-present)" "${f}" || true
 		echo
 	fi
 done

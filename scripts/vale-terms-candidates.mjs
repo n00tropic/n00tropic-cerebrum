@@ -69,7 +69,9 @@ for (let i = 0; i < args.length; i++) {
 }
 
 if (!fs.existsSync(jsonPath)) {
-  console.error(`Missing ${jsonPath}. Run vale-triage to produce artifacts/vale-full.json first.`);
+  console.error(
+    `Missing ${jsonPath}. Run vale-triage to produce artifacts/vale-full.json first.`,
+  );
   process.exit(1);
 }
 
@@ -86,7 +88,8 @@ const matchesMessage = (issue) => {
 
 for (const [file, issues] of Object.entries(data)) {
   // simple pattern matcher: a minimal glob using includes
-  if (pattern !== "**/*" && !file.includes(pattern.replace("**/", ""))) continue;
+  if (pattern !== "**/*" && !file.includes(pattern.replace("**/", "")))
+    continue;
   for (const issue of issues) {
     if (issue.Check !== "Vale.Terms") continue;
     // try to extract a token; Message frequently has 'Prefer "X"' or similar
@@ -97,7 +100,9 @@ for (const [file, issues] of Object.entries(data)) {
       if (m) token = m[1];
       else {
         // fallback: pick the first word with limited length
-        const fallback = issue.Message.split(/[\s,:;]+/).slice(0, 3).join(" ");
+        const fallback = issue.Message.split(/[\s,:;]+/)
+          .slice(0, 3)
+          .join(" ");
         token = fallback;
       }
     }
@@ -106,7 +111,9 @@ for (const [file, issues] of Object.entries(data)) {
     counts[k] = (counts[k] || 0) + 1;
     // suggested replacement - try to parse 'Prefer "<suggestion>"' or 'use <suggestion>'
     if (issue.Message) {
-      const sm = issue.Message.match(/Prefer\s+"([^"]+)"|Use\s+"([^"]+)"|use\s+([a-zA-Z0-9_-]+)/i);
+      const sm = issue.Message.match(
+        /Prefer\s+"([^"]+)"|Use\s+"([^"]+)"|use\s+([a-zA-Z0-9_-]+)/i,
+      );
       if (sm) {
         suggestions[k] = suggestions[k] || sm[1] || sm[2] || sm[3];
       }
@@ -130,7 +137,8 @@ if (caseInsensitive) {
     tmpSuggestions[key] = tmpSuggestions[key] || suggestions[t];
     tmpFileMap[key] = tmpFileMap[key] || {};
     if (fileMap[t]) {
-      for (const f of Object.keys(fileMap[t])) tmpFileMap[key][f] = (tmpFileMap[key][f] || 0) + fileMap[t][f];
+      for (const f of Object.keys(fileMap[t]))
+        tmpFileMap[key][f] = (tmpFileMap[key][f] || 0) + fileMap[t][f];
     }
   }
   effectiveCounts = tmpCounts;
@@ -139,7 +147,12 @@ if (caseInsensitive) {
 }
 
 const arr = Object.entries(effectiveCounts)
-  .map(([t, c]) => ({ token: t, count: c, suggestion: effectiveSuggestions[t] || null, files: effectiveFileMap[t] || {} }))
+  .map(([t, c]) => ({
+    token: t,
+    count: c,
+    suggestion: effectiveSuggestions[t] || null,
+    files: effectiveFileMap[t] || {},
+  }))
   .sort((a, b) => b.count - a.count);
 
 // read existing tokens from vocab and Terms
@@ -158,7 +171,10 @@ if (fs.existsSync(".vale.ini")) {
   const txt = fs.readFileSync(".vale.ini", "utf8");
   const m = txt.match(/TokenIgnores\s*=\s*(.*)/);
   if (m) {
-    m[1].split(",").map((s) => s.trim()).forEach((t) => t && existing.add(t));
+    m[1]
+      .split(",")
+      .map((s) => s.trim())
+      .forEach((t) => t && existing.add(t));
   }
 }
 // If case-insensitive mode requested, also add lowercase variants to existing set for comparison
@@ -167,10 +183,14 @@ if (caseInsensitive) {
   addLower.forEach((l) => existing.add(l));
 }
 
-const candidates = arr.filter((r) => r.count >= threshold && !existing.has(r.token));
+const candidates = arr.filter(
+  (r) => r.count >= threshold && !existing.has(r.token),
+);
 
 if (candidates.length === 0) {
-  console.log(`No Term candidates with threshold ${threshold} (existing tokens filtered).`);
+  console.log(
+    `No Term candidates with threshold ${threshold} (existing tokens filtered).`,
+  );
   process.exit(0);
 }
 
@@ -189,20 +209,36 @@ const out = {
 };
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
-console.log(`Wrote ${outPath} with ${candidates.length} candidates (threshold ${threshold}).`);
+console.log(
+  `Wrote ${outPath} with ${candidates.length} candidates (threshold ${threshold}).`,
+);
 
 // Also produce a text file with tokens to append to Terms.yml or vocab.txt
-const lines = candidates.map((c) => `${c.token}  # ${c.count}${c.suggestion ? ` -> ${c.suggestion}` : ''}`);
-fs.writeFileSync("artifacts/vale-terms-suggestions.txt", `${lines.join("\n")}\n`);
-console.log("Wrote artifacts/vale-terms-suggestions.txt with", lines.length, "items.");
+const lines = candidates.map(
+  (c) => `${c.token}  # ${c.count}${c.suggestion ? ` -> ${c.suggestion}` : ""}`,
+);
+fs.writeFileSync(
+  "artifacts/vale-terms-suggestions.txt",
+  `${lines.join("\n")}\n`,
+);
+console.log(
+  "Wrote artifacts/vale-terms-suggestions.txt with",
+  lines.length,
+  "items.",
+);
 
 // Helper: simple interactive prompt
 const ask = async (question) => {
   if (yesAll) return true;
   if (!interactive) return false;
   const readline = await import("node:readline/promises");
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  const answer = (await rl.question(question + " (y/N): ")).trim().toLowerCase();
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  const answer = (await rl.question(question + " (y/N): "))
+    .trim()
+    .toLowerCase();
   rl.close();
   return answer === "y" || answer === "yes";
 };
@@ -212,7 +248,8 @@ const appendToVocab = (tokens) => {
   const pathVocab = "styles/n00/vocab.txt";
   fs.mkdirSync(path.dirname(pathVocab), { recursive: true });
   let existingLines = [];
-  if (fs.existsSync(pathVocab)) existingLines = fs.readFileSync(pathVocab, "utf8").split(/\r?\n/);
+  if (fs.existsSync(pathVocab))
+    existingLines = fs.readFileSync(pathVocab, "utf8").split(/\r?\n/);
   const toAppend = tokens.filter((t) => !existingLines.includes(t));
   if (toAppend.length === 0) {
     console.log("No new vocab terms to append.");
@@ -238,11 +275,15 @@ const appendToTermsYml = (tokens) => {
   // locate 'terms:' line
   const m = text.match(/terms:\s*\[([\s\S]*?)\]/);
   if (!m) {
-    console.warn(`Could not find 'terms:' array in ${pathTerms}; skipping Terms.yml append.`);
+    console.warn(
+      `Could not find 'terms:' array in ${pathTerms}; skipping Terms.yml append.`,
+    );
     return [];
   }
   const inside = m[1];
-  const existingTokens = new Set([...inside.matchAll(/"([^"]+)"/g)].map((mm) => mm[1]));
+  const existingTokens = new Set(
+    [...inside.matchAll(/"([^"]+)"/g)].map((mm) => mm[1]),
+  );
   const toAppend = tokens.filter((t) => !existingTokens.has(t));
   if (toAppend.length === 0) {
     console.log("No new Terms.yml tokens to append.");
@@ -253,7 +294,12 @@ const appendToTermsYml = (tokens) => {
     return toAppend;
   }
   // Insert before the closing ']' in the match
-  const newInside = inside + (inside.trim().endsWith(",") || inside.trim().endsWith("\n") ? "" : ",") + "\n    " + toAppend.map((t) => `\"${t}\",`).join("\n    ") + "\n  ";
+  const newInside =
+    inside +
+    (inside.trim().endsWith(",") || inside.trim().endsWith("\n") ? "" : ",") +
+    "\n    " +
+    toAppend.map((t) => `\"${t}\",`).join("\n    ") +
+    "\n  ";
   const newText = text.replace(m[0], `terms: [${newInside}]`);
   fs.writeFileSync(pathTerms, newText);
   console.log(`Appended ${toAppend.length} tokens to ${pathTerms}`);
@@ -262,8 +308,14 @@ const appendToTermsYml = (tokens) => {
 
 // Apply editorial edits conservatively
 const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const isCodeFenceBegin = (line) => line.trim().startsWith("```") || line.trim().startsWith("----") || line.trim().startsWith("....");
-const isAsciiDocIncludeImage = (line) => line.includes("include::") || line.includes("image::") || line.includes("xref:");
+const isCodeFenceBegin = (line) =>
+  line.trim().startsWith("```") ||
+  line.trim().startsWith("----") ||
+  line.trim().startsWith("....");
+const isAsciiDocIncludeImage = (line) =>
+  line.includes("include::") ||
+  line.includes("image::") ||
+  line.includes("xref:");
 
 const previewEditsForFile = (file, token, replacement) => {
   const txt = fs.readFileSync(file, "utf8");
@@ -334,22 +386,30 @@ const runApplyEdits = async (candidatesList) => {
     }
   }
   if (Object.keys(filesChanged).length === 0) {
-    console.log("No editorial edits to apply (no suggestions or safe changes).");
+    console.log(
+      "No editorial edits to apply (no suggestions or safe changes).",
+    );
     return;
   }
   console.log("Proposed edits (summary):");
   for (const [f, changes] of Object.entries(filesChanged)) {
     console.log(`- ${f}: ${changes.length} token(s)`);
     for (const ch of changes) {
-      console.log(`  - ${ch.token} -> ${ch.suggestion} (${ch.edits.length} line(s))`);
+      console.log(
+        `  - ${ch.token} -> ${ch.suggestion} (${ch.edits.length} line(s))`,
+      );
     }
   }
   let ok = yesAll;
   if (!ok && interactive) {
-    ok = await ask("Apply these edits to the repository files? This will create backup files with .bak by path.");
+    ok = await ask(
+      "Apply these edits to the repository files? This will create backup files with .bak by path.",
+    );
   }
   if (!ok && !yesAll) {
-    console.log("Skipping apply edits (no confirmation). Use --yes to bypass prompts.");
+    console.log(
+      "Skipping apply edits (no confirmation). Use --yes to bypass prompts.",
+    );
     return;
   }
   if (dryRun) {
@@ -367,7 +427,10 @@ const runApplyEdits = async (candidatesList) => {
     if (appliedAny) applied.push(f);
   }
   console.log(`Applied edits to ${applied.length} files.`);
-  fs.writeFileSync("artifacts/vale-terms-applied.json", JSON.stringify({ applied, timestamp: new Date().toISOString() }, null, 2));
+  fs.writeFileSync(
+    "artifacts/vale-terms-applied.json",
+    JSON.stringify({ applied, timestamp: new Date().toISOString() }, null, 2),
+  );
 };
 
 // If user wants to whitelist or apply edits
