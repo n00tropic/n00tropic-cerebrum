@@ -16,6 +16,7 @@ let yesAll = false;
 let caseInsensitive = false;
 let autoWhitelist = false;
 let autoApply = false;
+let oxfordMode = false;
 for (let i = 0; i < args.length; i++) {
   switch (args[i]) {
     case "--threshold":
@@ -52,6 +53,9 @@ for (let i = 0; i < args.length; i++) {
       autoApply = true;
       applyEdits = true;
       yesAll = true;
+      break;
+    case "--oxford":
+      oxfordMode = true;
       break;
     case "--apply-edits":
       applyEdits = true;
@@ -154,6 +158,36 @@ const arr = Object.entries(effectiveCounts)
     files: effectiveFileMap[t] || {},
   }))
   .sort((a, b) => b.count - a.count);
+
+// Optionally apply Oxford English stylistic preferences for suggestions
+const oxfordMap = {
+  color: "colour",
+  colors: "colours",
+  organization: "organisation",
+  organizations: "organisations",
+  optimize: "optimise",
+  optimization: "optimisation",
+  center: "centre",
+  license: "licence",
+  licenses: "licences",
+  dialog: "dialogue",
+  catalog: "catalogue",
+  program: "programme",
+  programs: "programmes",
+  behavior: "behaviour",
+  behaviors: "behaviours",
+};
+if (oxfordMode) {
+  for (const entry of arr) {
+    const lower = String(entry.token).toLowerCase();
+    if (!entry.suggestion && oxfordMap[lower]) {
+      entry.suggestion = oxfordMap[lower];
+    } else if (entry.suggestion) {
+      const sLower = String(entry.suggestion).toLowerCase();
+      if (oxfordMap[sLower]) entry.suggestion = oxfordMap[sLower];
+    }
+  }
+}
 
 // read existing tokens from vocab and Terms
 const existing = new Set();
@@ -352,7 +386,13 @@ const applyEditsForFile = (file, edits) => {
 };
 
 const runWhitelist = async (candidatesList) => {
-  const tokens = candidatesList.map((c) => c.token);
+  const tokens = candidatesList.map((c) => {
+    if (oxfordMode) {
+      const mapped = oxfordMap[String(c.token).toLowerCase()];
+      return mapped || c.token;
+    }
+    return c.token;
+  });
   if (tokens.length === 0) {
     console.log("No tokens to whitelist.");
     return;

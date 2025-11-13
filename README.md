@@ -135,6 +135,14 @@ To validate all subrepos centrally while preserving subrepo autonomy, the worksp
 - Root CI behaviour: `pnpm run trunk:check-all` iterates over repository folders and runs `trunk check` in each, capturing JSON artifacts in `artifacts/trunk-results/`.
 - Subrepo behaviour: Each subrepo provides its own `.trunk/trunk.yaml`. If a subrepo lacks a `.trunk` directory, the workspace runner will still run `trunk check` with default settings and fail/record findings.
 
+Tip: If you see 'unsupported linter' errors locally for `trunk` checks, run `pnpm run trunk:sync-defs` to copy the workspace standard definitions into each subrepo's `.trunk/trunk.yaml` (only when the subrepo needs the definitions locally). This avoids having to hand-edit each repo and remains reversible.
+
+Dependency placement and storage guidance
+
+- Keep shared developer tooling at the workspace root (`pnpm install` at the root) to avoid installing the same tool multiple times in each subrepo. For example, `@biomejs/biome` is a workspace-level dev-dependency. Use `pnpm -w exec biome` to run the workspace-installed Biome from a subrepo.
+- For tools used by one subrepo only (for example, Antora for documentation), prefer installing them in the subrepo where they are required or centralize them at root and make CI/workflows call into the workspace Antora binary. We added `@antora/cli` and `@antora/site-generator` to the root devDependencies so `pnpm -w exec antora` works consistently across the workspace.
+- Avoid running `pnpm install` inside each `trunk` lint definition; instead run `pnpm install` once at the job start or on the developer machine at root. Trunk definitions should invoke `pnpm -w exec` (workspace) or `pnpm -C <repo> exec` to run a binary from a specific subrepo to conserve local storage.
+
 Local commands:
 
 ```bash

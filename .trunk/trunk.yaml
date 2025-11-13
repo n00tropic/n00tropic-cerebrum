@@ -17,11 +17,12 @@ lint:
     - actionlint@1.7.8
     - bandit@1.8.6
     - biome@2.3.5
+    - isort@7.0.0
     - black@25.11.0
     - checkov@3.2.493
     - git-diff-check
     - hadolint@2.14.0
-    - isort@7.0.0
+    # isort is intentionally listed before black; keep a single isort definition
     - markdownlint@0.45.0
     - osv-scanner@2.2.4
     - oxipng@9.1.5
@@ -36,28 +37,8 @@ lint:
     - yamllint@1.37.1
     - 'vale@3.13.0'
     - markdownlint-cli2@0.18.1
-    - biome-lint
-    - antora-validate
-  definitions:
-    - name: biome-lint
-      batch: true
-      commands:
-        - name: lint
-          run: |
-            pnpm install --frozen-lockfile
-            pnpm exec biome check --reporter compact .
-          output: pass_fail
-          success_codes: [0, 1]
-    - name: antora-validate
-      batch: true
-      commands:
-        - name: lint
-          run: |
-            cd n00plicate || true
-            pnpm install --frozen-lockfile
-            pnpm exec antora --log-failure-level=error --asciidoc-sourcemap antora-playbook.ci.yml
-          output: pass_fail
-          success_codes: [0, 1]
+    # biome-lint and antora-validate are defined centrally in n00-cortex/data/trunk/base/.trunk/trunk.yaml
+  # Do not duplicate lint definitions here; they are provided in n00-cortex/data/trunk/base/.trunk/trunk.yaml
 
 actions:
   enabled:

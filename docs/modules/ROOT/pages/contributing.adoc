@@ -123,17 +123,19 @@ All documentation PRs are validated against:
 === Building the Docs
 
 [source,bash]
-----
-# Install Antora and extensions
-npm i -g @antora/CLI@latest @antora/site-generator@latest
-@antora/lunr-extension@latest
+# Install Antora and extensions (pnpm)
+corepack enable
+corepack prepare pnpm@latest --activate
+pnpm install --frozen-lockfile
+
+# Verify locally installed Antora (use workspace installation or the n00plicate repo)
+pnpm exec antora --version
 
 # Build the site
-npx antora-playbook.yml
+pnpm exec antora antora-playbook.yml
 
 # View the output
 open build/site/index.html
-----
 
 === Running Validation
 
