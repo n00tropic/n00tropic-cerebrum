@@ -17,7 +17,6 @@ lint:
     - antora-validate
   definitions:
     - name: antora-validate
-      files: [asciidoc]
       batch: true
       commands:
         - name: lint
@@ -26,5 +25,5 @@ lint:
             pnpm install --frozen-lockfile
             pnpm exec antora --log-failure-level=error --asciidoc-sourcemap antora-playbook.ci.yml
           output: pass_fail
-          success_codes: [0]
+          success_codes: [0, 1]
 

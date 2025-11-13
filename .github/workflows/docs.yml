@@ -22,12 +22,11 @@ on:
       - "antora-playbook.ci.yml"
       - "Makefile"
       - "scripts/**"
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+permissions: {}
 jobs:
   build-validate:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -107,6 +106,10 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build-validate
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
