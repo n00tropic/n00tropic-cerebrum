@@ -6,22 +6,28 @@
 
 == Overview
 
-The n00 Cerebrum documentation uses https://docs.antora.org/[Antora] to build a multi-repository documentation site. All documentation follows the https://diataxis.fr/[Diátaxis framework] for structured technical documentation.
+The n00 Cerebrum documentation uses https://docs.antora.org/[Antora] to build a
+multi-repository documentation site. All documentation follows the
+https://diataxis.fr/[Diátaxis framework] for structured technical documentation.
 
 == Diátaxis Framework
 
 Diátaxis divides documentation into four distinct modes:
 
-* **Tutorial** - Learning-oriented, greenfield walk-throughs (e.g., provisioning frontier workspaces)
-* **How-to Guide** - Task-oriented, focused jobs with clear outcomes (e.g., running ERPNext exports)
-* **Reference** - Information-oriented, exhaustive configuration, API schemas, CLI flags
-* **Explanation** - Understanding-oriented, architecture notes, ADRs, and rationale
-
-When creating or editing documentation, always classify your content according to these modes.
+* **Tutorial** - Learning-oriented, greenfield walk-throughs (e.g., provisioning
+ frontier workspaces)
+* **How-to Guide** - Task-oriented, focused jobs with clear outcomes (e.g.,
+ running ERPNext exports)
+* **Reference** - Information-oriented, exhaustive configuration, API schemas, CLI
+ flags
+* **Explanation** - Understanding-oriented, architecture notes, ADRs, and
+ rationale
+When creating or editing documentation, always classify your content according
+to these modes.
 
 == Page Requirements
 
-Every AsciiDoc page must include the following attributes in the header:
+Every asciidoc page must include the following attributes in the header:
 
 [source,asciidoc]
 ----
@@ -63,7 +69,7 @@ Documentation pages must be reviewed at least every **90 days**. Update the `:re
 * Code examples are tested
 * Technical accuracy is confirmed
 
-The CI pipeline will fail if pages have stale review dates (>90 days).
+The ci pipeline will fail if pages have stale review dates (>90 days).
 
 == Snippet Tagging
 
@@ -103,8 +109,7 @@ Factor repeated content into partials under `docs/modules/ROOT/partials/`:
 * Avoid gerunds in headings (enforced by Vale)
 * Use code blocks for commands and outputs
 * Include examples and screenshots where helpful
-
-== CI/CD Checks
+== ci/CD Checks
 
 All documentation PRs are validated against:
 
@@ -113,31 +118,21 @@ All documentation PRs are validated against:
 * **Attribute checks** - Validates presence of `:page-tags:` and `:reviewed:`
 * **DangerJS** - PR policy enforcement
 * **Antora build** - Ensures the site builds successfully
-
 == Local Development
 
 === Building the Docs
 
 [source,bash]
 ----
-# Install dependencies locally via pnpm (preferred)
-pnpm install
+# Install Antora and extensions
+npm i -g @antora/CLI@latest @antora/site-generator@latest
+@antora/lunr-extension@latest
 
-# Build the site using the workspace's local Antora binaries
-pnpm exec antora antora-playbook.yml
+# Build the site
+npx antora-playbook.yml
 
 # View the output
 open build/site/index.html
-----
-
-=== DangerJS
-
-The repository includes a `Dangerfile.ts` to enforce PR policy checks. Install and run Danger locally via pnpm:
-
-[source,bash]
-----
-pnpm add -D danger
-pnpm exec danger ci
 ----
 
 === Running Validation
@@ -147,8 +142,15 @@ pnpm exec danger ci
 # Check attributes
 node scripts/check-attrs.mjs
 
-# Run Vale (requires Vale CLI installed)
-vale docs
+# Run Vale (local) (recommended for lightweight checks):
+# Use the local style focused on n00 rules
+#
+# make setup-vale-local
+# VALE_LOCAL=1 make validate-docs
+#
+# To run the full Vale check (ci-style) with third-party styles (Google/Microsoft), sync styles first:
+# make vale-sync
+# vale docs
 
 # Check links (requires Lychee CLI installed)
 lychee --config .lychee.toml 'docs/**/*.adoc'
@@ -156,7 +158,8 @@ lychee --config .lychee.toml 'docs/**/*.adoc'
 
 == Navigation Structure
 
-Update `docs/modules/ROOT/nav.adoc` when adding new pages. Organize navigation hierarchically using Antora's xref syntax:
+Update `docs/modules/ROOT/nav.adoc` when adding new pages. Organize navigation
+hierarchically using Antora's xref syntax:
 
 [source,asciidoc]
 ----
@@ -165,7 +168,7 @@ Update `docs/modules/ROOT/nav.adoc` when adding new pages. Organize navigation h
 ** xref:tutorials/first-steps.adoc[First Steps Tutorial]
 ----
 
-== Markdown to AsciiDoc Conversion
+== Markdown to asciidoc Conversion
 
 When converting existing Markdown documentation:
 
@@ -174,8 +177,7 @@ When converting existing Markdown documentation:
 # Using kramdown-asciidoc (recommended)
 kramdoc -o docs/modules/ROOT/pages/converted.adoc original.md
 
-# Or using Pandoc
-pandoc -f markdown -t asciidoc -o converted.adoc original.md
+# Or using Pandoc -f markdown -t asciidoc -o converted.adoc original.md
 ----
 
 After conversion:
@@ -211,7 +213,6 @@ This provides three tools:
 * `search(query)` - Full-text search
 * `get_page(id)` - Retrieve page content
 * `list_tags()` - List all available tags
-
 == Questions and Support
 
 For questions about documentation:

@@ -13,10 +13,10 @@ The generated index will be saved as 'script_index.md' in the current directory.
 """
 
 import os
-import re
 import pathlib
-from typing import Dict, List, Tuple
+import re
 from collections import defaultdict
+from typing import Dict, List, Tuple
 
 # Script extensions to look for
 SCRIPT_EXTENSIONS = {

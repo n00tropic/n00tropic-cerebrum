@@ -123,9 +123,27 @@ Automation executions append telemetry to `.dev/automation/artifacts/automation/
 ## Formatter Guardrails
 
 - **Python format flow**: Every Trunk config runs `isort@7.0.0` before `black@25.x` so imports settle before layout styling. If a formatter loop appears, run `trunk fmt --filter=isort,black` or `isort . && black .` in the affected repo.
-- **isort configuration**: `n00-frontiers/.isort.cfg` pins `profile = black` and `line_length = 88`, and the setting is mirrored by the other repos via Trunk sync so Black never rewrites imports immediately after isort.
+- **isort configuration**: `n00-frontiers/.isort.cfg` pins `profile = black` and `line_length = 120`, and the setting is mirrored by the other repos via Trunk sync so Black never rewrites imports immediately after isort.
 - **Deep dive**: See `n00-school/in-dev-learnings/black-isort-conflicts.md` plus `n00-frontiers/docs/quality/formatting-style.md` for the rationale, escalation steps, and verification checklist agents should follow when formatters disagree.
 - **Automation reminder**: `trunk-upgrade.sh` (and the `python3 cli.py trunk-upgrade` helper) keep formatter versions in lockstep across every repo, so rerun it whenever `isort`/`black` ship compatibility fixes.
+- **Python linting helper**: run `pnpm run lint:python` in the workspace root to run `isort`, `black` and `ruff` checks across Python subprojects. The workspace CI now runs `pnpm run lint:python` as part of `workspace-health` to validate Python formatting and lint checks in PRs.
+
+## Trunk: Workspace-level control vs. subrepo autonomy
+
+To validate all subrepos centrally while preserving subrepo autonomy, the workspace CI runs the root helper script (`pnpm run trunk:check-all`) that executes `trunk check` in each subrepo. Each subrepo's `.trunk/trunk.yaml` still governs behaviour for developer workflows and PR-bottom checks. This avoids conflicts and ensures CI-level uniformity.
+
+- Root CI behaviour: `pnpm run trunk:check-all` iterates over repository folders and runs `trunk check` in each, capturing JSON artifacts in `artifacts/trunk-results/`.
+- Subrepo behaviour: Each subrepo provides its own `.trunk/trunk.yaml`. If a subrepo lacks a `.trunk` directory, the workspace runner will still run `trunk check` with default settings and fail/record findings.
+
+Local commands:
+
+```bash
+# Run trunk checks across each subrepo (same script CI uses):
+pnpm run trunk:check-all
+
+# Run the workspace-level Python checks (isort, black, ruff) locally:
+pnpm run lint:python
+```
 
 ## Operating Guidelines
 
