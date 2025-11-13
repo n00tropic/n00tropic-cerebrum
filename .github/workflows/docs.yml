@@ -55,7 +55,7 @@ jobs:
       - name: Vale triage artifacts
         run: pnpm run docs:vale-triage || true
       - name: Upload Vale triage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: vale-triage
           path: artifacts/vale-triage.json
@@ -79,7 +79,7 @@ jobs:
       - name: Spelling counts
         run: pnpm run docs:generate-spelling-counts || true
       - name: Upload spelling counts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: vale-spelling-counts
           path: artifacts/vale-spelling-token-counts.json

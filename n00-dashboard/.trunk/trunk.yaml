@@ -5,7 +5,7 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v1.7.3
+      ref: v1.7.4
       uri: https://github.com/trunk-io/plugins
 runtimes:
   enabled:
@@ -16,11 +16,11 @@ lint:
     - taplo@0.10.0
     - bandit@1.8.6
     - black@25.11.0
-    - checkov@3.2.492
+    - checkov@3.2.493
     - isort@7.0.0
     - markdownlint@0.45.0
     - ruff@0.14.4
-    - trufflehog@3.90.13
+    - trufflehog@3.91.0
     - git-diff-check
     - markdownlint-cli2@0.18.1
     - prettier@3.6.2
