@@ -2,8 +2,8 @@
 // Replacer: replace CLI examples like `npm install` or `npm start` in docs with pnpm equivalents
 // Safe-hits: `npm install` -> `pnpm install`, `npm start` -> `pnpm start`, `npm run` -> `pnpm run`, `npm ci` -> `pnpm install --frozen-lockfile` (or `pnpm ci` when supported), `npm test` -> `pnpm test`
 
-import fs from "node:fs";
-import path from "node:path";
+import fs from "fs";
+import path from "path";
 
 const argv = process.argv.slice(2);
 const options = {
@@ -66,7 +66,7 @@ function processFile(filePath) {
   replacePatterns.forEach(({ regex, replace }) => {
     // Only replace if the line doesn't already contain a pnpm equivalent
     const lines = patched.split("\n");
-    const newLines = lines.map((line) => {
+    let newLines = lines.map((line) => {
       if (line.includes("pnpm")) return line;
       if (regex.test(line)) return line.replace(regex, replace);
       return line;
@@ -81,7 +81,7 @@ function processFile(filePath) {
     if (options.dryRun) {
       return { filePath, before: content, after: patched };
     } else if (options.apply) {
-      if (options.backup) fs.writeFileSync(`${filePath}.bak`, content, "utf8");
+      if (options.backup) fs.writeFileSync(filePath + ".bak", content, "utf8");
       fs.writeFileSync(filePath, patched, "utf8");
       return { filePath, applied: true };
     }
@@ -94,16 +94,12 @@ function walk(dir) {
   const list = fs.readdirSync(dir);
   // Avoid recursion loops and skip common big dirs
   if (dir.includes("/.git") || dir.includes("/node_modules")) return results;
-  list.forEach((file) => {
+  list.forEach(function (file) {
     const full = path.join(dir, file);
     const stat = fs.statSync(full);
-    if (stat?.isDirectory()) {
-      if (shouldExclude(full)) {
-        return;
-      }
-      if (stat.isSymbolicLink()) {
-        return;
-      } // skip symlink dirs to avoid cycles
+    if (stat && stat.isDirectory()) {
+      if (shouldExclude(full)) return;
+      if (stat.isSymbolicLink()) return; // skip symlink dirs to avoid cycles
       results.push(...walk(full));
     } else {
       results.push(full);
@@ -112,7 +108,7 @@ function walk(dir) {
   return results;
 }
 
-const results = [];
+let results = [];
 for (const dir of options.dirs) {
   if (!fs.existsSync(dir)) continue;
   const files = walk(dir);
@@ -139,6 +135,4 @@ if (!options.apply) {
 }
 
 console.log("Applied to files:");
-for (const r of results) {
-  console.log(" -", r.filePath);
-}
+results.forEach((r) => console.log(" -", r.filePath));
