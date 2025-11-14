@@ -4,7 +4,7 @@
 
 This is a consolidated spec merging the core end-to-end (E2E) workflow with
 Pro-tier optimizations. It's designed for projects in Python, TypeScript, and
-other popular languages/tools (e.g., React, Node.js, Django, AWS). The workflow
+other popular languages/Tools (for example, React, Node.js, Django, AWS). The workflow
 leverages each AI's strengths, assuming Pro tiers for unlimited access, advanced
 features, and higher limits. This hybrid approach boosts productivity by 2-3x,
 with cleaner code and fewer errors.
@@ -12,7 +12,7 @@ with cleaner code and fewer errors.
 == AI Strengths
 
 * *Grok (xAI)*: High-level reasoning, large context (up to 512k tokens in Grok 4
- for mega-repos), real-time tools (web/X search, code sandbox), and fast
+ for mega-repos), real-time Tools (web/X search, code sandbox), and fast
  processing (Grok Code Fast 1 at 92 tokens/sec). Ideal for planning,
  architecture, debugging, and STEM tasks. Pro perks: Grok 4 access, "Heavy" mode
  for parallel reasoning on complex refactors.
@@ -24,7 +24,7 @@ with cleaner code and fewer errors.
  https://docs.github.com/en/copilot/using-github-copilot/coding-agent/asking-copilot-to-create-a-pull-request[10]
 * *OpenAI Codex*: Natural language-to-code translation, refactoring, and bug
  fixing (75%+ accuracy). Strong for scaffolding and abstract strategies. Pro
- perks: Higher API quotas (e.g., GPT-4o fine-tunes) for batch tasks.
+ perks: Higher API quotas (for example, GPT-4o fine-tunes) for batch tasks.
 * *Google Gemini (2.5 Pro / 2.5 Flash / Flash‑Lite)*: Very long‑context endpoints
  (up to ~1M tokens on supported endpoints) and strong multimodal reasoning;
  excellent latency/throughput with Flash/Flash‑Lite; tight Vertex AI integration
@@ -32,7 +32,7 @@ with cleaner code and fewer errors.
  https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models[1]
 * *Anthropic Claude (Opus / latest Sonnet)*: Reliable high‑depth reasoning, large
  context, and robust *computer‑use* agents for desktop/browser automation. Strong
- at repo‑wide analysis and test generation.
+ at Repo‑wide analysis and test generation.
  https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool[3]
 * *Meta Llama 3.x (open‑weights)*: Open, self‑hostable models with ~128K context
  support (variant‑dependent); good coding ability and privacy‑preserving on‑prem
@@ -47,7 +47,7 @@ with cleaner code and fewer errors.
 * *DeepSeek Coder V2 (open)*: Open Mixture‑of‑Experts code models with 128K
  context; strong code generation/repair; useful for local, cost‑efficient batch
  refactors. https://github.com/deepseek-ai/DeepSeek-Coder-V2[8]
-Free tiers work for light use, but Pro enables seamless scaling (e.g., no query
+Free tiers work for light use, but Pro enables seamless scaling (for example, no query
 limits, Codex API batches at $0.02/1k tokens).
 
 == Implementation Scripts
@@ -73,15 +73,15 @@ individual phases or the complete workflow. All scripts generate artifacts in
 == Workflow Phases
 
 Total cycle time: 20-50% faster than solo coding. Use VS Code extensions to
-query all AIs from one IDE (e.g., Grok Code Fast in Copilot preview for free
+query all AIs from one IDE (for example, Grok Code Fast in Copilot preview for free
 speed boosts). Pipe outputs via copy-paste or scripts.
 
 === 1. Planning & Research (Led by Grok: 10-20% of workflow)
 
 * *Why Grok?* Handles ambiguity, research, and synthesis best.
-* *Steps:* ** Describe project (e.g., "Plan a TypeScript React app with Python
+* *Steps:* ** Describe project (for example, "Plan a TypeScript React app with Python
  FastAPI backend for auth and real-time chat"). ** Grok researches
- dependencies/trends (e.g., web/X search for "2025 TypeScript auth libraries").
+ dependencies/trends (for example, web/X search for "2025 TypeScript auth libraries").
  ** Output: High-level spec, stack recommendations, pitfalls.
 * *Pro Enhancements:* Use Grok 4's expanded context for detailed plans; enable
  "Heavy" mode for multi-faceted analysis.
@@ -91,7 +91,7 @@ speed boosts). Pipe outputs via copy-paste or scripts.
 === 2. Architecture & Design (Led by Grok + Codex: 15-25%)
 
 * *Why this split?* Grok for diagrams/reasoning; Codex for code skeletons.
-* *Steps:* ** Grok generates architecture (e.g., "Draw Mermaid diagram for
+* *Steps:* ** Grok generates architecture (for example, "Draw Mermaid diagram for
  microservices in Python/TS"). ** Feed to Codex (API/Playground): "Generate
  TypeScript interfaces and Python models from spec." ** Iterate: Paste back to
  Grok for validation.
@@ -103,10 +103,10 @@ speed boosts). Pipe outputs via copy-paste or scripts.
 
 * *Why Copilot?* Seamless IDE assistance without switching.
 * *Steps:* ** Import stubs into VS Code/JetBrains with Copilot. ** Autocomplete
- functions/imports (e.g., Python pandas; TS React hooks). ** Use Copilot Chat:
+ functions/imports (for example, Python pandas; TS React hooks). ** Use Copilot Chat:
  "@copilot implement auth middleware in TypeScript." ** For blocks, query Codex:
  "Refactor Python class for concurrency."
-* *Pro Enhancements:* Copilot Workspace auto-generates features from issues (e.g.,
+* *Pro Enhancements:* Copilot Workspace auto-generates features from issues (for example,
  "@workspace build TS auth flow").
 * *Involve Grok:* For hallucinations, paste snippets for second opinions.
 * *Fit for Python/TS:* Adapts to codebase patterns.
@@ -115,21 +115,21 @@ speed boosts). Pipe outputs via copy-paste or scripts.
 
 * *Why this split?* Grok for repo-wide debugging; Codex for strategic fixes.
 * *Steps:* ** Paste errors to Grok: "Debug TS loop; run in sandbox." ** Grok
- analyzes/executes tests (e.g., Python units). ** Use Codex: "Fix SQL injection
+ analyzes/executes tests (for example, Python units). ** Use Codex: "Fix SQL injection
  in Python; propose diff." ** Copilot for inline patches.
-* *Pro Enhancements:* Grok 4's large context for full-repo debugs; Codex
- batch-refactors with custom instructions (e.g., "Optimize Python for AWS
+* *Pro Enhancements:* Grok 4's large context for full-Repo debugs; Codex
+ batch-refactors with custom instructions (for example, "Optimize Python for AWS
  Lambda").
 * *Fit for Python/TS:* Grok for math bugs; Codex for backend logic.
-* *Output:* Bug-free, optimized code (e.g., 20% faster Python runtime).
+* *Output:* Bug-free, optimized code (for example, 20% faster Python runtime).
 === 5. Review, Deployment & Iteration (Led by Copilot: 5-10%)
 
 * *Why Copilot?* Integrated with GitHub for PRs/ci.
-* *Steps:* ** Push code; Copilot auto-generates PRs/reviews. ** For issues (e.g.,
+* *Steps:* ** Push code; Copilot auto-generates PRs/reviews. ** For issues (for example,
  TS builds), query Grok/Codex. ** Post-deploy: Grok monitors X/user feedback.
 * *Pro Enhancements:* Copilot Workspace for end-to-end auto-PRs; Grok 4 for
  real-time trend analysis.
-* *Fit for Python/TS:* Handles ci YAML; researches cloud tools.
+* *Fit for Python/TS:* Handles ci YAML; researches cloud Tools.
 == Phase Summary Table
 
 |=== | Phase | Primary AI | Backup AIs | Time Savings | Example in Python/TS
@@ -168,7 +168,7 @@ https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool[3
 Gemini https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models[1] |
 DeepSeek Coder V2 https://github.com/deepseek-ai/DeepSeek-Coder-V2[8]; Codestral
 https://docs.mistral.ai/models/codestral-25-01[5] | 35% | Sandbox Python tests;
-refactor TS bugs. | Grok 4 full‑repo debugs; Claude computer‑use; Gemini log
+refactor TS bugs. | Grok 4 full‑Repo debugs; Claude computer‑use; Gemini log
 summarisation.
 
 | Review/Deployment | Copilot
@@ -184,7 +184,7 @@ summaries; Vertex evals/quotas. |===
 == Overall Tips
 
 * *Integration:* Query all from IDE; use scripts for piping.
-* *Cost/Scaling:* Pro tiers minimize interruptions (e.g., unlimited Grok 4
+* *Cost/Scaling:* Pro tiers minimize interruptions (for example, unlimited Grok 4
  queries, Codex API batches at $0.02/1k tokens).
 * *Switching:* Rotate for stuck tasks--Copilot for speed, Grok for depth, Codex
  for precision.
@@ -222,13 +222,13 @@ strengths per phase and keep a local/open path ready for privacy‑sensitive cod
  propose experiments. ** *2:* Validate architecture for invariants and threat
  models; generate acceptance criteria. ** *3:* High‑quality refactors; translate
  code between languages; generate tests that actually run. ** *4:* Excellent at
- repo‑wide debugging and systematic failure analysis; pairs well with ci logs. **
+ Repo‑wide debugging and systematic failure analysis; pairs well with ci logs. **
  *5:* Draft precise PR reviews; good at change‑risk notes and rollback plans.
 * *Notes:* Use *Opus* (or latest Sonnet w/ "`computer use`") for heavy reasoning
  and interactive tool control.
 === Meta Llama 3.x (open‑weights family)
 
-* *Strengths:* Open models (e.g., Llama 3.1/3.2) with strong coding ability, long
+* *Strengths:* Open models (for example, Llama 3.1/3.2) with strong coding ability, long
  contexts (up to ~128k+ depending on variant), and on‑prem/air‑gapped
  deployability.
 * *Where it shines:* ** *1--2:* Private reading of design docs/RFCs that cannot
@@ -236,7 +236,7 @@ strengths per phase and keep a local/open path ready for privacy‑sensitive cod
  prohibits cloud providers. ** *4--5:* On‑prem agents for log triage and internal
  PR review.
 * *Notes:* Pair with retrieval (FAISS/pgvector or corporate search) and a
- lightweight guardrail (e.g., Llama Guard) for production.
+ lightweight guardrail (for example, Llama Guard) for production.
 === Mistral Codestral (latest 25.08 series)
 
 * *Strengths:* Code‑specialised models optimised for *fill‑in‑the‑middle (FIM)*
@@ -253,7 +253,7 @@ strengths per phase and keep a local/open path ready for privacy‑sensitive cod
  a strong retrieval stack (Embed/Rerank families).
 * *Where it shines:* ** *1:* Evidence‑gated research with citations from your
  corpora. ** *2:* Generate/open‑refine API contracts from domain docs. ** *3--4:*
- Structured agents that call tools (issue trackers, build systems) and write
+ Structured agents that call Tools (issue trackers, build systems) and write
  tests. ** *5:* Policy‑constrained PR summaries and release notes.
 * *Notes:* Good vendor if you need on‑prem or strict data‑isolation options.
 === DeepSeek Coder V2 (open)
@@ -306,7 +306,7 @@ TIP: keep each model behind a tiny interface ("planner," "coder," "debugger,"
 === Calibration & Caveats
 
 * Specs (contexts, pricing, and features) change frequently. Keep a small "`model
- registry`" in your repo with live checks and smoke tests per provider.
+ registry`" in your Repo with live checks and smoke tests per provider.
 * Avoid hard‑coding vendors in business logic; dependency‑inject a *ModelRole* to
  keep swaps cheap.
 === References
