@@ -114,17 +114,31 @@ Factor repeated content into partials under `docs/modules/ROOT/partials/`:
 
 All documentation PRs are validated against:
 
-* **Vale** - Prose linting for style and terminology
-* **Lychee** - Link checking
-* **Attribute checks** - Validates presence of `:page-tags:` and `:reviewed:`
-* **DangerJS** - PR policy enforcement
-* **Antora build** - Ensures the site builds successfully
+|===
+| Check | Purpose
 
-== Local Development
+| **Vale**
+| Prose linting for style and terminology
 
-=== Building the Docs
+| **Lychee**
+| Link checking
+
+| **Attribute checks**
+| Validates presence of `:page-tags:` and `:reviewed:`
+
+| **DangerJS**
+| PR policy enforcement
+
+| **Antora build**
+| Ensures the site builds successfully
+|===
+
+=== Local Development
+
+==== Building the Docs
 
 [source,bash]
+----
 # Install Antora and extensions (pnpm)
 corepack enable
 corepack prepare pnpm@latest --activate
@@ -138,8 +152,9 @@ pnpm exec antora antora-playbook.yml
 
 # View the output
 open build/site/index.html
+----
 
-=== Running Validation
+==== Running Validation
 
 [source,bash]
 ----
