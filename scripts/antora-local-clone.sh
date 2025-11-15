@@ -11,6 +11,7 @@ TOKEN=${GITHUB_TOKEN-}
 UI_PATH=""
 REMOTE_UI=""
 COMPONENTS=(n00tropic-cerebrum n00-frontiers n00-cortex n00t)
+USE_WORKSPACE=false
 
 usage() {
 	cat <<EOF
@@ -25,6 +26,7 @@ Options:
   --ui             Path to a local ui-bundle.zip (copied to tmp dir)
   --remote-ui      URL to a remote ui-bundle.zip to download to tmp dir
   --stub-ui        Generate and use a default minimal UI bundle
+  --use-workspace  Clone components from the current workspace instead of GitHub remotes
 EOF
 }
 
@@ -59,6 +61,10 @@ while [[ $# -gt 0 ]]; do
 		STUB_UI=true
 		shift 1
 		;;
+	--use-workspace)
+		USE_WORKSPACE=true
+		shift 1
+		;;
 	--help)
 		usage
 		exit 0
@@ -77,14 +83,28 @@ echo "Preparing local Antora environment in $TMP_DIR"
 
 clone_repo() {
 	local repo="$1"
-	local url="https://github.com/IAmJonoBo/${repo}.git"
 	local target="$TMP_DIR/$repo"
-	echo "Cloning $url -> $target (depth: $DEPTH)"
-	if [[ -n $TOKEN ]]; then
-		# Use Personal Access Token if provided for private repos
-		url="https://x-access-token:${TOKEN}@github.com/IAmJonoBo/${repo}.git"
+	if [[ ${USE_WORKSPACE} == true ]]; then
+		local src
+		if [[ ${repo} == "n00tropic-cerebrum" ]]; then
+			src="${ROOT_DIR}"
+		else
+			src="${ROOT_DIR}/${repo}"
+		fi
+		if [[ ! -d ${src} ]]; then
+			echo "Workspace repo ${src} not found; cannot clone locally"
+			return 1
+		fi
+		echo "Cloning local workspace ${src} -> ${target}"
+		git clone --local --no-hardlinks "${src}" "${target}"
+	else
+		local url="https://github.com/IAmJonoBo/${repo}.git"
+		echo "Cloning $url -> $target (depth: $DEPTH)"
+		if [[ -n $TOKEN ]]; then
+			url="https://x-access-token:${TOKEN}@github.com/IAmJonoBo/${repo}.git"
+		fi
+		git clone --depth "$DEPTH" "$url" "$target"
 	fi
-	git clone --depth "$DEPTH" "$url" "$target"
 }
 
 for repo in "${COMPONENTS[@]}"; do
