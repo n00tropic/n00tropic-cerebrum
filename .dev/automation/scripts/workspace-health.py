@@ -7,11 +7,17 @@ import argparse
 import json
 import os
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Tuple
 
 ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))
+
+from observability import initialize_tracing
+
 DEFAULT_ARTIFACT_PATH = ROOT / "artifacts" / "workspace-health.json"
 
 
@@ -63,7 +69,9 @@ class RepoStatus:
 
 
 def run_git(args: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(["git", *args], cwd=cwd, text=True, capture_output=True, check=False)
+    return subprocess.run(
+        ["git", *args], cwd=cwd, text=True, capture_output=True, check=False
+    )
 
 
 def parse_status(output: str) -> Dict[str, object]:
@@ -142,7 +150,9 @@ def parse_gitmodules(path: Path) -> List[Dict[str, str]]:
 
 
 def _run_command(cmd: Sequence[str], cwd: Path) -> List[str]:
-    completed = subprocess.run(cmd, cwd=cwd, text=True, capture_output=True, check=False)
+    completed = subprocess.run(
+        cmd, cwd=cwd, text=True, capture_output=True, check=False
+    )
     logs: List[str] = []
     if completed.stdout:
         logs.append(completed.stdout.strip())
@@ -156,7 +166,9 @@ def _run_command(cmd: Sequence[str], cwd: Path) -> List[str]:
 def sync_submodules(root: Path) -> List[str]:
     logs: List[str] = []
     logs.extend(_run_command(["git", "submodule", "sync", "--recursive"], root))
-    logs.extend(_run_command(["git", "submodule", "update", "--init", "--recursive"], root))
+    logs.extend(
+        _run_command(["git", "submodule", "update", "--init", "--recursive"], root)
+    )
     return logs
 
 
@@ -174,14 +186,23 @@ def run_meta_check(root: Path) -> List[str]:
     return _run_command(["bash", str(script)], root)
 
 
-def run_repo_commands(entries: Sequence[str], modules: List[Dict[str, str]]) -> List[str]:
+def run_repo_commands(
+    entries: Sequence[str], modules: List[Dict[str, str]]
+) -> List[str]:
     logs: List[str] = []
     for entry in entries:
         if ":" not in entry:
             logs.append(f"Invalid repo-cmd '{entry}'. Use repo:command format.")
             continue
         repo_name, raw = entry.split(":", 1)
-        repo_path = next((ROOT / mod.get("path", mod["name"]) for mod in modules if mod.get("name") == repo_name), None)
+        repo_path = next(
+            (
+                ROOT / mod.get("path", mod["name"])
+                for mod in modules
+                if mod.get("name") == repo_name
+            ),
+            None,
+        )
         if repo_path is None or not repo_path.exists():
             logs.append(f"Repo '{repo_name}' not found for repo-cmd")
             continue
@@ -212,7 +233,9 @@ def build_report(args: argparse.Namespace) -> Dict[str, object]:
     return report
 
 
-def snapshot_workspace(modules: List[Dict[str, str]]) -> Tuple[RepoStatus, List[RepoStatus]]:
+def snapshot_workspace(
+    modules: List[Dict[str, str]],
+) -> Tuple[RepoStatus, List[RepoStatus]]:
     root_status = collect_repo_status("workspace", ROOT)
     submodule_statuses: List[RepoStatus] = []
     for module in modules:
@@ -229,7 +252,9 @@ def clean_untracked_entries(repos: Iterable[RepoStatus]) -> List[str]:
         if repo.tracked_lines or not repo.untracked_lines:
             continue
         ran_action = True
-        logs.append(f"[clean] git clean -fd in {repo.name} ({len(repo.untracked_lines)} entries)")
+        logs.append(
+            f"[clean] git clean -fd in {repo.name} ({len(repo.untracked_lines)} entries)"
+        )
         logs.extend(_run_command(["git", "clean", "-fd"], repo.path))
     if not ran_action:
         return ["[clean] no safe untracked entries to remove"]
@@ -237,7 +262,9 @@ def clean_untracked_entries(repos: Iterable[RepoStatus]) -> List[str]:
 
 
 def apply_payload_overrides(args: argparse.Namespace) -> argparse.Namespace:
-    raw_payload = os.environ.get("CAPABILITY_PAYLOAD") or os.environ.get("CAPABILITY_INPUT")
+    raw_payload = os.environ.get("CAPABILITY_PAYLOAD") or os.environ.get(
+        "CAPABILITY_INPUT"
+    )
     if not raw_payload:
         return args
     try:
@@ -276,7 +303,9 @@ def publish_json_artifact(payload: Dict[str, object], args: argparse.Namespace) 
     if destination.is_dir():
         destination = destination / "workspace-health.json"
     destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    destination.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def emit(report: Dict[str, object], args: argparse.Namespace) -> int:
@@ -288,7 +317,9 @@ def emit(report: Dict[str, object], args: argparse.Namespace) -> int:
         if repo.tracked_lines or repo.untracked_lines or repo.ahead or repo.behind
     ]
 
-    print(f"workspace: {root_status.summary()} (branch {root_status.branch}, HEAD {root_status.head})")
+    print(
+        f"workspace: {root_status.summary()} (branch {root_status.branch}, HEAD {root_status.head})"
+    )
     if root_status.tracked_lines:
         print("  tracked changes:")
         for line in root_status.tracked_lines[:10]:
@@ -304,7 +335,9 @@ def emit(report: Dict[str, object], args: argparse.Namespace) -> int:
     if dirty_subs:
         print(f"submodules needing attention: {len(dirty_subs)}/{len(subs)}")
         for repo in dirty_subs:
-            print(f"- {repo.name}: {repo.summary()} (branch {repo.branch}, HEAD {repo.head})")
+            print(
+                f"- {repo.name}: {repo.summary()} (branch {repo.branch}, HEAD {repo.head})"
+            )
             if repo.tracked_lines:
                 print("    tracked:")
                 for line in repo.tracked_lines[:3]:
@@ -333,7 +366,10 @@ def emit(report: Dict[str, object], args: argparse.Namespace) -> int:
     strict_subs = args.strict_submodules or args.strict
     exit_code = 0
     if strict_root and (
-        root_status.tracked_lines or root_status.untracked_lines or root_status.ahead or root_status.behind
+        root_status.tracked_lines
+        or root_status.untracked_lines
+        or root_status.ahead
+        or root_status.behind
     ):
         exit_code = 1
     if strict_subs and dirty_subs:
@@ -342,20 +378,69 @@ def emit(report: Dict[str, object], args: argparse.Namespace) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Workspace health checker for the federated polyrepo.")
-    parser.add_argument("--json", action="store_true", help="Emit JSON payload after human summary.")
-    parser.add_argument("--sync-submodules", action="store_true", help="Sync & init submodules before reporting.")
-    parser.add_argument("--sync-trunk", action="store_true", help="Run sync-trunk.py --pull before reporting.")
-    parser.add_argument("--run-meta-check", action="store_true", help="Invoke meta-check automation before reporting.")
-    parser.add_argument("--repo-cmd", action="append", default=[], help="Run custom command inside a repo (format repo:command). May repeat.")
-    parser.add_argument("--strict", action="store_true", help="Exit non-zero when root/submodules are dirty or diverged.")
-    parser.add_argument("--strict-root", action="store_true", help="Exit non-zero when workspace root is dirty or diverged.")
-    parser.add_argument("--strict-submodules", action="store_true", help="Exit non-zero when any submodule is dirty or diverged.")
-    parser.add_argument("--fix-all", action="store_true", help="Run all helper hooks (submodule + trunk sync) before reporting.")
+    initialize_tracing("workspace-health")
+    parser = argparse.ArgumentParser(
+        description="Workspace health checker for the federated polyrepo."
+    )
+    parser.add_argument(
+        "--json", action="store_true", help="Emit JSON payload after human summary."
+    )
+    parser.add_argument(
+        "--sync-submodules",
+        action="store_true",
+        help="Sync & init submodules before reporting.",
+    )
+    parser.add_argument(
+        "--sync-trunk",
+        action="store_true",
+        help="Run sync-trunk.py --pull before reporting.",
+    )
+    parser.add_argument(
+        "--run-meta-check",
+        action="store_true",
+        help="Invoke meta-check automation before reporting.",
+    )
+    parser.add_argument(
+        "--repo-cmd",
+        action="append",
+        default=[],
+        help="Run custom command inside a repo (format repo:command). May repeat.",
+    )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit non-zero when root/submodules are dirty or diverged.",
+    )
+    parser.add_argument(
+        "--strict-root",
+        action="store_true",
+        help="Exit non-zero when workspace root is dirty or diverged.",
+    )
+    parser.add_argument(
+        "--strict-submodules",
+        action="store_true",
+        help="Exit non-zero when any submodule is dirty or diverged.",
+    )
+    parser.add_argument(
+        "--fix-all",
+        action="store_true",
+        help="Run all helper hooks (submodule + trunk sync) before reporting.",
+    )
     parser.add_argument("--autofix", action="store_true", help=argparse.SUPPRESS)
-    parser.add_argument("--clean-untracked", action="store_true", help="Run git clean -fd for repos that only have untracked files.")
-    parser.add_argument("--json-path", help="Write the JSON payload to a specific path (defaults to artifacts when --publish-artifact is set).")
-    parser.add_argument("--publish-artifact", action="store_true", help="Persist workspace-health.json under artifacts/ for AI/agent consumers.")
+    parser.add_argument(
+        "--clean-untracked",
+        action="store_true",
+        help="Run git clean -fd for repos that only have untracked files.",
+    )
+    parser.add_argument(
+        "--json-path",
+        help="Write the JSON payload to a specific path (defaults to artifacts when --publish-artifact is set).",
+    )
+    parser.add_argument(
+        "--publish-artifact",
+        action="store_true",
+        help="Persist workspace-health.json under artifacts/ for AI/agent consumers.",
+    )
     args = parser.parse_args()
     args = apply_payload_overrides(args)
     if args.autofix:

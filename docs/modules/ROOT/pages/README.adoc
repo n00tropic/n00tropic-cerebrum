@@ -152,9 +152,10 @@ totals, overdue reviews, and integration gaps for planning.
 | `project-control-panel.sh` | Builds `n00-horizons/docs/control-panel.md` so
 planning decks link runbooks, radar output, and preflights.
 
-| `scripts/erpnext-run.sh` | Run-and-gun ERPNext dev stack: bootstraps bench,
-verifies MySQL/Redis, launches browser, logs telemetry, and triggers
-PM/telemetry exports.
+| `scripts/erpnext-run.sh` | Legacy bench shim kept for compatibility; reads
+pins from `n00tropic_HQ/12-Platform-Ops/erpnext-docker/.env`, verifies
+MySQL/Redis, launches the ERPNext UI, logs telemetry, and runs PM/telemetry
+exports once the Docker-managed stack is up.
 
 | `scripts/docker-sync.mjs` | Pulls the latest Penpot + ERPNext docker images,
 updates compose pins, and records the outcome under

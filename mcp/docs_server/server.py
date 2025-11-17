@@ -7,6 +7,7 @@ Provides read-only access to n00 Cerebrum documentation via MCP tools.
 
 import json
 import re
+import sys
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable
@@ -21,6 +22,12 @@ mcp = FastMCP("n00-docs")
 
 # Paths
 REPO_ROOT = Path(__file__).parent.parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.append(str(REPO_ROOT))
+
+from observability import initialize_tracing
+
+initialize_tracing("n00-docs-mcp")
 IGNORE_PARTS = {".git", "node_modules", "build", "vendor", "dist", "tmp", "artifacts"}
 DOCS_ROOT = REPO_ROOT / "docs"
 BUILD_SITE = REPO_ROOT / "build" / "site"
