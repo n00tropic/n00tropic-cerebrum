@@ -1,5 +1,6 @@
 packages:
   - "n00-cortex/**"
+  - "n00-cortex/mcp-server"
   - "n00-dashboard/**"
   - "n00-frontiers/**"
   - "!n00-frontiers/examples/**"
@@ -9,6 +10,7 @@ packages:
   - "n00plicate/**"
   - "n00t/**"
   - "n00tropic/**"
+  - "n00tropic/.dev/automation/mcp-server"
   - "n00tropic-cerebrum/**"
   - "n00tropic_HQ/**"
   - "n00clear-fusion/**"

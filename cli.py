@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 from typing import Iterable, List, Optional, Tuple
 
+from observability import initialize_tracing
+
 WORKSPACE_ROOT = Path(__file__).resolve().parent
 ORG_ROOT = WORKSPACE_ROOT.parent
 SCRIPTS_ROOT = ORG_ROOT / ".dev" / "automation" / "scripts"
@@ -121,13 +123,16 @@ def ensure_repo_remote(repo: str, path: Path, apply_changes: bool) -> None:
     if not path.exists():
         print(f"[remotes] {repo}: path missing ({path})")
         return
-    is_repo = subprocess.run(
-        ["git", "rev-parse", "--is-inside-work-tree"],
-        cwd=path,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        check=False,
-    ).returncode == 0
+    is_repo = (
+        subprocess.run(
+            ["git", "rev-parse", "--is-inside-work-tree"],
+            cwd=path,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        ).returncode
+        == 0
+    )
     if not is_repo:
         print(f"[remotes] {repo}: not a git repository, skipping")
         return
@@ -177,7 +182,9 @@ def run_trunk_upgrade(targets: Optional[Iterable[str]]) -> None:
         resolved.append(canonical)
 
     if not resolved:
-        print("[trunk] No matching repositories resolved; nothing to do.", file=sys.stderr)
+        print(
+            "[trunk] No matching repositories resolved; nothing to do.", file=sys.stderr
+        )
         return
 
     args: List[str] = []
@@ -187,6 +194,8 @@ def run_trunk_upgrade(targets: Optional[Iterable[str]]) -> None:
 
 
 def main() -> int:
+    # Best-effort OTLP tracing so automation runs show up in the shared collector.
+    initialize_tracing("n00tropic-workspace-cli")
     parser = argparse.ArgumentParser(description="n00tropic cerebrum orchestrator")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -195,42 +204,77 @@ def main() -> int:
     preflight_parser = subparsers.add_parser(
         "preflight", help="Run batch preflight across registry and/or target docs."
     )
-    preflight_parser.add_argument("--paths", nargs="*", default=[], help="Specific metadata paths to include.")
     preflight_parser.add_argument(
-        "--include-registry", action="store_true", help="Include every registry-sourced document."
+        "--paths", nargs="*", default=[], help="Specific metadata paths to include."
+    )
+    preflight_parser.add_argument(
+        "--include-registry",
+        action="store_true",
+        help="Include every registry-sourced document.",
     )
 
-    subparsers.add_parser("control-panel", help="Regenerate the control panel snapshot.")
+    subparsers.add_parser(
+        "control-panel", help="Regenerate the control panel snapshot."
+    )
 
     autofix_parser = subparsers.add_parser(
         "autofix-links", help="Repair metadata link blocks (default dry-run)."
     )
     autofix_parser.add_argument(
-        "--path", dest="path_list", action="append", default=[], help="Metadata document to autofix."
+        "--path",
+        dest="path_list",
+        action="append",
+        default=[],
+        help="Metadata document to autofix.",
     )
-    autofix_parser.add_argument("--all", action="store_true", help="Run across all known documents.")
-    autofix_parser.add_argument("--apply", action="store_true", help="Persist fixes to disk.")
+    autofix_parser.add_argument(
+        "--all", action="store_true", help="Run across all known documents."
+    )
+    autofix_parser.add_argument(
+        "--apply", action="store_true", help="Persist fixes to disk."
+    )
 
     for name in ("capture", "sync-github", "sync-erpnext"):
-        cmd_parser = subparsers.add_parser(name, help=f"{name.replace('-', ' ').title()} a metadata document.")
-        cmd_parser.add_argument("--path", required=True, help="Path to the metadata-bearing Markdown file.")
+        cmd_parser = subparsers.add_parser(
+            name, help=f"{name.replace('-', ' ').title()} a metadata document."
+        )
+        cmd_parser.add_argument(
+            "--path", required=True, help="Path to the metadata-bearing Markdown file."
+        )
 
-    doctor_parser = subparsers.add_parser("doctor", help="Run workspace git doctor checks.")
-    doctor_parser.add_argument("--strict", action="store_true", help="Fail on advisory findings.")
+    doctor_parser = subparsers.add_parser(
+        "doctor", help="Run workspace git doctor checks."
+    )
+    doctor_parser.add_argument(
+        "--strict", action="store_true", help="Fail on advisory findings."
+    )
 
-    upgrade_parser = subparsers.add_parser("upgrade-tools", help="Check for latest tool versions.")
-    upgrade_parser.add_argument("--apply", action="store_true", help="Apply suggested upgrades where possible.")
+    upgrade_parser = subparsers.add_parser(
+        "upgrade-tools", help="Check for latest tool versions."
+    )
+    upgrade_parser.add_argument(
+        "--apply", action="store_true", help="Apply suggested upgrades where possible."
+    )
 
-    subparsers.add_parser("status", help="Show git status for the workspace and key subrepos.")
+    subparsers.add_parser(
+        "status", help="Show git status for the workspace and key subrepos."
+    )
 
-    manifest_parser = subparsers.add_parser("manifest", help="Pretty-print an artefact JSON/manifest.")
+    manifest_parser = subparsers.add_parser(
+        "manifest", help="Pretty-print an artefact JSON/manifest."
+    )
     manifest_parser.add_argument("path", help="Path to the JSON file.")
 
-    caps_parser = subparsers.add_parser("capabilities", help="List or inspect n00t capabilities.")
-    caps_parser.add_argument("--id", help="Show the full manifest entry for a specific capability.")
+    caps_parser = subparsers.add_parser(
+        "capabilities", help="List or inspect n00t capabilities."
+    )
+    caps_parser.add_argument(
+        "--id", help="Show the full manifest entry for a specific capability."
+    )
 
     trunk_parser = subparsers.add_parser(
-        "trunk-upgrade", help="Run `trunk upgrade` inside every repo with Trunk configuration."
+        "trunk-upgrade",
+        help="Run `trunk upgrade` inside every repo with Trunk configuration.",
     )
     trunk_parser.add_argument(
         "--repos",
@@ -254,7 +298,8 @@ def main() -> int:
     )
 
     remote_parser = subparsers.add_parser(
-        "remotes", help="Verify that each repo has a remote alias that matches its directory name."
+        "remotes",
+        help="Verify that each repo has a remote alias that matches its directory name.",
     )
     remote_parser.add_argument(
         "--repos",
