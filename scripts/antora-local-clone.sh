@@ -3,10 +3,11 @@ set -euo pipefail
 
 # antora-local-clone.sh
 # CLI: --depth <n> (git clone depth), --no-cleanup (keep temp dir), --token <PAT>, --components "csv"
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" || {
+SCRIPT_PARENT="$(dirname "${BASH_SOURCE[0]}")/.."
+if ! ROOT_DIR="$(cd "${SCRIPT_PARENT}" && pwd)"; then
 	echo "Unable to determine repository root"
 	exit 1
-}
+fi
 TMP_DIR="/tmp/antora-dev-$(whoami)-$(date +%s)"
 DEPTH=1
 KEEP=false
