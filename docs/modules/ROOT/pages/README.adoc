@@ -2,7 +2,7 @@
 = N00tropic cerebrum workspace
 // vale Google.Headings = YES
 :page-tags: diataxis:explanation, domain:platform, audience:contrib, stability:beta
-:reviewed: 2025-11-11
+:reviewed: 2025-11-18
 
 The Cerebrum workspace stitches together the repositories that power n00tropic's
 platform: changelog automation, documentation, agent workflows, training
@@ -12,13 +12,19 @@ alignment.
 
 == Ecosystem map
 
-[mermaid] … graph TD cortex["n00-cortex\nSchemas & Docs"] -->
-frontiers["n00-frontiers\nTemplates, CLI, Renderers"] cortex -->
-n00t_node["n00t\nAgent & MCP surface"] n00t_node --> frontiers -->
-n00plicate_node["n00plicate\nPolyglot consumer"] frontiers --> docs_repo["1. Cerebrum
-Docs\nCross-repo ADRs"] n00tropic_ops["n00tropic\nOperational playbooks"] --> docs_repo
-n00school_node["n00-school\nTraining curriculum"] --> n00t_node n00school_node --> frontiers
---> cortex …
+[mermaid]
+....
+graph TD
+cortex["n00-cortex\\nSchemas & Docs"] --> frontiers["n00-frontiers\\nTemplates, CLI, Renderers"]
+cortex --> n00t_node["n00t\\nAgent & MCP surface"]
+n00t_node --> frontiers
+frontiers --> n00plicate_node["n00plicate\\nPolyglot consumer"]
+frontiers --> docs_repo["1. Cerebrum Docs\\nCross-repo ADRs"]
+n00tropic_ops["n00tropic\\nOperational playbooks"] --> docs_repo
+n00school_node["n00-school\\nTraining curriculum"] --> n00t_node
+n00school_node --> frontiers
+frontiers --> cortex
+....
 
 Schemas published from `n00-cortex` drive automation in `n00-frontiers`, which
 then feeds downstream consumers such as `n00plicate` and the shared
@@ -34,8 +40,9 @@ filesystem in `../n00tropic_HQ/`. ____
 
 * *Focus*: Cross-Repo decision records, release manifests, and workspace
  onboarding docs.
-* *Key artifacts*: ADRs, `RENOVATE_SETUP.md`, `TRUNK_GUIDE.md`, `releases.yaml`
- (written by automation).
+* *Key artifacts*: ADRs, xref:++1. Cerebrum Docs/RENOVATE_SETUP.adoc++[RENOVATE_SETUP],
+ xref:++1. Cerebrum Docs/TRUNK_GUIDE.adoc++[TRUNK_GUIDE], `releases.yaml` (written by
+ automation).
 * *Role*: Acts as canonical reference material that other repos cite for shared
  policy.
 === `n00-frontiers/`
@@ -106,15 +113,22 @@ filesystem in `../n00tropic_HQ/`. ____
  agents can scaffold projects from curated source material.
 == Cross-repo release flow
 
-[mermaid] … sequenceDiagram participant Dev as Contributor participant Cortex as
-n00-cortex participant Frontiers as n00-frontiers participant Docs as 1.
-Cerebrum Docs participant Automation as .dev/automation
+[mermaid]
+....
+sequenceDiagram
+    participant Dev as Contributor
+    participant Cortex as n00-cortex
+    participant Frontiers as n00-frontiers
+    participant Docs as 1. Cerebrum Docs
+    participant Automation as .dev/automation
 
-Dev->>Cortex: update schemas and manifests Cortex-->>Frontiers: publish new
-toolchain rules Dev->>Frontiers: regenerate templates and run sanity checks
-Dev->>Automation: run meta-check and trunk sync Automation-->>Docs: write
-releases.yaml via workspace-release.sh Docs-->>Dev: document decisions and ADR
-updates …
+    Dev->>Cortex: update schemas and manifests
+    Cortex-->>Frontiers: publish new toolchain rules
+    Dev->>Frontiers: regenerate templates and run sanity checks
+    Dev->>Automation: run meta-check and trunk sync
+    Automation-->>Docs: write releases.yaml via workspace-release.sh
+    Docs-->>Dev: document decisions and ADR updates
+....
 
 This sequence highlights the typical cadence: adjust policy in `n00-cortex`,
 adapt generators in `n00-frontiers`, validate via automation, and record the
@@ -125,49 +139,61 @@ outcome in shared documentation.
 Automation scripts live under `.dev/automation/scripts/` and surface through the
 `n00t` capability manifest.
 
-|=== | Script | Purpose
+|===
+| Script | Purpose
 
-| `meta-check.sh` | Orchestrates Repo health checks, schema validation, and CVE
-scans before publishing changes.
+| `meta-check.sh`
+| Orchestrates repo health checks, schema validation, and CVE scans before
+publishing changes.
 
-| `refresh-workspace.sh` | Fast-forwards each Repo and updates submodules to
-keep local clones aligned.
+| `refresh-workspace.sh`
+| Fast-forwards each repo and updates submodules to keep local clones aligned.
 
-| `trunk-upgrade.sh` | Runs `trunk upgrade` across repos (supports Repo filters
-and extra flags when invoked via capabilities).
+| `trunk-upgrade.sh`
+| Runs `trunk upgrade` across repos (supports repo filters and extra flags when
+invoked via capabilities).
 
-| `check-cross-repo-consistency.py` | Ensures toolchain manifests and overrides
-remain aligned.
+| `check-cross-repo-consistency.py`
+| Ensures toolchain manifests and overrides remain aligned.
 
-| `workspace-release.sh` | Verifies clean git state and writes `1. Cerebrum
-Docs/releases.yaml`.
+| `workspace-release.sh`
+| Verifies clean git state and writes `1. Cerebrum Docs/releases.yaml`.
 
-| `ai-workflows/*` | Phase-specific scripts for the AI-assisted development
-workflow surfaced by `n00t`.
+| `ai-workflows/*`
+| Phase-specific scripts for the AI-assisted development workflow surfaced by
+`n00t`.
 
-| `project-preflight.sh` | Chains capture + GitHub/ERPNext syncs and fails fast
-when review cadence, links, or IDs are missing.
+| `project-preflight.sh`
+| Chains capture + GitHub/ERPNext syncs and fails fast when review cadence,
+links, or IDs are missing.
 
-| `project-lifecycle-radar.sh` | Emits a JSON radar summarising lifecycle
-totals, overdue reviews, and integration gaps for planning.
+| `project-lifecycle-radar.sh`
+| Emits a JSON radar summarising lifecycle totals, overdue reviews, and
+integration gaps for planning.
 
-| `project-control-panel.sh` | Builds `n00-horizons/docs/control-panel.md` so
-planning decks link runbooks, radar output, and preflights.
+| `project-control-panel.sh`
+| Builds `n00-horizons/docs/control-panel.md` so planning decks link runbooks,
+radar output, and preflights.
 
-| `scripts/erpnext-run.sh` | Legacy bench shim kept for compatibility; reads
-pins from `n00tropic_HQ/12-Platform-Ops/erpnext-docker/.env`, verifies
-MySQL/Redis, launches the ERPNext UI, logs telemetry, and runs PM/telemetry
-exports once the Docker-managed stack is up.
+| `scripts/erpnext-run.sh`
+| Legacy bench shim kept for compatibility; reads pins from
+`n00tropic_HQ/12-Platform-Ops/erpnext-docker/.env`, verifies MySQL/Redis,
+launches the ERPNext UI, logs telemetry, and runs PM/telemetry exports once the
+Docker-managed stack is up.
 
-| `scripts/docker-sync.mjs` | Pulls the latest ERPNext and design-tool docker images,
-| updates compose pins, and records the outcome under
+| `scripts/docker-sync.mjs`
+| Pulls the latest ERPNext and design-tool docker images, updates compose pins,
+and records the outcome under automation telemetry.
 
-| `project-preflight-batch.sh` | Executes preflight across every registry entry
-to keep GitHub + ERPNext sync warnings visible.
+| `project-preflight-batch.sh`
+| Executes preflight across every registry entry to keep GitHub + ERPNext sync
+warnings visible.
 
-| `workspace-health.py` | Summarises root + submodule git status, emits
+| `workspace-health.py`
+| Summarises root + submodule git status, emits
 `artifacts/workspace-health.json`, cleans safe untracked files, and syncs
-submodules on demand. |===
+submodules on demand.
+|===
 
 Run `python CLI.py --help` from the workspace root (or `n00-horizons/CLI.py`,
 `n00-frontiers/CLI.py`, etc.) to access curated wrappers around these scripts
@@ -197,10 +223,11 @@ and agent insights.
  link to repo-specific ADRs.
 * *Keep repos pristine*: Use `.dev/` directories for scratch assets and avoid
  committing generated artefacts.
-* *Run the workspace maintenance loop*: Follow `1. Cerebrum
- Docs/WORKSPACE_MAINTENANCE.md` (plus the `AI_WORKSPACE_PLAYBOOK.md` companion)
- to run `workspace-health`, `meta-check`, and project preflights before every PR
- or release.
+* *Run the workspace maintenance loop*: Follow
+ xref:++1. Cerebrum Docs/WORKSPACE_MAINTENANCE.adoc++[WORKSPACE_MAINTENANCE]
+ (plus the xref:++1. Cerebrum Docs/AI_WORKSPACE_PLAYBOOK.adoc++[AI Workspace
+ Playbook] companion) to run `workspace-health`, `meta-check`, and project
+ preflights before every PR or release.
 * *Version discipline*: Update `n00-cortex/data/toolchain-manifest.json` first
  when bumping runtimes so Renovate presets and generators stay aligned.
 * *Release sequencing*: Tag repos independently, then run `workspace-release.sh`
@@ -233,34 +260,28 @@ Space/n00tropic`, organized as:
 * `98-Scratchpad/`: temporary drafts purged automatically after 30 days.
 == Getting started locally
 
-. Clone the workspace: `+git clone
-https://github.com/IAmJonoBo/n00tropic-cerebrum.git && cd n00tropic-cerebrum+`.
-. Initialise submodules: `git submodule update --init --recursive`. . Run
-`.dev/automation/scripts/workspace-health.sh --sync-submodules
---publish-artifact --json` (optionally `--clean-untracked`) to ensure submodules
-are aligned and to snapshot git state for agents/ci. . Install toolchains per
-Repo (Python venv for `n00-frontiers`, Node for `n00-cortex` and `n00t`, pnpm
-for `n00plicate`). . Open the multi-root VS Code workspace
-(`n00-cortex/generators/n00tropic-cerebrum.code-workspace`). . Run baseline
-checks: `./.dev/automation/scripts/meta-check.sh` followed by repo-specific
-health commands. . Explore `1. Cerebrum Docs/` for ADRs, Renovate setup, and
-onboarding guides.
+. Clone the workspace: `git clone git@github.com:n00tropic/n00tropic-cerebrum.git && cd n00tropic-cerebrum`.
+. Initialise submodules: `git submodule update --init --recursive`.
+. Run `.dev/automation/scripts/workspace-health.sh --sync-submodules --publish-artifact --json` (optionally `--clean-untracked`) to ensure submodules are aligned and to snapshot git state for agents/CI.
+. Install toolchains per repo (Python venv for `n00-frontiers`, Node for `n00-cortex` and `n00t`, pnpm for `n00plicate`).
+. Open the multi-root VS Code workspace (`n00-cortex/generators/n00tropic-cerebrum.code-workspace`).
+. Run baseline checks: `./.dev/automation/scripts/meta-check.sh` followed by repo-specific health commands.
+. Explore `1. Cerebrum Docs/` for ADRs, Renovate setup, and onboarding guides.
 
 == Script index
 
-The `script_index.md` file provides an automatically generated, organized
-catalog of all scripts across the n00tropic polyrepo. This index is optimized
-for agents and developers to locate and understand available scripts.
+xref:script-index.adoc[Script index] now surfaces an Antora-friendly summary of
+every automation category, while the generated `script_index.md` file provides
+the exhaustive Markdown listing agents still rely on.
 
 === Usage
 
-* *View index*: Open `script_index.md` to browse scripts by category.
-* *Update index*: Run `python3 generate_script_index.py` to regenerate the index
- after adding new scripts.
-* *Dynamic registration*: New scripts are automatically detected and categorized
- when the index is updated.
-The index includes executable files and scripts with common extensions (.sh,
-.py, .js, etc.), organized by their containing directory for easy navigation.
+* *View curated summary*: Open xref:script-index.adoc[] from the docs site.
+* *Review full listing*: Inspect `script_index.md` at the workspace root for the
+ per-script breakdown.
+* *Update index*: Run `python3 generate_script_index.py --workspace-root "/Volumes/APFS Space/n00tropic"` whenever new automation lands.
+* *Dynamic registration*: New scripts are automatically detected and
+ categorized when the index is regenerated.
 
 By keeping the repos intentionally decoupled yet automation-aware, the Cerebrum
 workspace lets contributors evolve generators, docs, and agents without tripping

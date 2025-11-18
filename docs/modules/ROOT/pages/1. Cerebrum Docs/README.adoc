@@ -1,21 +1,21 @@
 = Cerebrum documentation hub
 :page-tags: diataxis:reference, domain:platform, audience:contrib, stability:beta
-:reviewed: 2025-11-11
+:reviewed: 2025-11-18
 
 This directory captures workspace-level knowledge that spans more than any single
 repository. Use it to document governance, cross-repository automation, and decisions
 that affect multiple generators at once.
 
-[,text]
+[source,text]
 ----
-1.CEREBRUM-DOCS/ ├── README.md # You are here
+1.CEREBRUM-DOCS/ ├── README.adoc # You are here
 └── ADR/ # Architecture Decision Records for the workspace
 ----
 
 == Using this folder
 
 . *Workspace ADRs* -- Store cross-cutting architectural decisions under `ADR/`
-and follow the naming pattern `ADR-XXX-title.md` (three-digit sequence).
+and follow the naming pattern `ADR-XXX-title.adoc` (three-digit sequence).
 . *Indexes* -- Reference repository-specific ADR indices when a decision spans
 multiple repositories so readers know where to dive deeper.
 . *Local Guidance* -- Add any future quick start guides, release checklists, or
@@ -35,8 +35,8 @@ here and update the Toolchain manifest at
 ** `../n00-cortex/docs/adr/` (if present)
 ** Additional indices as they're introduced
 * Model curriculum: `../n00-school/README.md`
-* Renovate governance: `RENOVATE_SETUP.md`
-* Trunk CI guidance: `TRUNK_GUIDE.md`
+* Renovate governance: xref:++1. Cerebrum Docs/RENOVATE_SETUP.adoc++[]
+* Trunk CI guidance: xref:++1. Cerebrum Docs/TRUNK_GUIDE.adoc++[]
 
 == Current workspace ADRs
 

@@ -50,6 +50,7 @@
     "docs:vale-whitelist": "node scripts/vale-terms-candidates.mjs --whitelist --interactive --oxford",
     "docs:vale-terms-test": "bash scripts/run-vale-terms-candidates-test.sh",
     "docker:sync": "node scripts/docker-sync.mjs",
+    "validate-docs": "node scripts/validate-docs.mjs",
     "trunk:check-all": "auto_dir=.dev/auto; auto_dir=\"${auto_dir}mation\"; bash ${auto_dir}/scripts/run-trunk-subrepos.sh",
     "trunk:sync-defs": "node scripts/sync-trunk-defs.mjs",
     "tools:scan-npm": "node scripts/find-npm-usages.mjs",
