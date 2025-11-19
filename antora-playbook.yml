@@ -42,6 +42,12 @@ content:
       worktrees:
         - path: ./n00plicate
           branches: [chore/migrate-node-24]
+    - url: ./.git/modules/n00tropic
+      branches: [main]
+      start_paths: [docs]
+      worktrees:
+        - path: ./n00tropic
+          branches: [main]
     # TODO(n00tropic): Add n00-horizons, n00-school, n00plicate, n00tropic, and
     # n00clear-fusion once their Antora scaffolding ships (track via
     # docs/modules/ROOT/pages/migration-status.adoc).
