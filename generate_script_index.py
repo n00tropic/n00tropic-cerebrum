@@ -286,6 +286,9 @@ def generate_markdown_index(
 ) -> str:
     totals = count_totals(repo_map)
     lines: List[str] = []
+    lines.append("<!-- markdownlint-disable -->")
+    lines.append("<!-- vale off -->")
+    lines.append("")
     lines.append("# n00tropic Polyrepo Script Index")
     lines.append("")
     lines.append(
@@ -333,6 +336,9 @@ def generate_markdown_index(
     lines.append(
         '*This index is automatically generated. To update, run `python generate_script_index.py --workspace-root "/Volumes/APFS Space/n00tropic"`.*'
     )
+    lines.append("")
+    lines.append("<!-- vale on -->")
+    lines.append("<!-- markdownlint-enable -->")
     lines.append("")
     return "\n".join(lines)
 

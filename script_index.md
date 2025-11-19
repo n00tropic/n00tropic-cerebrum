@@ -1,3 +1,6 @@
+<!-- markdownlint-disable -->
+<!-- vale off -->
+
 # n00tropic Polyrepo Script Index
 
 This index automatically catalogues scripts across the workspace for agents and maintainers.
@@ -463,8 +466,8 @@ No description available
 #### `n00tropic-cerebrum/generate_script_index.py`
 
 Generate Markdown + Antora script indices for the n00tropic polyrepo.
-- **Size:** 12.1 KB
-- **Modified:** 2025-11-18T22:51:37.255517
+- **Size:** 12.5 KB
+- **Modified:** 2025-11-19T02:13:20.567552
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `(repo root)`
 
@@ -678,7 +681,7 @@ No description available
 
 No description available
 - **Size:** 5.1 KB
-- **Modified:** 2025-11-12T07:22:08.922559
+- **Modified:** 2025-11-19T00:39:05.289781
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-cortex/scripts`
 
@@ -728,7 +731,7 @@ No description available
 
 Enrich generated slices with taxonomy tags and optional GitHub/Project wiring.
 - **Size:** 14.2 KB
-- **Modified:** 2025-11-07T05:06:17.470606
+- **Modified:** 2025-11-19T00:39:05.290073
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-cortex/scripts/injection`
 
@@ -960,7 +963,7 @@ Frontier Software Excellence Bible
 
 No description available
 - **Size:** 27.9 KB
-- **Modified:** 2025-11-12T09:20:45.377700
+- **Modified:** 2025-11-19T00:39:05.252520
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers`
 
@@ -968,7 +971,7 @@ No description available
 
 Changelog
 - **Size:** 3.9 KB
-- **Modified:** 2025-11-05T18:12:23.226745
+- **Modified:** 2025-11-19T00:39:05.265950
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers`
 
@@ -992,7 +995,7 @@ Code of Conduct
 
 No description available
 - **Size:** 0.0 KB
-- **Modified:** 2025-10-11T19:04:18
+- **Modified:** 2025-11-19T00:39:05.265604
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers`
 
@@ -1008,7 +1011,7 @@ Project Tracker Consolidation - Completion Summary
 
 Contributing Guide
 - **Size:** 12.0 KB
-- **Modified:** 2025-11-06T00:19:19.774848
+- **Modified:** 2025-11-19T00:39:05.289452
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers`
 
@@ -1120,7 +1123,7 @@ Automation sessions for n00-frontiers.
 
 No description available
 - **Size:** 3.3 KB
-- **Modified:** 2025-11-05T18:12:23.227690
+- **Modified:** 2025-11-19T00:39:05.263822
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers`
 
@@ -1160,7 +1163,7 @@ n00-frontiers - Quick Reference
 
 n00-frontiers
 - **Size:** 28.9 KB
-- **Modified:** 2025-11-06T12:31:19.243318
+- **Modified:** 2025-11-19T00:39:05.288169
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers`
 
@@ -1176,7 +1179,7 @@ Frontier Software Excellence & Red-Team Copilot Playbook
 
 No description available
 - **Size:** 0.2 KB
-- **Modified:** 2025-11-06T20:09:13.169839
+- **Modified:** 2025-11-19T00:39:05.265298
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers`
 
@@ -1216,7 +1219,7 @@ Implementation Instructions for the Next Agent
 
 Security Policy
 - **Size:** 7.9 KB
-- **Modified:** 2025-11-05T17:11:19.974649
+- **Modified:** 2025-11-19T00:39:05.251002
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers`
 
@@ -1264,7 +1267,7 @@ Version 1.10 - 2.00 Summary
 
 Verifying Project Management Automation
 - **Size:** 7.2 KB
-- **Modified:** 2025-11-06T00:19:19.777256
+- **Modified:** 2025-11-19T00:39:05.286481
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers`
 
@@ -1654,7 +1657,7 @@ No description available
 
 Examples
 - **Size:** 7.2 KB
-- **Modified:** 2025-11-05T18:33:00.721653
+- **Modified:** 2025-11-19T00:39:05.291035
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples`
 
@@ -1702,7 +1705,7 @@ Azure Pipelines for Python Service
 
 Community Template Contribution Guide
 - **Size:** 11.2 KB
-- **Modified:** 2025-11-06T00:19:19.777484
+- **Modified:** 2025-11-19T00:39:05.290353
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/community`
 
@@ -1826,7 +1829,7 @@ Multi-Cloud Infrastructure Examples
 
 AWS Infrastructure Examples
 - **Size:** 10.9 KB
-- **Modified:** 2025-11-06T00:19:19.779402
+- **Modified:** 2025-11-19T00:39:05.291340
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/multi-cloud/aws`
 
@@ -1836,7 +1839,7 @@ AWS Infrastructure Examples
 
 Express API Service Example
 - **Size:** 16.6 KB
-- **Modified:** 2025-11-11T22:11:30.697364
+- **Modified:** 2025-11-19T00:39:05.292801
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/projects`
 
@@ -1844,7 +1847,7 @@ Express API Service Example
 
 FastAPI Microservice Example
 - **Size:** 7.4 KB
-- **Modified:** 2025-11-05T18:12:28.070144
+- **Modified:** 2025-11-19T00:39:05.298106
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/projects`
 
@@ -1852,7 +1855,7 @@ FastAPI Microservice Example
 
 Go gRPC Service Example
 - **Size:** 20.5 KB
-- **Modified:** 2025-11-06T00:19:19.780521
+- **Modified:** 2025-11-19T00:39:05.301769
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/projects`
 
@@ -1868,7 +1871,7 @@ Working Example Projects - Implementation Summary
 
 React Dashboard WebApp Example
 - **Size:** 16.3 KB
-- **Modified:** 2025-11-12T09:16:14.486901
+- **Modified:** 2025-11-19T00:39:05.299171
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/projects`
 
@@ -2988,7 +2991,7 @@ No description available
 
 Getting Started with n00-frontiers
 - **Size:** 7.3 KB
-- **Modified:** 2025-11-06T00:19:19.780972
+- **Modified:** 2025-11-19T00:39:05.301481
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/video-tutorials`
 
@@ -2996,7 +2999,7 @@ Getting Started with n00-frontiers
 
 Creating a New Service with Cookiecutter
 - **Size:** 4.2 KB
-- **Modified:** 2025-11-05T18:12:28.068604
+- **Modified:** 2025-11-19T00:39:05.301211
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/video-tutorials`
 
@@ -3012,7 +3015,7 @@ Setting Up CI/CD Pipelines
 
 Video Tutorial Script: Implementing Security Gates
 - **Size:** 11.8 KB
-- **Modified:** 2025-11-05T18:12:28.069223
+- **Modified:** 2025-11-19T00:39:05.300303
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/video-tutorials`
 
@@ -3020,7 +3023,7 @@ Video Tutorial Script: Implementing Security Gates
 
 Video Tutorial Script: Adding Observability to Your Service
 - **Size:** 12.2 KB
-- **Modified:** 2025-11-06T00:19:19.781407
+- **Modified:** 2025-11-19T00:39:05.302043
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/video-tutorials`
 
@@ -3028,7 +3031,7 @@ Video Tutorial Script: Adding Observability to Your Service
 
 Video Tutorial Script: Using Jupyter Book for Documentation
 - **Size:** 11.0 KB
-- **Modified:** 2025-11-12T06:14:19.142277
+- **Modified:** 2025-11-19T00:39:05.300569
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/examples/video-tutorials`
 
@@ -3120,7 +3123,7 @@ No description available
 
 No description available
 - **Size:** 9.1 KB
-- **Modified:** 2025-11-05T18:10:50.545330
+- **Modified:** 2025-11-19T00:39:05.252843
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00-frontiers/applications/scaffolder/notebooks`
 
@@ -5914,7 +5917,7 @@ Repo-local helper for n00plicate.
 
 No description available
 - **Size:** 1.4 KB
-- **Modified:** 2025-11-12T03:18:29.796251
+- **Modified:** 2025-11-19T01:37:24.899577
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate`
 
@@ -6214,7 +6217,7 @@ No description available
 
 Prevents additional console window on Windows in release, DO NOT REMOVE!!
 - **Size:** 0.2 KB
-- **Modified:** 2025-11-03T12:04:36.663340
+- **Modified:** 2025-11-19T01:37:25.011937
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/apps/desktop/src-tauri/src`
 
@@ -6574,7 +6577,7 @@ No description available
 
 n00plicate Token CLI
 - **Size:** 9.9 KB
-- **Modified:** 2025-11-11T23:04:27.121323
+- **Modified:** 2025-11-19T00:39:05.294202
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/n00plicate-token-cli`
 
@@ -6817,8 +6820,8 @@ Auto-generated design tokens
 #### `n00tropic-cerebrum/n00plicate/packages/design-tokens/src/index.test.ts`
 
 No description available
-- **Size:** 9.4 KB
-- **Modified:** 2025-11-04T00:39:57.075468
+- **Size:** 9.5 KB
+- **Modified:** 2025-11-19T01:37:25.011923
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/packages/design-tokens/src`
 
@@ -6826,7 +6829,7 @@ No description available
 
 No description available
 - **Size:** 12.4 KB
-- **Modified:** 2025-11-04T01:11:05.597243
+- **Modified:** 2025-11-19T01:37:25.011897
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/packages/design-tokens/src`
 
@@ -6962,7 +6965,7 @@ No description available
 
 No description available
 - **Size:** 1.7 KB
-- **Modified:** 2025-11-03T12:05:04.936210
+- **Modified:** 2025-11-19T01:37:25.011739
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/packages/token-orchestrator/src`
 
@@ -6970,7 +6973,7 @@ No description available
 
 No description available
 - **Size:** 5.8 KB
-- **Modified:** 2025-11-03T12:05:04.936330
+- **Modified:** 2025-11-19T01:37:25.011868
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/packages/token-orchestrator/src`
 
@@ -6994,7 +6997,7 @@ No description available
 
 No description available
 - **Size:** 1.9 KB
-- **Modified:** 2025-11-03T12:05:04.936713
+- **Modified:** 2025-11-19T01:37:25.011877
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/packages/token-orchestrator/src`
 
@@ -7002,15 +7005,15 @@ No description available
 
 No description available
 - **Size:** 0.2 KB
-- **Modified:** 2025-11-03T12:05:04.936806
+- **Modified:** 2025-11-19T01:37:25.011930
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/packages/token-orchestrator/src`
 
 #### `n00tropic-cerebrum/n00plicate/packages/token-orchestrator/src/telemetry.rs`
 
 [derive(Debug, Clone)]
-- **Size:** 4.7 KB
-- **Modified:** 2025-11-03T12:05:04.936903
+- **Size:** 4.8 KB
+- **Modified:** 2025-11-19T02:02:19.856830
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/packages/token-orchestrator/src`
 
@@ -7028,7 +7031,7 @@ No description available
 
 No description available
 - **Size:** 2.6 KB
-- **Modified:** 2025-11-03T12:05:04.937269
+- **Modified:** 2025-11-19T01:37:25.011906
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/packages/token-orchestrator/tests`
 
@@ -7124,7 +7127,7 @@ No description available
 
 No description available
 - **Size:** 1.4 KB
-- **Modified:** 2025-11-03T12:05:04.959392
+- **Modified:** 2025-11-19T01:37:24.984894
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/scripts`
 
@@ -7132,7 +7135,7 @@ No description available
 
 🚀 n00plicate Development Setup Script
 - **Size:** 1.3 KB
-- **Modified:** 2025-11-12T03:18:30.038855
+- **Modified:** 2025-11-19T01:37:24.900143
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/scripts`
 
@@ -7148,7 +7151,7 @@ No description available
 
 Documentation Validation Script
 - **Size:** 3.3 KB
-- **Modified:** 2025-11-03T12:04:38.548414
+- **Modified:** 2025-11-19T01:37:24.960974
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/scripts`
 
@@ -7156,7 +7159,7 @@ Documentation Validation Script
 
 No description available
 - **Size:** 5.8 KB
-- **Modified:** 2025-11-12T00:20:52.081216
+- **Modified:** 2025-11-19T01:37:24.900135
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `n00plicate/scripts`
 
@@ -8463,8 +8466,8 @@ Scaffold a new project from a brief using n00tropic templates.
 #### `n00tropic-cerebrum/scripts/antora-local-clone.sh`
 
 No description available
-- **Size:** 5.5 KB
-- **Modified:** 2025-11-18T19:02:04.690715
+- **Size:** 5.7 KB
+- **Modified:** 2025-11-19T00:38:56.530744
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `scripts`
 
@@ -8672,7 +8675,7 @@ No description available
 
 No description available
 - **Size:** 1.7 KB
-- **Modified:** 2025-11-18T21:57:50.672625
+- **Modified:** 2025-11-18T23:16:43.271237
 - **Repository:** `n00tropic-cerebrum`
 - **Category:** `scripts`
 
@@ -34719,3 +34722,6 @@ No description available
 ---
 
 *This index is automatically generated. To update, run `python generate_script_index.py --workspace-root "/Volumes/APFS Space/n00tropic"`.*
+
+<!-- vale on -->
+<!-- markdownlint-enable -->
