@@ -16,7 +16,7 @@ include::partial$diataxis-blurb.adoc[]
 | n00t | `docs/antora-migration` | ✅ Minimal Antora component scaffold added; migration in progress.
 | n00plicate | `docs/antora-migration` | 🔄 Antora scaffold + overview/start-here added; migrate deep-dives next.
 | n00tropic | `docs/antora-migration` | 🔄 Antora scaffold + overview/start-here added; migrate departmental docs next.
-| n00clear-fusion | `docs/antora-migration` | 🔄 Antora scaffold + overview/start-here added; migrate ingestion/export guides next.
+| n00clear-fusion | `docs/antora-migration` | ✅ Antora scaffold plus ingestion/export guide added.
 |===
 
 [IMPORTANT]

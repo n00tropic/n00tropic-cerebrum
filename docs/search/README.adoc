@@ -38,6 +38,14 @@ Artifacts go to `build/site/` (Lunr) and the live Typesense collection defined i
 
 `.github/workflows/search-reindex.yml` builds the docs, launches a short-lived Typesense container, runs the DocSearch scraper with the env secrets, and tears everything down. Override the endpoint by setting repository secrets (`TYPESENSE_HOST`, etc.).
 
+== Remote clusters
+
+For hosted Typesense deployments:
+
+1. Store `TYPESENSE_API_KEY`, `TYPESENSE_HOST`, `TYPESENSE_PORT`, `TYPESENSE_PROTOCOL`, and `TYPESENSE_COLLECTION` as repository secrets.
+2. Run `search-reindex.yml` manually after updating docs to validate the remote index.
+3. Confirm the workflow summary shows successful scraping; investigate logs if the remote cluster rejects connections.
+
 == Troubleshooting
 
 * `docsearch` fails with 401 – make sure the API key environment variable matches the Typesense config.

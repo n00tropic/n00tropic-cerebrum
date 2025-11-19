@@ -26,6 +26,19 @@
  `.github/workflows/search-reindex.yml`).
 . Stop the HTTP server + Typesense container when complete.
 
+[#remote]
+== Remote deployment validation
+
+When targeting a shared Typesense cluster, set the following repository secrets so `.github/workflows/search-reindex.yml` can authenticate:
+
+* `TYPESENSE_API_KEY`
+* `TYPESENSE_HOST`
+* `TYPESENSE_PORT`
+* `TYPESENSE_PROTOCOL`
+* `TYPESENSE_COLLECTION`
+
+Trigger the workflow manually (`Actions → search-reindex → Run workflow`) after updating secrets. The job spins up a local HTTP server, runs the scraper with the remote endpoint, and reports success/failure in the job summary.
+
 == Troubleshooting
 
 * If Lunr search returns no hits, delete `build/site` and rebuild to ensure stale
