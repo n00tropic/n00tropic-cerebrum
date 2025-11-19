@@ -44,12 +44,31 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}/n00t
         run: |
+          ARTIFACT_DIR=.dev/automation/artifacts/plans
+          rm -rf "$ARTIFACT_DIR"
+          mkdir -p "$ARTIFACT_DIR"
           while IFS= read -r file; do
             if [ -n "$file" ]; then
               echo "Planning $file"
-              .dev/automation/scripts/plan-exec.sh --brief "$file" --check --airgapped --yagni-threshold 0.3 --conflict-limit 0 || exit 1
+              safe_name=$(echo "$file" | sed -E 's/[^A-Za-z0-9._-]/_/g' | sed -E 's/\.md$//')
+              plan_path="$ARTIFACT_DIR/${safe_name}.plan.md"
+              telemetry_path="$ARTIFACT_DIR/${safe_name}.json"
+              .dev/automation/scripts/plan-exec.sh \
+                --brief "$file" \
+                --airgapped \
+                --force \
+                --output "$plan_path" \
+                --telemetry "$telemetry_path" \
+                --yagni-threshold 0.3 \
+                --conflict-limit 0 || exit 1
             fi
           done < plan-targets.txt
+      - name: Upload planner artifacts
+        if: steps.targets.outputs.count != '0'
+        uses: actions/upload-artifact@v5
+        with:
+          name: planner-artifacts
+          path: .dev/automation/artifacts/plans
       - name: No-op
         if: steps.targets.outputs.count == '0'
         run: echo "No planner-eligible files changed"
