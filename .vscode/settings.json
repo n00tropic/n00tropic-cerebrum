@@ -25,5 +25,9 @@
         "cwd": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-cortex"
       }
     }
+  },
+  "sonarlint.connectedMode.project": {
+    "connectionId": "n00tropic",
+    "projectKey": "n00tropic_n00-cerebrum"
   }
 }
