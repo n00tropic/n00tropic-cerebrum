@@ -53,6 +53,7 @@ Remote deployments can override `TYPESENSE_HOST/TYPESENSE_PROTOCOL` via secrets 
 * Deterministic plan artefacts: `n00-horizons/scripts/generate-experiment-plans.sh` regenerates `.plan.md` files committed under `n00-horizons/docs/experiments/`.
 * Workspace Python toolchain: run `scripts/bootstrap-python.sh` once to install aggregated dependencies (PyYAML/jsonschema/mcp) into `.venv-workspace` so automation + MCP scripts never hit `ModuleNotFoundError`.
 * Model entrypoints: `n00-cortex/data/llms.yaml` lists local providers including `litellm/lmstudio-deepseek`; see the AGENT E2E runbook for curl commands and fallback options (GitHub Models/Copilot).
+* MCP hooks: `planner.refreshPlans` + `docs.captureTypesenseSummary` capabilities expose deterministic plan regeneration and search-summary capture directly through `run_workflow_phase`.
 
 == Next steps
 

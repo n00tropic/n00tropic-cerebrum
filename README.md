@@ -136,6 +136,20 @@ Automation executions append telemetry to `.dev/automation/artifacts/automation/
 1. Capture design or schema decisions in `1. Cerebrum Docs/ADR/` and link to the owning repo's ADR or TASK entry before merging cross-repo changes.
 1. Release in the Cortex -> Frontiers -> Consumer order. Tag each repo before moving the next pointer so downstream repos consume only immutable versions.
 
+### Workspace bootstrap & sanity
+
+```bash
+# Ensure all subrepos exist and are on-disk
+scripts/check-superrepo.sh
+
+# Install workspace dependencies once per machine
+pnpm install
+scripts/bootstrap-python.sh
+source .venv-workspace/bin/activate  # repeat in each shell before running automation
+```
+
+`scripts/check-superrepo.sh` aborts if any subrepo is missing (guiding you to `git submodule update --init --recursive`), while `scripts/bootstrap-python.sh` provisions `.venv-workspace` with the aggregated requirements defined in `requirements.workspace.txt` so automation (MCP servers, project-control-panel, planners) never hit `ModuleNotFoundError`.
+
 ### Interaction matrix
 
 | Repo               | Owns                                     | Consumes                                      | Gate                                                 |

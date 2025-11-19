@@ -85,9 +85,65 @@ async function summarizePlanMetrics() {
   }
 }
 
+function ensureTypesenseFreshness() {
+  const logDir = path.join(process.cwd(), "docs/search/logs");
+  let entries: { file: string; mtime: number }[] = [];
+  try {
+    const files = fs
+      .readdirSync(logDir)
+      .filter((name) => name.endsWith(".log.json"));
+    entries = files.map((name) => {
+      const full = path.join(logDir, name);
+      const stats = fs.statSync(full);
+      return { file: full, mtime: stats.mtimeMs };
+    });
+  } catch (error) {
+    warn(
+      `Unable to inspect docs/search/logs for Typesense summaries (${String(
+        error,
+      )}). Run docs/search/scripts/capture-latest-summary.sh once before merging.`,
+    );
+    return;
+  }
+  if (!entries.length) {
+    fail(
+      "Typesense summary (.log.json) not found under docs/search/logs. Run docs/search/scripts/capture-latest-summary.sh (or the docs Typesense recipe) before merging docs/search changes.",
+    );
+    return;
+  }
+  entries.sort((a, b) => b.mtime - a.mtime);
+  const latest = entries[0];
+  let payload: { [key: string]: unknown } = {};
+  try {
+    payload = JSON.parse(fs.readFileSync(latest.file, "utf8"));
+  } catch (error) {
+    fail(`Unable to parse Typesense summary ${latest.file}: ${String(error)}`);
+    return;
+  }
+  const capturedRaw = (payload["captured_at"] || payload["capturedAt"]) as
+    | string
+    | undefined;
+  const capturedAt = capturedRaw ? Date.parse(capturedRaw) : NaN;
+  if (Number.isNaN(capturedAt)) {
+    fail(
+      `Typesense summary ${latest.file} is missing a valid captured_at timestamp. Re-run docs/search/scripts/capture-latest-summary.sh.`,
+    );
+    return;
+  }
+  const ageMs = Date.now() - capturedAt;
+  const maxAgeMs = 7 * 24 * 60 * 60 * 1000;
+  if (ageMs > maxAgeMs) {
+    const days = (ageMs / (24 * 60 * 60 * 1000)).toFixed(1);
+    fail(
+      `Typesense index summary is stale (${days} days old). Refresh the index via docs/search/README.adoc (or run docs/search/scripts/capture-latest-summary.sh) before merging.`,
+    );
+  }
+}
+
 schedule(async () => {
   await checkReviewDates();
   await ensurePlansResolved();
   await summarizePlanMetrics();
   ensureBriefsHavePlans();
+  ensureTypesenseFreshness();
 });
