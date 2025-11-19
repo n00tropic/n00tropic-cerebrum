@@ -1,6 +1,6 @@
 = Script index
 :page-tags: diataxis:reference, domain:platform, audience:operator, stability:beta
-:reviewed: 2025-11-18
+:reviewed: 2025-11-19
 // vale Vale.Terms = NO
 
 This page summarises 4021 scripts across 5 repositories and 1257 categories.
