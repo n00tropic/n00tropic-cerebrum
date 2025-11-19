@@ -54,6 +54,11 @@ When targeting a shared Typesense cluster, set the following repository secrets 
 
 Trigger the workflow manually (`Actions → search-reindex → Run workflow`) after updating secrets. The job spins up a local HTTP server, runs the Dockerised scraper with the remote endpoint, and reports success/failure in the job summary. Each run archives logs under `docs/search/logs/` plus machine-readable summaries (`.log.json`); see `docs/search/logs/typesense-reindex-20251119.log` and its `.json` twin for the latest evidence (37 indexed records).
 
+== Guardrails
+
+* `docs/search/scripts/capture-latest-summary.sh` parses the newest `typesense-reindex-*.log` and writes the `.log.json` summary consumed by automation.
+* Danger raises a blocking failure when the latest summary is missing or older than 7 days, ensuring search validation stays fresh before docs/brief PRs merge.
+
 == Troubleshooting
 
 * If Lunr search returns no hits, delete `build/site` and rebuild to ensure stale

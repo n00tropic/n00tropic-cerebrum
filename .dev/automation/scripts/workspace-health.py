@@ -21,6 +21,29 @@ if str(ROOT) not in sys.path:
 DEFAULT_ARTIFACT_PATH = ROOT / "artifacts" / "workspace-health.json"
 
 
+def ensure_superrepo_layout() -> None:
+    if os.environ.get("SKIP_SUPERREPO_CHECK"):
+        return
+    script = ROOT / "scripts" / "check-superrepo.sh"
+    if not script.exists():
+        return
+    result = subprocess.run(  # nosec B603 - curated helper script
+        ["bash", str(script)],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        sys.stdout.write(result.stdout)
+        sys.stderr.write(result.stderr)
+        raise SystemExit(
+            "Superrepo check failed. Run scripts/check-superrepo.sh to inspect missing submodules."
+        )
+    if os.environ.get("VERBOSE_SUPERREPO_CHECK"):
+        sys.stdout.write(result.stdout)
+
+
 @dataclass
 class RepoStatus:
     name: str
@@ -437,6 +460,7 @@ def main() -> int:
     from observability import initialize_tracing
 
     initialize_tracing("workspace-health")
+    ensure_superrepo_layout()
     parser = argparse.ArgumentParser(
         description="Workspace health checker for the federated polyrepo."
     )

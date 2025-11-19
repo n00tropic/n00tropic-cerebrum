@@ -118,6 +118,14 @@ print(result.output)
 
 **Model choice**: `openai/gpt-5` (via GitHub Models) balances orchestration reasoning with manageable cost; switch to `openai/gpt-5-mini` when latency is critical.
 
+## Key workspace capabilities
+
+- `workspace.plan` – generate DRY/YAGNI-scored plans (runs `.dev/automation/scripts/plan-exec.sh`).
+- `planner.refreshPlans` – regenerate deterministic `.plan.md` artefacts + telemetry by calling `n00-horizons/scripts/generate-experiment-plans.sh`.
+- `docs.captureTypesenseSummary` – parse the latest `docs/search/logs/typesense-reindex-*.log` and produce the `.log.json` summary that Danger/dashboard automation requires.
+
+Run these via `run_workflow_phase` whenever you need to refresh planner collateral or prove Typesense freshness before merging docs.
+
 ## Telemetry and observability
 
 - Workspace entry points (`cli.py`, `.dev/automation/scripts/workspace-health.py`, and `mcp/docs_server/server.py`) now import `observability.initialize_tracing`, enabling `agent_framework` telemetry whenever the dependency is installed.
