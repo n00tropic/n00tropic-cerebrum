@@ -17,7 +17,7 @@
  default; keep configuration in sync only if you still serve the previous index.
 
 [#Typesense]
-== Re-index steps (Typesense)
+== Re-index steps for Typesense
 
 . Build docs: `pnpm exec antora antora-playbook.yml`.
 . Serve `build/site` locally (`npx http-server build/site -p 8080`).

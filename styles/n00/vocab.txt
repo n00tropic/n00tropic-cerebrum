@@ -78,3 +78,14 @@ renovate
 codestral
 Runbook
 lunr
+Typesense
+typesense
+DocSearch
+docsearch
+Workstream
+Workstreams
+workstream
+workstreams
+Dockerised
+backend
+env
