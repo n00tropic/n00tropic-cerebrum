@@ -139,16 +139,19 @@ Automation executions append telemetry to `.dev/automation/artifacts/automation/
 ### Workspace bootstrap & sanity
 
 ```bash
-# Ensure all subrepos exist and are on-disk
-scripts/check-superrepo.sh
+# One-shot bootstrap (submodules, pnpm, Python, Antora)
+scripts/bootstrap-workspace.sh
 
-# Install workspace dependencies once per machine
-pnpm install
-scripts/bootstrap-python.sh
-source .venv-workspace/bin/activate  # repeat in each shell before running automation
+# Repeat as needed:
+scripts/check-superrepo.sh               # verify subrepos exist
+pnpm install                             # install/update JS deps after lockfile changes
+scripts/bootstrap-python.sh              # refresh shared Python deps
+source .venv-workspace/bin/activate      # activate venv in each shell before running automation
 ```
 
 `scripts/check-superrepo.sh` aborts if any subrepo is missing (guiding you to `git submodule update --init --recursive`), while `scripts/bootstrap-python.sh` provisions `.venv-workspace` with the aggregated requirements defined in `requirements.workspace.txt` so automation (MCP servers, project-control-panel, planners) never hit `ModuleNotFoundError`.
+
+> **Authentication tip:** when running inside Codex Cloud or other ephemeral runners, export `GH_SUBMODULE_TOKEN=<PAT with repo scope>` (or rely on `GITHUB_TOKEN`) before invoking `scripts/bootstrap-workspace.sh` so `git submodule update --init --recursive` can clone the private repos referenced in `.gitmodules`.
 
 ### Interaction matrix
 
