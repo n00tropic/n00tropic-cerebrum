@@ -1,32 +1,40 @@
 # Next Steps
 
 ## Tasks
-- [ ] Audit repos and migrate docs per instructions (owner: codex, due: 2025-02-05)
-- [ ] Authenticate and sync required submodules (git submodule update --init --recursive prompts for GitHub credentials) (owner: codex)
-- [ ] Add CODEOWNERS coverage for workspace root paths touched in this change (owner: codex)
-- [ ] Remediate OSV scanner alerts for `mcp` (GHSA-3qhf-m339-9g5v, GHSA-j975-95f5-7wqh) in `mcp/docs_server/requirements.txt` (owner: codex)
-- [ ] Restore superrepo sync (scripts/check-superrepo.sh exit 1; git submodule update --init --recursive prompts for GitHub credentials) (owner: codex)
-- [ ] Repair workspace health sync (.dev/automation/scripts/workspace-health.sh --sync-submodules --json exit 1; artifacts/workspace-health.json missing) (owner: codex)
-- [ ] Fix Python bootstrap (scripts/bootstrap-python.sh exit 1 missing n00tropic/requirements.txt; submodules unavailable) (owner: codex)
-- [ ] Restore trunk automation (.dev/automation/scripts/run-trunk-subrepos.sh --fmt exit 1: missing scripts/sync-trunk-defs.mjs and trunk binary; curl -sSf https://trunk.io/install.sh | sh returned 404) (owner: codex)
-- [ ] Resolve Biome script lint path (pnpm -s exec biome check "scripts/**/*.mjs" exit 1: path missing) (owner: codex)
-- [ ] Repair Antora docs build (make docs exit 2: missing .git/modules/n00-frontiers; submodules not initialized) (owner: codex)
+- [x] Authenticate and sync required submodules (owner: codex, completed: 2025-11-20; see Next_Steps_Log)
+- [x] Add CODEOWNERS coverage for workspace root paths touched in this change (owner: codex, completed: 2025-11-20)
+- [ ] Restore pnpm + trunk toolchain at default root (owner: codex, due: 2025-02-05)
+  - Run `scripts/setup-pnpm.sh` (corepack prepare pnpm@10.22.0) and `pnpm install` at workspace root.
+  - Install trunk CLI v1.25.0 to `~/.trunk/bin/trunk` (CLI version is pinned in `.trunk/trunk.yaml`); set `TRUNK_BIN` if installed elsewhere.
+  - Recreate `scripts/sync-trunk-defs.mjs` (missing) to sync n00-cortex base trunk defs into subrepos before running `.dev/automation/scripts/run-trunk-subrepos.sh`.
+- [ ] Repair Biome script lint path (owner: codex)
+  - After pnpm is present, re-run `pnpm -w exec biome check scripts` (unquoted glob) to validate scripts linting.
+- [ ] Remediate OSV scanner alerts for `mcp` (GHSA-3qhf-m339-9g5v, GHSA-j975-95f5-7wqh) (owner: codex)
+  - Dependency bumped to `mcp>=1.10.0` in `mcp/docs_server/requirements.txt`; rerun `osv-scanner` to verify closure.
+- [ ] Restore superrepo health artifact (owner: codex)
+  - Clean local-only submodule changes (`n00-horizons` untracked jobs, `n00t` tracked `capabilities/manifest.json`), then rerun `.dev/automation/scripts/workspace-health.py --publish-artifact`.
+- [ ] Repair workspace health sync for ephemeral agents (owner: codex)
+  - Document bootstrap order for runners: `GH_SUBMODULE_TOKEN` → `scripts/bootstrap-workspace.sh` → `pnpm install` → `scripts/bootstrap-python.sh` → `pnpm exec antora antora-playbook.yml` (skip if private sources unavailable).
+- [ ] Fix Python bootstrap notes (owner: codex)
+  - Confirm `requirements.workspace.txt` resolves now that submodules exist; keep guidance to activate `.venv-workspace` before running automation.
+- [ ] Repair Antora docs build (owner: codex)
+  - After pnpm/trunk restore, run `pnpm exec antora antora-playbook.yml --stacktrace`; validate playbook paths for doc branches.
 
 ## Steps
 
-- [ ] Audit repos and migrate docs per instructions (owner: codex, due: 2025-02-05)
-- [ ] Mirror Antora/Vale/Lychee workflows + Markdown→AsciiDoc migrations across repos listed in `docs/modules/ROOT/pages/migration-status.adoc` once private submodules are available (owner: codex)
-
-## Steps
-
-1. Establish baseline per repo instructions.
-2. Plan migration tasks and update docs references.
-3. Run full QC suite before commits.
+1) Bootstrap toolchain (pnpm via corepack; trunk CLI install; python venv via `scripts/bootstrap-python.sh`).
+2) Sync submodules and artifacts (`scripts/check-superrepo.sh`, `.dev/automation/scripts/workspace-health.py --sync-submodules --publish-artifact`).
+3) Restore linters/formatters (`pnpm -w exec biome check scripts`, `.dev/automation/scripts/run-trunk-subrepos.sh --fmt` once `TRUNK_BIN` exists).
+4) Rebuild docs and search (`pnpm exec antora antora-playbook.yml`; rerun `docsearch.config.json` workflow if search is enabled).
+5) Run security + health (`osv-scanner --config osv-scanner.toml .`, confirm GHSA items cleared).
+6) Mirror Antora/Vale/Lychee + Markdown→AsciiDoc migrations across repos listed in `docs/modules/ROOT/pages/migration-status.adoc` when private submodules are reachable.
 
 ## Deliverables
-- Updated docs across repos.
-- Updated nav entries and playbook.
-- Passing CI workflows.
+- Restored pnpm/trunk toolchain with default pnpm store location.
+- Regenerated `artifacts/workspace-health.json`.
+- Passing trunk + Biome checks and Antora build.
+- OSV scanner clean for `mcp/docs_server`.
+- Updated migration status and runner bootstrap notes for agents.
 
 ## Quality Gates
 - tests: pass
@@ -38,9 +46,14 @@
 - docs updated
 
 ## Links
-- PRs: TBD
-- Files/lines: TBD
+- Submodule/migration tracker: `docs/modules/ROOT/pages/migration-status.adoc`
+- Antora migration playbook: `stuff/Temp/temp-doc-2.md`
+- Trunk runner: `.dev/automation/scripts/run-trunk-subrepos.sh`
+- Workspace health: `.dev/automation/scripts/workspace-health.py`
+- Security fix: `mcp/docs_server/requirements.txt`
+- Antora playbook: `antora-playbook.yml`
 
 ## Risks/Notes
-- Pending baseline runs and repo-specific CI alignment.
-- `osv-scanner` detected two outstanding `mcp` PyPI advisories and could not parse `requirements.workspace.txt`; follow-up task added for remediation.
+- pnpm/trunk missing on current runner; trunk install script at trunk.io now 404—install pinned CLI manually from GitHub releases or reuse cached binary.
+- `n00-horizons` and `n00t` submodules carry local changes; clean or commit before rerunning workspace-health to avoid false positives.
+- Antora build and docs migration depend on private submodules being readable (set `GH_SUBMODULE_TOKEN` for ephemeral agents).
