@@ -4,11 +4,11 @@
 - [x] Authenticate and sync required submodules (owner: codex, completed: 2025-11-20; see Next_Steps_Log)
 - [x] Add CODEOWNERS coverage for workspace root paths touched in this change (owner: codex, completed: 2025-11-20)
 - [ ] Restore pnpm + trunk toolchain at default root (owner: codex, due: 2025-02-05)
-  - Run `scripts/setup-pnpm.sh` (corepack prepare pnpm@10.22.0) and `pnpm install` at workspace root.
-  - Install trunk CLI v1.25.0 to `~/.trunk/bin/trunk` (CLI version is pinned in `.trunk/trunk.yaml`); set `TRUNK_BIN` if installed elsewhere.
-  - Recreate `scripts/sync-trunk-defs.mjs` (missing) to sync n00-cortex base trunk defs into subrepos before running `.dev/automation/scripts/run-trunk-subrepos.sh`.
+  - Run `scripts/setup-pnpm.sh` (corepack prepare pnpm@10.22.0; npm global fallback added) and `pnpm install` at workspace root.
+  - Install trunk CLI v1.25.0 to `~/.trunk/bin/trunk` (CLI version is pinned in `.trunk/trunk.yaml`); set `TRUNK_BIN` if installed elsewhere. Script now errors early when trunk is missing.
+  - Trunk defs sync script restored at `scripts/sync-trunk-defs.mjs`; invoked automatically by `.dev/automation/scripts/run-trunk-subrepos.sh`.
 - [ ] Repair Biome script lint path (owner: codex)
-  - After pnpm is present, re-run `pnpm -w exec biome check scripts` (unquoted glob) to validate scripts linting.
+  - After pnpm is present, re-run `pnpm -w exec biome check scripts` (avoid quoting the glob) to validate scripts linting.
 - [ ] Remediate OSV scanner alerts for `mcp` (GHSA-3qhf-m339-9g5v, GHSA-j975-95f5-7wqh) (owner: codex)
   - Dependency bumped to `mcp>=1.10.0` in `mcp/docs_server/requirements.txt`; rerun `osv-scanner` to verify closure.
 - [ ] Restore superrepo health artifact (owner: codex)
