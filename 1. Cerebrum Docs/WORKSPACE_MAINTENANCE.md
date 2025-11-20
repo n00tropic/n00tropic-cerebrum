@@ -41,6 +41,14 @@ For a fast human-friendly snapshot of the workspace state while you are iteratin
 
 This prints a short root `git status`, submodule summary, and (when installed) a Trunk summary for the root repo.
 
+When submodules have moved forward (for example, after you have committed and pushed changes inside `n00-cortex` or `n00-frontiers`), you can capture the new "machine state" in the superrepo with:
+
+```bash
+./.dev/automation/scripts/workspace-commit-submodules.sh
+```
+
+This stages all submodule paths in the root repo and creates a single commit that pins the updated SHAs, so you can follow with a simple `git push`.
+
 ## 4. Validate Delivery Artefacts
 
 For any metadata-bearing document (ideas, jobs, projects):
