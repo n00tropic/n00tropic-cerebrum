@@ -8,6 +8,23 @@ export VALE_CONFIG="${DIR}/.vale.local.ini"
 echo "VALE_CONFIG=${VALE_CONFIG}"
 cd "${DIR}"
 
+if ! command -v pnpm >/dev/null 2>&1; then
+	echo "pnpm not found on PATH. Run scripts/setup-pnpm.sh first." >&2
+	exit 1
+fi
+
+# Resolve trunk binary if TRUNK_BIN path is not present
+if [[ ! -x "${TRUNK_BIN}" ]]; then
+	if command -v trunk >/dev/null 2>&1; then
+		TRUNK_BIN="$(command -v trunk)"
+		echo "Resolved trunk binary via PATH: ${TRUNK_BIN}"
+	else
+		echo "Trunk binary missing at ${TRUNK_BIN} and not found on PATH." >&2
+		echo "Install trunk CLI v1.25.0 (per .trunk/trunk.yaml) to ~/.trunk/bin/trunk or set TRUNK_BIN." >&2
+		exit 1
+	fi
+fi
+
 # Sync trunk defs from base to subrepos to ensure supported definitions are present
 pnpm run trunk:sync-defs || true
 
