@@ -20,6 +20,10 @@
   - Confirm `requirements.workspace.txt` resolves now that submodules exist; keep guidance to activate `.venv-workspace` before running automation.
 - [ ] Repair Antora docs build (owner: codex)
   - After pnpm/trunk restore, run `pnpm exec antora antora-playbook.yml --stacktrace`; validate playbook paths for doc branches.
+- [ ] Harden MCP servers/prompts/tracing for agent parity (owner: automation/agent platform)
+  - Run MCP services from `.venv-workspace`, keep prompt manifests in sync with docs, and ensure OTEL env (`OTEL_EXPORTER_OTLP_ENDPOINT`, `N00_DISABLE_TRACING`) is set before launching ai-workflow/cortex/docs servers.
+- [ ] Schedule planner telemetry exports + Typesense freshness guards + dashboard updates (owner: horizons/school PMs)
+  - Export `.dev/automation/artifacts/plans/horizons-*.json` into dashboards, refresh `docs/search/logs/typesense-reindex-*.log[.json]` (<7d), and publish planner-GA runs per `docs/modules/ROOT/pages/closing-gaps.adoc`.
 
 ## Steps
 
