@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-cd "$ROOT_DIR"
+cd "${ROOT_DIR}"
 
 echo "[complete-n00menon] Starting n00menon completion checks"
 
@@ -26,14 +26,14 @@ pnpm -C n00menon run ui:build || true
 pnpm -C n00menon run docs:build || true
 
 echo "Detecting repo changes"
-if [ -n "$(git status --porcelain)" ]; then
+if [[ -n "$(git status --porcelain)" ]]; then
 	BRANCH_NAME="n00menon/complete/$(date -u +%Y%m%d%H%M%S)"
-	git checkout -b "$BRANCH_NAME"
+	git checkout -b "${BRANCH_NAME}"
 	git add -A
 	git commit -m "chore(n00menon): complete docs/ui build and validation artifacts"
-	git push --set-upstream origin "$BRANCH_NAME"
-	echo "Created branch $BRANCH_NAME with changes; open a PR to merge the improvements"
-	echo "$BRANCH_NAME"
+	git push --set-upstream origin "${BRANCH_NAME}"
+	echo "Created branch ${BRANCH_NAME} with changes; open a PR to merge the improvements"
+	echo "${BRANCH_NAME}"
 else
 	echo "No changes detected; nothing to commit"
 fi
