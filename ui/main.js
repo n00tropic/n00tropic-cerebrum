@@ -37,7 +37,35 @@ form.addEventListener("submit", async (e) => {
         : ["- n/a"]),
     ].filter(Boolean);
     log(lines.join("\n"));
+    if (data.dataset) {
+      pollStatus(data.dataset);
+    }
   } catch (err) {
     log(`Error: ${err.message}`);
   }
 });
+
+async function pollStatus(dataset) {
+  logEl.textContent += `\nPolling for assets for ${dataset}...`;
+  const start = Date.now();
+  const deadline = start + 60_000; // 60 seconds
+  const seen = new Set();
+  const interval = setInterval(async () => {
+    try {
+      const res = await fetch(`/status?dataset=${encodeURIComponent(dataset)}`);
+      const data = await res.json();
+      const assets = data.assets || [];
+      const newOnes = assets.filter((a) => !seen.has(a));
+      newOnes.forEach((a) => seen.add(a));
+      if (newOnes.length > 0) {
+        logEl.textContent += `\nNew assets:\n${newOnes.map((a) => `- ${new URL(a, window.location.href).href}`).join("\n")}`;
+      }
+      if (assets.length > 0 || Date.now() > deadline) {
+        clearInterval(interval);
+      }
+    } catch (err) {
+      clearInterval(interval);
+      logEl.textContent += `\nStatus polling error: ${err.message}`;
+    }
+  }, 3000);
+}
