@@ -14,9 +14,8 @@
   },
   "devDependencies": {
     "@antora/cli": "3.1.14",
-    "@antora/site-generator": "3.1.14",
     "@antora/lunr-extension": "1.0.0-alpha.12",
-    "vale": ">=2.14.0",
-    "cspell": "^6.18.0"
+    "@antora/site-generator": "3.1.14",
+    "cspell": "^9.3.2"
   }
 }
