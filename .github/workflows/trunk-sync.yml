@@ -1,0 +1,42 @@
+name: Trunk sync (dry-run by default)
+
+on:
+  schedule:
+    - cron: "0 4 * * 1" # weekly Monday at 04:00 UTC
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Apply changes & create PRs (default: false)"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+
+jobs:
+  check-trunk-sync:
+    name: Check trunk sync (dry-run unless apply=true)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          submodules: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Run trunk sync (dry-run by default)
+        env:
+          APPLY: ${{ github.event.inputs.apply || 'false' }}
+        run: |
+          set -eux
+          if [ "$APPLY" = "true" ]; then
+            python3 .dev/automation/scripts/sync-trunk-autopush.py --apply
+          else
+            python3 .dev/automation/scripts/sync-trunk-autopush.py
+          fi
