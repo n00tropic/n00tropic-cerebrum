@@ -2,13 +2,8 @@ name: Trunk sync (dry-run by default)
 
 on:
   schedule:
-    - cron: "0 4 * * 1" # weekly Monday at 04:00 UTC
+    - cron: 0 4 * * 1 # weekly Monday at 04:00 UTC
   workflow_dispatch:
-    inputs:
-      apply:
-        description: "Apply changes & create PRs (default: false)"
-        required: false
-        default: "false"
 
 permissions:
   contents: read
@@ -30,13 +25,9 @@ jobs:
         with:
           python-version: 3.x
 
-      - name: Run trunk sync (dry-run by default)
+      - name: Run trunk sync (dry-run only)
         env:
-          APPLY: ${{ github.event.inputs.apply || 'false' }}
+          APPLY: false
         run: |
           set -eux
-          if [ "$APPLY" = "true" ]; then
-            python3 .dev/automation/scripts/sync-trunk-autopush.py --apply
-          else
-            python3 .dev/automation/scripts/sync-trunk-autopush.py
-          fi
+          python3 .dev/automation/scripts/sync-trunk-autopush.py
