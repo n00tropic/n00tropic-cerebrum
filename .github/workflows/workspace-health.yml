@@ -32,6 +32,18 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.22.0
+      - name: Ensure pnpm is available
+        shell: bash
+        run: |
+          set -eux
+          if ! command -v pnpm >/dev/null 2>&1; then
+            # Try corepack or install pnpm globally as fallback
+            if command -v corepack >/dev/null 2>&1; then
+              corepack enable
+            else
+              npm i -g pnpm@10.22.0
+            fi
+          fi
       - name: Install n00t dependencies
         working-directory: n00t
         run: pnpm install --frozen-lockfile
