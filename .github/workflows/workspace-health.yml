@@ -48,15 +48,11 @@ jobs:
         working-directory: n00t
         run: |
           set -eux
-          if ! command -v pnpm >/dev/null 2>&1; then
-            npm i -g pnpm@10.22.0
-          fi
-          pnpm -v
-          pnpm install --frozen-lockfile
+          npx -y pnpm@10.22.0 install --frozen-lockfile
       - name: Scan for npm usage (fail if found)
-        run: pnpm run tools:scan-npm -- --exclude=templates,examples,stuff,vendor && echo "No npm usage found"
+        run: npx -y pnpm@10.22.0 run tools:scan-npm -- --exclude=templates,examples,stuff,vendor && echo "No npm usage found"
       - name: Run Biome checks for scripts
-        run: pnpm -s exec biome check "scripts/**/*.mjs"
+        run: npx -y pnpm@10.22.0 exec biome check "scripts/**/*.mjs"
       - name: Install trunk CLI
         run: |
           curl -sSf https://trunk.io/install.sh | sh
@@ -71,7 +67,7 @@ jobs:
       - name: Run trunk checks across subrepos (fmt + check)
         run: |
           # Ensure trunk definitions are synced from the workspace base to subrepos
-          pnpm run trunk:sync-defs || true
+          npx -y pnpm@10.22.0 run trunk:sync-defs || true
           chmod +x .dev/automation/scripts/run-trunk-subrepos.sh
           .dev/automation/scripts/run-trunk-subrepos.sh --fmt || true
       - name: Install Python linters
@@ -79,10 +75,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install isort black ruff
       - name: Run Python lint script
-        run: pnpm run lint:python
+        run: npx -y pnpm@10.22.0 run lint:python
       - name: Run Python lint script (auto-fix safe changes)
-        run: pnpm run lint:python:fix || true
+        run: npx -y pnpm@10.22.0 run lint:python:fix || true
       - name: Validate cortex schemas
-        run: pnpm run ci:validate:cortex
+        run: npx -y pnpm@10.22.0 run ci:validate:cortex
       - name: Run workspace.gitDoctor capability
         run: ./.dev/automation/scripts/workspace-gitdoctor-capability.sh --sync-submodules --publish-artifact --strict
