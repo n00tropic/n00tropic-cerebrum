@@ -36,5 +36,5 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh auth status || gh auth login --with-token <<< "$REPO_TOKEN"
+          gh auth status || echo "$REPO_TOKEN" | gh auth login --with-token
           bash .dev/automation/scripts/merge-to-minimal-set.sh || true

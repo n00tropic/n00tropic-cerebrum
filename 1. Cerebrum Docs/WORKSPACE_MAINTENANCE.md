@@ -72,3 +72,9 @@ Preflight chains capture, GitHub sync, and ERPNext sync to confirm IDs, links, a
 - Preferred capability: `workspace.gitDoctor` (backed by `workspace-health.sh`). Payload keys include `cleanUntracked`, `syncSubmodules`, `publishArtifact`, and `strict`.
 - Automation emits `artifacts/workspace-health.json`, which distinguishes tracked vs untracked entries per repo so agents can react programmatically.
 - Additional context and sample payload LIVE in [`AI_WORKSPACE_PLAYBOOK.md`](AI_WORKSPACE_PLAYBOOK.md).
+
+## Branch merging helpers
+
+- A workspace workflow `Merge to minimal set` is available to help merge PRs that are labeled `automerge`. This workflow runs on manual dispatch and merges PRs that are mergeable and labeled `automerge` to `main`.
+- Use the label `automerge` for PRs that have already been reviewed and have passing checks; the automation only merges PRs that are mergeable and won't force-merge PRs with conflicts or failing checks.
+- To trigger the merge automation manually, run the workflow `Merge to minimal set` from the Actions tab or use the capability `merge.minimalSet` from the MCP CLI to run it programmatically.
