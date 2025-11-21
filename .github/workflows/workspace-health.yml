@@ -84,3 +84,47 @@ jobs:
         run: npx -y pnpm@10.22.0 run ci:validate:cortex
       - name: Run workspace.gitDoctor capability
         run: ./.dev/automation/scripts/workspace-gitdoctor-capability.sh --sync-submodules --publish-artifact --strict
+
+  health-selfhosted:
+    name: workspace-health (self-hosted runner)
+    runs-on: [self-hosted, linux]
+    steps:
+      - name: Checkout (no submodules by default)
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          submodules: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: n00t/pnpm-lock.yaml
+      - name: Ensure pnpm is available (self-hosted variant)
+        shell: bash
+        run: |
+          set -eux
+          if ! command -v pnpm >/dev/null 2>&1; then
+            npm i -g pnpm@10.22.0
+          fi
+      - name: Install n00t dependencies (self-hosted)
+        working-directory: n00t
+        run: |
+          set -eux
+          pnpm -v
+          pnpm install --frozen-lockfile
+      - name: Run trunk checks across subrepos (fmt + check)
+        run: |
+          set -eux
+          npx -y pnpm@10.22.0 run trunk:sync-defs || true
+          chmod +x .dev/automation/scripts/run-trunk-subrepos.sh
+          .dev/automation/scripts/run-trunk-subrepos.sh --fmt || true
+      - name: Run Python lint script
+        run: npx -y pnpm@10.22.0 run lint:python
+      - name: Run workspace.gitDoctor capability (self-hosted)
+        run: ./.dev/automation/scripts/workspace-gitdoctor-capability.sh --sync-submodules --publish-artifact --strict
