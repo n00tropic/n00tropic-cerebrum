@@ -115,6 +115,7 @@ Automation scripts live under `.dev/automation/scripts/` and surface through the
 | `scripts/erpnext-run.sh`          | Run-and-gun ERPNext dev stack: bootstraps bench, verifies MySQL/Redis, launches browser, logs telemetry, and triggers PM/telemetry exports.   |
 | `project-preflight-batch.sh`      | Executes preflight across every registry entry to keep GitHub + ERPNext sync warnings visible.                                                |
 | `workspace-health.py`             | Summarizes root + submodule git status, emits `artifacts/workspace-health.json`, cleans safe untracked files, and syncs submodules on demand. |
+| `meta-check.sh`                   | Runs cortex schema validation and records a run envelope for telemetry (`.dev/automation/artifacts/automation/run-envelopes.jsonl`).          |
 
 Run `python cli.py --help` from the workspace root (or `n00-horizons/cli.py`, `n00-frontiers/cli.py`, etc.) to access curated wrappers around these scripts for both agents and humans.
 
