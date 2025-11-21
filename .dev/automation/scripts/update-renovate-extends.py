@@ -15,7 +15,6 @@ ROOT = Path(__file__).resolve().parents[3]
 CENTRAL_EXTEND = "github>n00tropic/n00tropic-cerebrum//renovate-presets/workspace.json"
 CENTRAL_EXTEND_LOCAL = "local>renovate-presets/workspace.json"
 LEGACY_EXTENDS = [
-    "github>IAmJonoBo/n00-cortex//renovate-presets/workspace.json",
     "github>n00tropic/n00-cortex//renovate-presets/workspace.json",
 ]
 
