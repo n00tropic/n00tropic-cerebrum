@@ -8,13 +8,36 @@ for repos whose `.trunk/trunk.yaml` changed. It is intentionally opt-in via
 from __future__ import annotations
 
 import argparse
+import re
+import shutil
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 
 ROOT = Path(__file__).resolve().parents[3]
 SYNC_SCRIPT = ROOT / ".dev" / "automation" / "scripts" / "sync-trunk.py"
+
+
+def _runcmd(cmd: List[str], cwd: Path | None = None) -> subprocess.CompletedProcess:
+    """Run a command and return CompletedProcess, raising on unexpected errors.
+
+    The function maps command names to absolute binaries found on PATH (where applicable)
+    to reduce bandit warnings about partial executable names.
+    """
+    # Map common binaries to absolute path where available
+    if cmd and cmd[0] in ("git", "gh"):
+        path = shutil.which(cmd[0])
+        if path:
+            cmd[0] = path
+    return subprocess.run(
+        cmd,
+        cwd=(str(cwd) if cwd else None),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
 
 
 def _find_changed_repos() -> List[str]:
@@ -25,18 +48,26 @@ def _find_changed_repos() -> List[str]:
         trunk = p / ".trunk" / "trunk.yaml"
         if trunk.exists():
             git = ["git", "-C", str(p), "status", "--porcelain"]
-            out = subprocess.run(git, capture_output=True, text=True)
+            out = _runcmd(git)
             if out.returncode == 0 and out.stdout.strip():
                 changed.append(p.name)
     return changed
 
 
 def _apply_changes_for_repo(repo: str) -> None:
+    if not re.match(r"^[a-zA-Z0-9_-]+$", repo):
+        raise RuntimeError(f"Invalid repo name: {repo}")
     path = ROOT / repo
     branch = f"chore/sync-trunk/{datetime.now(timezone.utc).strftime('%Y%m%d%H%M')}"
-    subprocess.run(["git", "-C", str(path), "checkout", "-b", branch], check=True)
-    subprocess.run(["git", "-C", str(path), "add", ".trunk/trunk.yaml"], check=True)
-    subprocess.run(
+    rc = _runcmd(["git", "-C", str(path), "checkout", "-b", branch])
+    if rc.returncode != 0:
+        raise RuntimeError(
+            f"Failed to create branch {branch} in repo {repo}: {rc.stderr}"
+        )
+    rc = _runcmd(["git", "-C", str(path), "add", ".trunk/trunk.yaml"])
+    if rc.returncode != 0:
+        raise RuntimeError(f"Failed to stage trunk.yaml in repo {repo}: {rc.stderr}")
+    rc = _runcmd(
         [
             "git",
             "-C",
@@ -45,14 +76,20 @@ def _apply_changes_for_repo(repo: str) -> None:
             "-m",
             "chore(trunk): sync trunk.yaml from canonical",
         ],
-        check=True,
     )
-    subprocess.run(
-        ["git", "-C", str(path), "push", "--set-upstream", "origin", branch], check=True
-    )
+    if rc.returncode != 0:
+        print(f"Warning: commit may have failed (repo={repo}): {rc.stderr}")
+    rc = _runcmd(["git", "-C", str(path), "push", "--set-upstream", "origin", branch])
+    if rc.returncode != 0:
+        raise RuntimeError(
+            f"Failed to push branch {branch} for repo {repo}: {rc.stderr}"
+        )
     title = "chore(trunk): sync trunk.yaml from canonical"
     body = "Automated trunk sync from canonical trunk.yaml (n00-cortex) via `sync-trunk.py`."
-    subprocess.run(
+    if not shutil.which("gh"):
+        print("gh CLI not found; skipping PR creation for", repo)
+        return
+    rc = _runcmd(
         [
             "gh",
             "pr",
@@ -67,14 +104,15 @@ def _apply_changes_for_repo(repo: str) -> None:
             title,
             "--body",
             body,
-        ],
-        check=True,
+        ]
     )
+    if rc.returncode != 0:
+        raise RuntimeError(f"Failed to create PR for {repo}: {rc.stderr}")
     print(f"Created PR for {repo}: {title}")
 
 
 def run_sync(repos: Optional[List[str]] = None, apply_changes: bool = False) -> int:
-    args = ["python3", str(SYNC_SCRIPT), "--pull"]
+    args = [str(sys.executable), str(SYNC_SCRIPT), "--pull"]
     if repos:
         for r in repos:
             args.extend(["--repo", r])

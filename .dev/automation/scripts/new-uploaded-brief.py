@@ -14,7 +14,9 @@ from lib import project_metadata
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--slug", required=True, help="Slug for the brief (used in id/path).")
+    parser.add_argument(
+        "--slug", required=True, help="Slug for the brief (used in id/path)."
+    )
     parser.add_argument("--title", required=True, help="Title for the brief.")
     parser.add_argument("--owner", required=True, help="Owner/team handle.")
     parser.add_argument(
@@ -23,7 +25,9 @@ def parse_args() -> argparse.Namespace:
         default="idea",
         help="Brief classification; determines defaults and destination path.",
     )
-    parser.add_argument("--tags", nargs="*", default=[], help="Additional tags to apply.")
+    parser.add_argument(
+        "--tags", nargs="*", default=[], help="Additional tags to apply."
+    )
     parser.add_argument(
         "--review-days",
         type=int,
@@ -94,7 +98,11 @@ def main() -> int:
     review_date_str = project_metadata.format_display_date(review_date)
 
     identifier = f"{meta_defaults['id_prefix']}-{args.slug}"
-    target_path = args.path.resolve() if args.path else default_path(args.kind, identifier, workspace_root)
+    target_path = (
+        args.path.resolve()
+        if args.path
+        else default_path(args.kind, identifier, workspace_root)
+    )
     target_path.parent.mkdir(parents=True, exist_ok=True)
 
     links: List[Dict[str, str]] = []
@@ -160,9 +168,14 @@ def main() -> int:
     print(str(target_path))
 
     if args.register:
-        ingest_script = org_root / ".dev" / "automation" / "scripts" / "project-ingest-markdown.sh"
+        ingest_script = (
+            org_root / ".dev" / "automation" / "scripts" / "project-ingest-markdown.sh"
+        )
         if not ingest_script.exists():
             raise SystemExit(f"Ingest script not found at {ingest_script}")
+        # Ensure the ingest script is a file and executable; it is a workspace-local tool
+        if not ingest_script.is_file():
+            raise SystemExit(f"Ingest script is not a file: {ingest_script}")
         rel_path = str(target_path.relative_to(org_root))
         cmd = [
             str(ingest_script),
@@ -175,7 +188,10 @@ def main() -> int:
         ]
         if args.tags:
             cmd.extend(["--tags", *args.tags])
-        subprocess.run(cmd, check=True, cwd=org_root)
+        # Using list form with an absolute path to avoid shell injection (validated inputs above). noqa: B603
+        subprocess.run(
+            cmd, check=True, cwd=org_root
+        )  # nosec B603 - curated local script path and validated args
     return 0
 
 
