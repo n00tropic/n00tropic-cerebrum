@@ -53,14 +53,14 @@ RENOVATE_FILES: Dict[str, Tuple[Path, Union[str, list[str]]]] = {
         ROOT / "n00-frontiers" / "renovate.json",
         [
             "github>n00tropic/n00tropic-cerebrum//renovate-presets/workspace.json",
-            "github>IAmJonoBo/n00-cortex//renovate-presets/workspace.json",
+            "github>n00tropic/n00-cortex//renovate-presets/workspace.json",
         ],
     ),
     "n00plicate": (
         ROOT / "n00plicate" / "renovate.json",
         [
             "github>n00tropic/n00tropic-cerebrum//renovate-presets/workspace.json",
-            "github>IAmJonoBo/n00-cortex//renovate-presets/workspace.json",
+            "github>n00tropic/n00-cortex//renovate-presets/workspace.json",
         ],
     ),
 }
