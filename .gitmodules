@@ -22,3 +22,6 @@
 [submodule "n00clear-fusion"]
 	path = n00clear-fusion
 	url = https://github.com/n00tropic/n00clear-fusion.git
+[submodule "n00menon"]
+	path = n00menon
+	url = https://github.com/n00tropic/n00menon.git
