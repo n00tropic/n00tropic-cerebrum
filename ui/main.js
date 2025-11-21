@@ -26,8 +26,14 @@ form.addEventListener("submit", async (e) => {
     if (!res.ok) {
       throw new Error(data.error || res.statusText);
     }
-    const links = data.assets?.map((a) => `- ${a}`).join("\n") || "n/a";
-    log(`${JSON.stringify(data, null, 2)}\nAssets:\n${links}`);
+    const assets = data.assets || [];
+    const lines = [
+      `Status: ${data.status}`,
+      data.output || "",
+      "Assets:",
+      ...(assets.length ? assets.map((a) => `- ${a}`) : ["- n/a"]),
+    ];
+    log(lines.join("\n"));
   } catch (err) {
     log(`Error: ${err.message}`);
   }

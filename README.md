@@ -115,7 +115,15 @@ Automation scripts live under `.dev/automation/scripts/` and surface through the
 | `scripts/erpnext-run.sh`          | Run-and-gun ERPNext dev stack: bootstraps bench, verifies MySQL/Redis, launches browser, logs telemetry, and triggers PM/telemetry exports.   |
 | `project-preflight-batch.sh`      | Executes preflight across every registry entry to keep GitHub + ERPNext sync warnings visible.                                                |
 | `workspace-health.py`             | Summarizes root + submodule git status, emits `artifacts/workspace-health.json`, cleans safe untracked files, and syncs submodules on demand. |
-| `fusion-pipeline.sh`              | One-click PDF ingest → embed → generate → graph rebuild (moves processed PDFs to `n00clear-fusion/corpora/Processed/`, logs run envelopes).   |
+| `fusion-pipeline.sh`              | One-click PDF ingest → embed (auto backend) → generate → graph rebuild; moves processed PDFs to `n00clear-fusion/corpora/Processed/`, logs run envelopes, registers horizons/school stubs. |
+
+## Quick start (fusion UI + graph)
+
+- Serve graph for agents: `pnpm -C n00-cortex graph:serve` (port 7090).
+- One-click fusion UI: `pnpm run ui:serve` then open `http://localhost:7800` to upload a PDF (backend selectable: auto/OpenAI/LM Studio compatible/hashed). Pipelines rebuild the graph and place original PDFs into `corpora/Processed/`.
+- CLI pipeline: `./.dev/automation/scripts/fusion-pipeline.sh <pdf-or-dir> [dataset-id]`.
+
+CI guardrail: `.github/workflows/fusion-pipeline-ci.yml` runs a tiny sample PDF through the pipeline and validates the catalog graph.***
 | `meta-check.sh`                   | Runs cortex schema validation and records a run envelope for telemetry (`.dev/automation/artifacts/automation/run-envelopes.jsonl`).          |
 
 Run `python cli.py --help` from the workspace root (or `n00-horizons/cli.py`, `n00-frontiers/cli.py`, etc.) to access curated wrappers around these scripts for both agents and humans.
