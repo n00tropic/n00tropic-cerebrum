@@ -113,13 +113,21 @@ def main() -> int:
         help="Disable fail-fast behavior",
     )
     parser.add_argument(
+        "--fail-on",
+        type=str,
+        default=",".join(["failure", "cancelled", "timed_out", "action_required"]),
+        help="Comma-separated list of check conclusion values that should cause immediate exit (e.g. failure,cancelled)",
+    )
+    parser.add_argument(
         "--require-success",
         action="store_true",
         default=False,
         help="Only consider success when all checks succeed",
     )
     args = parser.parse_args()
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG if args.interval == 1 else logging.INFO)
+    if args.fail_on:
+        args.fail_on = [f.strip() for f in args.fail_on.split(",") if f.strip()]
 
     fail_fast = not args.no_fail_fast
     owner, repo_name = parse_repo(args.repo)
@@ -156,9 +164,11 @@ def main() -> int:
 
         # If fail-fast and any completed check has failure, stop
         if fail_fast:
-            for name, status, conclusion in details:
-                if conclusion and conclusion.lower() == "failure":
-                    logging.error("Fail-fast: check %s failed", name)
+            for name, _status, conclusion in details:
+                if conclusion and conclusion.lower() in {
+                    v.lower() for v in args.fail_on
+                }:
+                    logging.error("Fail-fast: check %s concluded %s", name, conclusion)
                     return 1
 
         # If all completed

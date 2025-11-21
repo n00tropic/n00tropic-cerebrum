@@ -5,11 +5,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import shlex
 import shutil
 import subprocess  # nosec B404 - toolchain commands are workspace-managed
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Tuple
@@ -19,6 +21,8 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 
 DEFAULT_ARTIFACT_PATH = ROOT / "artifacts" / "workspace-health.json"
+DIAGNOSTIC_PATH = ROOT / "artifacts" / "workspace-health-diagnostic.log"
+EXITED_WITH = "exited with"
 
 
 def ensure_superrepo_layout() -> None:
@@ -42,6 +46,7 @@ def ensure_superrepo_layout() -> None:
         )
     if os.environ.get("VERBOSE_SUPERREPO_CHECK"):
         sys.stdout.write(result.stdout)
+    logging.debug("superrepo check result: %s", result.stdout)
 
 
 @dataclass
@@ -107,6 +112,7 @@ def _run_process(
     capture_output: bool = True,
 ) -> subprocess.CompletedProcess[str]:
     resolved = _resolve_command(cmd)
+    logging.debug("_run_process: %s (cwd=%s)", resolved, cwd)
     return subprocess.run(  # nosec B603 - commands resolved from curated allowlist
         resolved,
         cwd=cwd,
@@ -210,9 +216,15 @@ def _run_command(cmd: Sequence[str], cwd: Path) -> List[str]:
 def sync_submodules(root: Path) -> List[str]:
     logs: List[str] = []
     logs.extend(_run_command(["git", "submodule", "sync", "--recursive"], root))
-    logs.extend(
-        _run_command(["git", "submodule", "update", "--init", "--recursive"], root)
+    sub_logs = _run_command(
+        ["git", "submodule", "update", "--init", "--recursive"], root
     )
+    logs.extend(sub_logs)
+    if any(EXITED_WITH in line for line in sub_logs):
+        logging.error("submodule update failed: %s", sub_logs)
+        logs.append(
+            "[error] submodule update returned non-zero; consider self-hosted runner"
+        )
     return logs
 
 
@@ -220,14 +232,20 @@ def sync_trunk_configs(root: Path) -> List[str]:
     script = root / ".dev" / "automation" / "scripts" / "sync-trunk.py"
     if not script.exists():
         return [f"sync-trunk script missing at {script}"]
-    return _run_command(["python3", str(script), "--pull"], root)
+    logs = _run_command(["python3", str(script), "--pull"], root)
+    if any(EXITED_WITH in line for line in logs):
+        logging.error("sync-trunk reported non-zero exit: %s", logs)
+    return logs
 
 
 def run_meta_check(root: Path) -> List[str]:
     script = root / ".dev" / "automation" / "scripts" / "meta-check.sh"
     if not script.exists():
         return [f"meta-check script missing at {script}"]
-    return _run_command(["bash", str(script)], root)
+    logs = _run_command(["bash", str(script)], root)
+    if any(EXITED_WITH in line for line in logs):
+        logging.error("meta-check returned non-zero: %s", logs)
+    return logs
 
 
 def run_repo_commands(
@@ -282,6 +300,19 @@ def build_report(args: argparse.Namespace) -> Dict[str, object]:
         "submodules": submodule_statuses,
         "logs": logs,
     }
+    # Add a summary field for simple diagnostic checks
+    # short string used to detect run failures in logs
+
+    report["summary"] = {
+        "pnpm_present": bool(shutil.which("pnpm")),
+        "pnpm_path": shutil.which("pnpm") or "",
+        "node_path": shutil.which("node") or "",
+        "python_path": shutil.which("python3") or shutil.which("python") or "",
+    }
+    # detect failures in logs (e.g., `exited with <code>`) and flag them
+    report["diagnostic_failures"] = [
+        line for line in logs if EXITED_WITH in line or "error" in line.lower()
+    ]
     return report
 
 
@@ -453,7 +484,46 @@ def emit(report: Dict[str, object], args: argparse.Namespace) -> int:
     if args.publish_artifact and not args.json_path:
         args.json_path = str(DEFAULT_ARTIFACT_PATH)
     publish_json_artifact(payload, args)
+    # If there are diagnostic failures recorded, treat that as a non-zero exit
+    diag_failures = report.get("diagnostic_failures", [])
+    if diag_failures:
+        print("Diagnostic failures detected:")
+        for f in diag_failures:
+            print(" -", f)
+        return 1
     return _determine_exit_code(root_status, dirty_subs, args)
+
+
+def write_diagnostic_file(report: Dict[str, object], args: argparse.Namespace) -> None:
+    """Write a diagnostic log file containing environment and payload details."""
+    diagnostic = []
+    try:
+        diagnostic.append(f"timestamp: {time.asctime()}")
+        diagnostic.append(
+            f"args: debug={getattr(args, 'debug', False)}, diagnostic={getattr(args, 'diagnostic', False)}"
+        )
+        diagnostic.append(f"cwd: {os.getcwd()}")
+        diagnostic.append(f"PATH: {os.environ.get('PATH')}")
+        diagnostic.append("--- tools ---")
+        for tool in ("git", "node", "pnpm", "python3", "gh"):
+            path = shutil.which(tool) or "(not found)"
+            diagnostic.append(f"{tool}_path: {path}")
+            if path != "(not found)":
+                try:
+                    res = _run_process([tool, "--version"], cwd=ROOT)
+                    if res.stdout:
+                        diagnostic.append(f"{tool}_version: {res.stdout.strip()}")
+                except Exception:
+                    diagnostic.append(f"{tool}_version: (failed to run)")
+        diagnostic.append("--- logs preview ---")
+        logs = report.get("logs", [])
+        for line in logs[-200:]:
+            diagnostic.append(line)
+        DIAGNOSTIC_PATH.parent.mkdir(parents=True, exist_ok=True)
+        DIAGNOSTIC_PATH.write_text("\n".join(diagnostic) + "\n", encoding="utf-8")
+        logging.info("Wrote diagnostic file to %s", DIAGNOSTIC_PATH)
+    except Exception:  # pragma: no cover - diagnostics should never crash main flow
+        logging.exception("Failed writing diagnostic file")
 
 
 def main() -> int:
@@ -523,11 +593,28 @@ def main() -> int:
         action="store_true",
         help="Persist workspace-health.json under artifacts/ for AI/agent consumers.",
     )
+    parser.add_argument(
+        "--diagnostic",
+        action="store_true",
+        help="Write additional diagnostic logs to artifacts/workspace-health-diagnostic.log",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug logging for additional observability",
+    )
     args = parser.parse_args()
     args = apply_payload_overrides(args)
+    if args.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
     if args.autofix:
         args.sync_submodules = True
     report = build_report(args)
+    if args.diagnostic:
+        try:
+            write_diagnostic_file(report, args)
+        except Exception:
+            logging.exception("Failed to write diagnostic file")
     return emit(report, args)
 
 

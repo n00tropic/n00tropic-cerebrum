@@ -5,7 +5,9 @@ import path from "node:path";
 
 const cwd = process.cwd();
 const args = process.argv.slice(2);
-const excludePatterns = [];
+// Default excludes: scripts that bootstrap pnpm via npm are allowed
+const defaultExcludePatterns = ["scripts/setup-pnpm.sh"];
+const excludePatterns = [...defaultExcludePatterns];
 
 for (let i = 0; i < args.length; i += 1) {
   const arg = args[i];
