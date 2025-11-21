@@ -34,6 +34,25 @@ function serveExport(req, res) {
   return true;
 }
 
+function serveStatus(req, res) {
+  const url = new URL(req.url, "http://localhost");
+  if (url.pathname !== "/status") return false;
+  const dataset = url.searchParams.get("dataset");
+  if (!dataset) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "dataset required" }));
+    return true;
+  }
+  const genDir = path.join(fusionDir, "exports", dataset, "generated");
+  let assets = [];
+  if (existsSync(genDir)) {
+    assets = fs.readdirSync(genDir).map((name) => path.join("exports", dataset, "generated", name));
+  }
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ dataset, assets }));
+  return true;
+}
+
 function handleUpload(req, res) {
   const busboy = Busboy({ headers: req.headers });
   const uploadsDir = path.join(fusionDir, "corpora");
@@ -102,6 +121,9 @@ function handleUpload(req, res) {
 const server = http.createServer((req, res) => {
   if (req.method === "POST" && req.url === "/upload") {
     return handleUpload(req, res);
+  }
+  if (req.method === "GET" && req.url.startsWith("/status")) {
+    return serveStatus(req, res);
   }
   if (serveExport(req, res)) {
     return;
