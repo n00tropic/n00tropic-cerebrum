@@ -71,8 +71,10 @@ done
 
 if [[ ${FAILED} -ne 0 ]]; then
 	echo "One or more trunk checks failed"
+	python3 "${DIR}/.dev/automation/scripts/record-run-envelope.py" --capability workspace.trunkCheck --status failure --asset "${ARTIFACTS_DIR}" --notes "trunk check failures" || true
 	exit 1
 fi
 
 echo "All trunk checks passed"
+python3 "${DIR}/.dev/automation/scripts/record-run-envelope.py" --capability workspace.trunkCheck --status success --asset "${ARTIFACTS_DIR}" --notes "trunk checks passed" || true
 exit 0

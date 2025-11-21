@@ -1,0 +1,75 @@
+#!/usr/bin/env node
+import { createWriteStream, existsSync, mkdirSync, readFileSync } from "node:fs";
+import http from "node:http";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { spawn } from "node:child_process";
+import Busboy from "busboy";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(__dirname, "..");
+const fusionDir = path.join(root, "n00clear-fusion");
+const pipelineScript = path.join(root, ".dev", "automation", "scripts", "fusion-pipeline.sh");
+
+function serveStatic(req, res) {
+  const url = req.url === "/" ? "/index.html" : req.url;
+  const filePath = path.join(__dirname, url);
+  if (!existsSync(filePath)) return false;
+  const content = readFileSync(filePath);
+  const type = filePath.endsWith(".js")
+    ? "application/javascript"
+    : "text/html";
+  res.writeHead(200, { "Content-Type": type });
+  res.end(content);
+  return true;
+}
+
+function handleUpload(req, res) {
+  const busboy = Busboy({ headers: req.headers });
+  const uploadsDir = path.join(fusionDir, "corpora");
+  mkdirSync(uploadsDir, { recursive: true });
+  let dataset = "";
+  let filePath = "";
+  busboy.on("file", (_name, file, info) => {
+    const saveTo = path.join(uploadsDir, info.filename);
+    filePath = saveTo;
+    file.pipe(createWriteStream(saveTo));
+  });
+  busboy.on("field", (name, val) => {
+    if (name === "dataset") dataset = val;
+  });
+  busboy.on("close", () => {
+    if (!filePath) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "No file uploaded" }));
+      return;
+    }
+    const args = [pipelineScript, filePath];
+    if (dataset) args.push(dataset);
+    const proc = spawn("bash", args.slice(0), { cwd: root });
+    let output = "";
+    proc.stdout.on("data", (d) => (output += d.toString()));
+    proc.stderr.on("data", (d) => (output += d.toString()));
+    proc.on("close", (code) => {
+      const status = code === 0 ? "ok" : "error";
+      res.writeHead(code === 0 ? 200 : 500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ status, output }));
+    });
+  });
+  req.pipe(busboy);
+}
+
+const server = http.createServer((req, res) => {
+  if (req.method === "POST" && req.url === "/upload") {
+    return handleUpload(req, res);
+  }
+  if (!serveStatic(req, res)) {
+    res.writeHead(404, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "not found" }));
+  }
+});
+
+const port = process.env.FUSION_UI_PORT || 7800;
+server.listen(port, () => {
+  console.log(`[fusion-ui] listening on http://localhost:${port}`);
+});

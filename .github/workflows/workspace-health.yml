@@ -56,5 +56,7 @@ jobs:
         run: pnpm run lint:python
       - name: Run Python lint script (auto-fix safe changes)
         run: pnpm run lint:python:fix || true
+      - name: Validate cortex schemas
+        run: pnpm run ci:validate:cortex
       - name: Run workspace.gitDoctor capability
         run: ./.dev/automation/scripts/workspace-gitdoctor-capability.sh --sync-submodules --publish-artifact --strict

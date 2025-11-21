@@ -8,6 +8,7 @@
     "@antora/lunr-extension": "1.0.0-alpha.12",
     "@antora/site-generator": "3.1.14",
     "@biomejs/biome": "2.3.6",
+    "busboy": "^1.6.0",
     "@types/node": "24.10.1",
     "danger": "^13.0.5",
     "dependency-cruiser": "^17.3.1",
@@ -52,11 +53,13 @@
     "docs:vale-terms-test": "bash scripts/run-vale-terms-candidates-test.sh",
     "docker:sync": "node scripts/docker-sync.mjs",
     "validate-docs": "node scripts/validate-docs.mjs",
+    "ci:validate:cortex": "pnpm -C n00-cortex validate:schemas",
     "trunk:check-all": "auto_dir=.dev/auto; auto_dir=\"${auto_dir}mation\"; bash ${auto_dir}/scripts/run-trunk-subrepos.sh",
     "trunk:sync-defs": "node scripts/sync-trunk-defs.mjs",
     "tools:scan-npm": "node scripts/find-npm-usages.mjs",
     "tools:replace-npx": "node scripts/replace-npx-with-pnpm.mjs",
-    "ci:autoapply": "bash scripts/ci-autoapply.sh"
+    "ci:autoapply": "bash scripts/ci-autoapply.sh",
+    "ui:serve": "node ui/fusion-ui-server.mjs"
   },
   "pnpm": {
     "overrides": {
