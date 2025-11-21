@@ -20,7 +20,7 @@ if [ -z "$PRS_TO_MERGE" ]; then
 	exit 0
 fi
 
-for PR_NUM in $PRS_TO_MERGE; do
+for PR_NUM in ${PRS_TO_MERGE}; do
 	echo "Merging PR #${PR_NUM}"
 	gh pr merge "$PR_NUM" --merge --admin || echo "Failed to merge PR $PR_NUM"
 done
