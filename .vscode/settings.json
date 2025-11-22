@@ -1,8 +1,22 @@
 {
   "npm.packageManager": "pnpm",
   "vitest.disableWorkspaceWarning": true,
-  "files.exclude": {
-    "**/Typora.app": true
+  "files.exclude": {},
+  "explorer.excludeGitIgnore": false,
+  "search.useIgnoreFiles": false,
+  "git.autoRepositoryDetection": "true",
+  "git.autofetch": true,
+  "git.enableSmartCommit": false,
+  "git.showInlineOpenFileAction": "auto",
+  "git.branchProtection": {},
+  "gitlens.statusBar.enabled": true,
+  "gitlens.views.repositories.enabled": true,
+  "gitlens.views.repositories.showBranches": true,
+  "gitlens.views.repositories.showRemotes": true,
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.venv-*/**": true,
+    "**/.pnpm/**": true
   },
   "python.terminal.useEnvFile": true,
   "mcp": {
