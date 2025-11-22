@@ -101,20 +101,20 @@ This sequence highlights the typical cadence: adjust policy in `n00-cortex`, ada
 
 Automation scripts live under `.dev/automation/scripts/` and surface through the `n00t` capability manifest.
 
-| Script                            | Purpose                                                                                                                                       |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `meta-check.sh`                   | Orchestrates repo health checks, schema validation, and CVE scans before publishing changes.                                                  |
-| `refresh-workspace.sh`            | Fast-forwards each repo and updates submodules to keep local clones aligned.                                                                  |
-| `trunk-upgrade.sh`                | Runs `trunk upgrade` across repos (supports repo filters and extra flags when invoked via capabilities).                                      |
-| `check-cross-repo-consistency.py` | Ensures toolchain manifests and overrides remain aligned.                                                                                     |
-| `workspace-release.sh`            | Verifies clean git state and writes `1. Cerebrum Docs/releases.yaml`.                                                                         |
-| `ai-workflows/*`                  | Phase-specific scripts for the AI-assisted development workflow surfaced by `n00t`.                                                           |
-| `project-preflight.sh`            | Chains capture + GitHub/ERPNext syncs and fails fast when review cadence, links, or IDs are missing.                                          |
-| `project-lifecycle-radar.sh`      | Emits a JSON radar summarizing lifecycle totals, overdue reviews, and integration gaps for planning.                                          |
-| `project-control-panel.sh`        | Builds `n00-horizons/docs/control-panel.md` so planning decks link runbooks, radar output, and preflights.                                    |
-| `scripts/erpnext-run.sh`          | Run-and-gun ERPNext dev stack: bootstraps bench, verifies MySQL/Redis, launches browser, logs telemetry, and triggers PM/telemetry exports.   |
-| `project-preflight-batch.sh`      | Executes preflight across every registry entry to keep GitHub + ERPNext sync warnings visible.                                                |
-| `workspace-health.py`             | Summarizes root + submodule git status, emits `artifacts/workspace-health.json`, cleans safe untracked files, and syncs submodules on demand. |
+| Script                            | Purpose                                                                                                                                                                                    |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `meta-check.sh`                   | Orchestrates repo health checks, schema validation, and CVE scans before publishing changes.                                                                                               |
+| `refresh-workspace.sh`            | Fast-forwards each repo and updates submodules to keep local clones aligned.                                                                                                               |
+| `trunk-upgrade.sh`                | Runs `trunk upgrade` across repos (supports repo filters and extra flags when invoked via capabilities).                                                                                   |
+| `check-cross-repo-consistency.py` | Ensures toolchain manifests and overrides remain aligned.                                                                                                                                  |
+| `workspace-release.sh`            | Verifies clean git state and writes `1. Cerebrum Docs/releases.yaml`.                                                                                                                      |
+| `ai-workflows/*`                  | Phase-specific scripts for the AI-assisted development workflow surfaced by `n00t`.                                                                                                        |
+| `project-preflight.sh`            | Chains capture + GitHub/ERPNext syncs and fails fast when review cadence, links, or IDs are missing.                                                                                       |
+| `project-lifecycle-radar.sh`      | Emits a JSON radar summarizing lifecycle totals, overdue reviews, and integration gaps for planning.                                                                                       |
+| `project-control-panel.sh`        | Builds `n00-horizons/docs/control-panel.md` so planning decks link runbooks, radar output, and preflights.                                                                                 |
+| `scripts/erpnext-run.sh`          | Run-and-gun ERPNext dev stack: bootstraps bench, verifies MySQL/Redis, launches browser, logs telemetry, and triggers PM/telemetry exports.                                                |
+| `project-preflight-batch.sh`      | Executes preflight across every registry entry to keep GitHub + ERPNext sync warnings visible.                                                                                             |
+| `workspace-health.py`             | Summarizes root + submodule git status, emits `artifacts/workspace-health.json`, cleans safe untracked files, and syncs submodules on demand.                                              |
 | `fusion-pipeline.sh`              | One-click PDF ingest → embed (auto backend) → generate → graph rebuild; moves processed PDFs to `n00clear-fusion/corpora/Processed/`, logs run envelopes, registers horizons/school stubs. |
 
 ## Quick start (fusion UI + graph)
@@ -123,8 +123,8 @@ Automation scripts live under `.dev/automation/scripts/` and surface through the
 - One-click fusion UI: `pnpm run ui:serve` then open `http://localhost:7800` to upload a PDF (backend selectable: auto/OpenAI/LM Studio compatible/hashed). Pipelines rebuild the graph and place original PDFs into `corpora/Processed/`.
 - CLI pipeline: `./.dev/automation/scripts/fusion-pipeline.sh <pdf-or-dir> [dataset-id]`.
 
-CI guardrail: `.github/workflows/fusion-pipeline-ci.yml` runs a tiny sample PDF through the pipeline and validates the catalog graph.***
-| `meta-check.sh`                   | Runs cortex schema validation and records a run envelope for telemetry (`.dev/automation/artifacts/automation/run-envelopes.jsonl`).          |
+CI guardrail: `.github/workflows/fusion-pipeline-ci.yml` runs a tiny sample PDF through the pipeline and validates the catalog graph.\*\*\*
+| `meta-check.sh` | Runs cortex schema validation and records a run envelope for telemetry (`.dev/automation/artifacts/automation/run-envelopes.jsonl`). |
 
 Run `python cli.py --help` from the workspace root (or `n00-horizons/cli.py`, `n00-frontiers/cli.py`, etc.) to access curated wrappers around these scripts for both agents and humans.
 
@@ -222,7 +222,7 @@ pnpm run lint:python
 - **Plan in public**: Capture cross-repo decisions in `1. Cerebrum Docs/ADR/` and link to repo-specific ADRs.
 - **Keep repos pristine**: Use `.dev/` directories for scratch assets and avoid committing generated artifacts.
 - **Run the workspace maintenance loop**: Follow `1. Cerebrum Docs/WORKSPACE_MAINTENANCE.md` (plus the `AI_WORKSPACE_PLAYBOOK.md` companion) to run `workspace-health`, `meta-check`, and project preflights before every PR or release.
-- **Version discipline**: Update `n00-cortex/data/toolchain-manifest.json` first when bumping runtimes so Renovate presets and generators stay aligned.
+- **Version discipline**: Update `n00-cortex/data/toolchain-manifest.json` first when bumping runtimes so Renovate presets and generators stay aligned, then run `.dev/automation/scripts/sync-nvmrc.sh` to relink every subrepo’s `.nvmrc` back to the workspace source. `n00tropic/` and `n00plicate/` are allowed to lead (break the symlink) when coordinating early Node upgrades; everything else should inherit the workspace pin by default.
 - **Release sequencing**: Tag repos independently, then run `workspace-release.sh` to snapshot versions and update documentation.
 - **Security hygiene**: Run `pip-audit -r n00-frontiers/requirements.txt` (or rely on `meta-check`) before shipping templates.
 - **Automation discovery**: Use `n00t/capabilities/manifest.json` to discover scripted operations for CLI or MCP clients.
@@ -247,7 +247,7 @@ Operational outputs live in the shared filesystem at `/Volumes/APFS Space/n00tro
 1. Clone the workspace: `git clone git@github.com:n00tropic/n00tropic-cerebrum.git && cd n00tropic-cerebrum`.
 1. Initialize submodules: `git submodule update --init --recursive`.
 1. Run `.dev/automation/scripts/workspace-health.sh --sync-submodules --publish-artifact --json` (optionally `--clean-untracked`) to align submodules and snapshot git state for agents and CI.
-1. Install toolchains per repo (Python venv for `n00-frontiers`, Node for `n00-cortex` and `n00t`, pnpm for `n00plicate`).
+1. Install toolchains per repo (Python venv for `n00-frontiers`, Node for `n00-cortex` and `n00t`, pnpm for `n00plicate`). Run `nvm use` (or `nvm install`) against the workspace `.nvmrc` so your local Node matches CI—every workflow now calls `actions/setup-node` with `node-version-file: .nvmrc`, so bumping that file (and `n00-cortex/data/toolchain-manifest.json`) is all that’s required to propagate a new Node release.
 1. Open the multi-root VS Code workspace (`n00-cortex/generators/n00tropic-cerebrum.code-workspace`).
 1. Run baseline checks: `./.dev/automation/scripts/meta-check.sh` followed by repo-specific health commands.
 1. Explore `1. Cerebrum Docs/` for ADRs, Renovate setup, and onboarding guides.
@@ -260,7 +260,7 @@ Use `pnpm` for local development of the Antora documentation and workspace scrip
 
    ```bash
    corepack enable
-   corepack prepare pnpm@latest --activate
+   corepack prepare pnpm@10.23.0 --activate
    ```
 
 2. Install workspace packages from the root folder:

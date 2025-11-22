@@ -22,7 +22,7 @@ This playbook explains how to run the OSS-first search stack for the Cerebrum do
 cp docs/search/docsearch.typesense.env.example docs/search/.env
 # Edit docs/search/.env with API key + collection name if desired
 pnpm exec antora antora-playbook.yml
-npx http-server build/site -p 8080 & echo $! > docs/search/logs/http.pid
+pnpm dlx http-server build/site -p 8080 & echo $! > docs/search/logs/http.pid
 cd docs/search
 source .env && docker compose -f typesense-compose.yml up -d
 cd -

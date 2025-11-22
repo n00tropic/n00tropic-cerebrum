@@ -8,7 +8,7 @@ help: ## Show this help message
 
 docs: ## Build Antora documentation
 	@echo "Building Antora documentation..."
-	@pnpm -v >/dev/null 2>&1 || (corepack prepare pnpm@latest --activate)
+	@pnpm -v >/dev/null 2>&1 || (corepack prepare pnpm@10.23.0 --activate)
 	pnpm exec antora antora-playbook.yml --stacktrace
 
 antora-local: ## Build Antora docs by cloning remote components into a temp dir and running a local playbook

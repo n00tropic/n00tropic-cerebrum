@@ -12,7 +12,7 @@ fi
 
 if command -v corepack >/dev/null 2>&1; then
 	corepack enable || true
-	corepack prepare pnpm@10.22.0 --activate || true
+	corepack prepare pnpm@10.23.0 --activate || true
 fi
 
 echo "Installing workspace dependencies"

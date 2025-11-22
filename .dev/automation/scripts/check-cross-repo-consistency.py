@@ -173,6 +173,29 @@ def _extract_workflow_node_version(path: Path) -> Iterable[str]:
                 yield match.group(1)
 
 
+def _extract_workflow_python_version(path: Path) -> Iterable[str]:
+    pattern = re.compile(r'python-version:\s*"([^\"]+)"')
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            match = pattern.search(line)
+            if match:
+                yield match.group(1)
+
+
+def _discover_all_workflows() -> Iterable[Path]:
+    for wf in ROOT.glob("**/.github/workflows/*.yml"):
+        yield wf
+
+
+def _extract_pnpm_versions_in_file(path: Path) -> Iterable[str]:
+    # Matches 'corepack prepare pnpm@10.23.0', 'npx -y pnpm@10.23.0', 'npm i -g pnpm@10.23.0'
+    pattern = re.compile(r"pnpm@(\d+(?:\.\d+)*)")
+    with path.open("r", encoding="utf-8", errors="ignore") as handle:
+        content = handle.read()
+        for match in pattern.finditer(content):
+            yield match.group(1)
+
+
 def _extract_trunk_runtime(path: Path, runtime: str) -> Iterable[str]:
     pattern = re.compile(rf"^\s*-\s*{re.escape(runtime)}@([0-9][0-9.\-]*)\s*$")
     with path.open("r", encoding="utf-8") as handle:
@@ -316,6 +339,48 @@ def main() -> int:
                 errors.append(
                     f"{workflow.name} sets node-version={declared}, expected {expected_node}."
                 )
+
+    # Check node/python versions and pnpm pinning across all workflows and files
+    expected_node = _effective_version(
+        "workspace", "node", node_version_canonical, overrides, errors
+    )
+    expected_python = _effective_version(
+        "workspace", "python", python_version_canonical, overrides, errors
+    )
+    expected_pnpm = toolchains.get("pnpm", {}).get("version")
+
+    # check workflows in each repo
+    for wf in sorted(set(_discover_all_workflows())):
+        try:
+            for declared_node in _extract_workflow_node_version(wf):
+                if expected_node and declared_node != expected_node:
+                    errors.append(
+                        f"{wf} sets node-version={declared_node}, expected {expected_node}."
+                    )
+            for declared_py in _extract_workflow_python_version(wf):
+                # Accept short form (3.11) vs 3.11.14; compare major/minor only
+                if expected_python:
+                    exp_py_match = str(expected_python).split(".")[:2]
+                    declared_match = str(declared_py).split(".")[:2]
+                    if exp_py_match != declared_match:
+                        errors.append(
+                            f"{wf} sets python-version={declared_py}, expected {expected_python}."
+                        )
+        except OSError as exc:
+            errors.append(f"Failed to read {wf}: {exc}")
+
+    # check for pnpm pinning in scripts and workflows
+    if expected_pnpm:
+        for path in sorted(ROOT.glob("**/*")):
+            if path.is_file() and (".git" not in str(path)):
+                try:
+                    for pn in _extract_pnpm_versions_in_file(path):
+                        if pn != expected_pnpm:
+                            errors.append(
+                                f"{path} references pnpm@{pn}, expected pnpm@{expected_pnpm}."
+                            )
+                except OSError:
+                    continue
 
     canonical_payload = None
     canonical_linters: Dict[str, str | None] = {}

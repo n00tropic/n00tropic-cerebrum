@@ -14,10 +14,10 @@ fi
 echo "Ensuring corepack/pnpm are available"
 if command -v corepack >/dev/null 2>&1; then
 	corepack enable || true
-	corepack prepare pnpm@10.22.0 --activate || true
+	corepack prepare pnpm@10.23.0 --activate || true
 else
 	echo "corepack not available; installing pnpm fallback"
-	npm i -g pnpm@10.22.0
+	npm i -g pnpm@10.23.0
 fi
 
 echo "Installing Antora CLI and site generator locally"
