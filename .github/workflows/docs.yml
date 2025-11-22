@@ -40,7 +40,7 @@ jobs:
           git submodule update --init --recursive || echo "Submodules failed to update — continuing without them"
       - uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version-file: .nvmrc
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -61,7 +61,7 @@ jobs:
       - name: Prepare pnpm and Antora
         run: |
           corepack enable
-          corepack prepare pnpm@latest --activate
+          corepack prepare pnpm@10.23.0 --activate
           # Local antora binaries are available via pnpm exec
       - name: Vale
         uses: errata-ai/vale-action@v2
@@ -133,7 +133,7 @@ jobs:
       - name: Python lint (auto fix safe changes)
         uses: actions/setup-python@v6
         with:
-          python-version: "3.14"
+          python-version: 3.11.14
       - name: Run lint-python script (fix mode)
         run: pnpm run lint:python:fix || true
       - name: Upload terms counts

@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Prepare pnpm on this machine via corepack, with an npm fallback for runners
 # that lack the corepack shim.
-PNPM_VERSION=${PNPM_VERSION:-10.22.0}
+PNPM_VERSION=${PNPM_VERSION:-10.23.0}
 
 if command -v corepack >/dev/null 2>&1; then
 	echo "Enabling corepack and preparing pnpm@${PNPM_VERSION}..."

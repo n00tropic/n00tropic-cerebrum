@@ -141,7 +141,7 @@ All documentation PRs are validated against:
 ----
 # Install Antora and extensions (pnpm)
 corepack enable
-corepack prepare pnpm@latest --activate
+corepack prepare pnpm@10.23.0 --activate
 pnpm install --frozen-lockfile
 
 # Verify locally installed Antora (use workspace installation or the n00plicate repo)

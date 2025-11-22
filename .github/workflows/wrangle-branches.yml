@@ -27,7 +27,7 @@ jobs:
       - name: Ensure node/pnpm
         run: |
           corepack enable || true
-          corepack prepare pnpm@10.22.0 --activate || true
+          corepack prepare pnpm@10.23.0 --activate || true
 
       - name: Run wrangle script
         run: |

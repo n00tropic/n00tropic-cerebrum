@@ -5,8 +5,8 @@
 - [x] Authenticate and sync required submodules (owner: codex, completed: 2025-11-20; see Next_Steps_Log)
 - [x] Add CODEOWNERS coverage for workspace root paths touched in this change (owner: codex, completed: 2025-11-20)
 - [ ] Restore pnpm toolchain + external Trunk binary (owner: codex, due: 2025-02-05)
-  - Run `scripts/setup-pnpm.sh` (corepack prepare pnpm@10.22.0; npm global fallback added) and `pnpm install` at workspace root.
-  - Install trunk CLI v1.25.0 to `~/.cache/trunk/bin/trunk` (or another runner-level location) and export `TRUNK_BIN`; the workspace no longer ships `.trunk/trunk.yaml`, so runners must source lint configs from `n00-cortex/data/trunk/base/.trunk/` or downstream repos directly.
+  - Run `scripts/setup-pnpm.sh` (corepack prepare pnpm@10.23.0; npm global fallback added) and `pnpm install` at workspace root.
+  - Install trunk CLI v1.25.4 to `~/.cache/trunk/bin/trunk` (or another runner-level location) and export `TRUNK_BIN`; the workspace no longer ships `.trunk/trunk.yaml`, so runners must source lint configs from `n00-cortex/data/trunk/base/.trunk/` or downstream repos directly.
   - Trunk defs sync script restored at `scripts/sync-trunk-defs.mjs`; invoked automatically by `.dev/automation/scripts/run-trunk-subrepos.sh` against the canonical configs under `n00-cortex/data/trunk/base/.trunk/`.
 - [ ] Repair Biome script lint path (owner: codex)
   - After pnpm is present, re-run `pnpm -w exec biome check scripts` (avoid quoting the glob) to validate scripts linting.
