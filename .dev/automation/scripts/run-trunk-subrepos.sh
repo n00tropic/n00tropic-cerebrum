@@ -93,7 +93,7 @@ if [[ ${SYNC_ONLY} == true ]]; then
 	exit 0
 fi
 
-mapfile -t REPOS < <(find . -maxdepth 2 -path "./*/.trunk/trunk.yaml" -not -path "./.trunk/trunk.yaml" -print | sed -e 's#^\./##' -e 's#/\.trunk/trunk\.yaml$##' | sort)
+mapfile -t REPOS < <(find . -maxdepth 3 -path "./*/.trunk/trunk.yaml" -not -path "./.trunk/trunk.yaml" -print | sed -e 's#^\./##' -e 's#/\.trunk/trunk\.yaml$##' | sort)
 if [[ ${#REPOS[@]} -eq 0 ]]; then
 	echo "No subrepositories with .trunk/trunk.yaml found; skipping trunk checks."
 	exit 0
@@ -107,6 +107,9 @@ for repo in "${REPOS[@]}"; do
 	if [[ -d ${repo} ]]; then
 		printf "\n== Running trunk check in %s ==\n" "${repo}"
 		pushd "${repo}" >/dev/null
+		# Ensure git commands invoked by trunk can resolve submodule metadata even when run from temp dirs.
+		export GIT_DIR="${DIR}/.git/modules/${repo}"
+		export GIT_WORK_TREE="$(pwd)"
 		# Ensure subrepo trunk config exists
 		if [[ -d ".trunk" ]]; then
 			echo "Using local .trunk/trunk.yaml for ${repo}"
