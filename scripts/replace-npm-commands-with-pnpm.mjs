@@ -98,8 +98,12 @@ function walk(dir) {
     const full = path.join(dir, file);
     const stat = fs.statSync(full);
     if (stat?.isDirectory()) {
-      if (shouldExclude(full)) return;
-      if (stat.isSymbolicLink()) return; // skip symlink dirs to avoid cycles
+      if (shouldExclude(full)) {
+        return;
+      }
+      if (stat.isSymbolicLink()) {
+        return;
+      } // skip symlink dirs to avoid cycles
       results.push(...walk(full));
     } else {
       results.push(full);
