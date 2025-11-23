@@ -38,8 +38,15 @@ ensure_trunk() {
 		TRUNK_BIN="$(command -v trunk)"
 		return 0
 	fi
-	echo "Trunk binary not found at ${TRUNK_BIN} or on PATH." >&2
-	echo "Set TRUNK_BIN to an existing trunk binary or preinstall trunk (prefer cached path ${DEFAULT_TRUNK_BIN})." >&2
+	echo "Trunk binary not found; attempting cached install to ${DEFAULT_TRUNK_BIN}..."
+	mkdir -p "$(dirname "${DEFAULT_TRUNK_BIN}")"
+	if curl -fsSL https://trunk.io/releases/trunk -o "${DEFAULT_TRUNK_BIN}"; then
+		chmod +x "${DEFAULT_TRUNK_BIN}"
+		TRUNK_BIN="${DEFAULT_TRUNK_BIN}"
+		echo "Installed Trunk launcher to ${TRUNK_BIN}"
+		return 0
+	fi
+	echo "Trunk binary not found and download failed. Set TRUNK_BIN to an existing trunk binary or preinstall trunk." >&2
 	exit 1
 }
 
