@@ -15,6 +15,20 @@
       "matchUpdateTypes": ["major"],
       "labels": ["dep:storybook"],
       "prPriority": 75
+    },
+    {
+      "description": "Track vitest majors",
+      "matchPackageNames": ["vitest", "@vitest/*"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dep:vitest"],
+      "prPriority": 70
+    },
+    {
+      "description": "Track tsup majors",
+      "matchPackageNames": ["tsup"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dep:tsup"],
+      "prPriority": 65
     }
   ]
 }
