@@ -1,0 +1,27 @@
+name: python-lock-check
+
+on:
+  pull_request:
+    paths:
+      - requirements.workspace.txt
+      - requirements.workspace.lock
+      - scripts/refresh-python-lock.sh
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lock-check:
+    runs-on: [self-hosted, linux]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: false
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Check lock freshness
+        run: |
+          bash scripts/refresh-python-lock.sh --check

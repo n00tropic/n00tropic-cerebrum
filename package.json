@@ -65,6 +65,10 @@
     "tools:scan-npm": "node scripts/find-npm-usages.mjs",
     "tools:replace-npx": "node scripts/replace-npx-with-pnpm.mjs",
     "tools:check-toolchain": "node scripts/check-toolchain-pins.mjs",
+    "python:lock": "bash scripts/refresh-python-lock.sh",
+    "python:lock:check": "bash scripts/refresh-python-lock.sh --check",
+    "tools:sync-python-version": "bash scripts/sync-python-version.sh",
+    "tools:check-runners": "node scripts/check-runners.mjs",
     "ui:serve": "node ui/fusion-ui-server.mjs"
   },
   "pnpm": {
