@@ -8,6 +8,11 @@ on:
 jobs:
   penpot-smoke:
     runs-on: ubuntu-latest
+    env:
+      PNPM_VERIFY_STORE_INTEGRITY: "true"
+      PNPM_SKIP_RECURSIVE_CACHE: "1"
+      PNPM_ENABLE_PRELPOSTSCRIPTS: "false"
+      ALLOW_SUBREPO_PNPM_INSTALL: "1"
     steps:
       - name: Checkout repo (with submodules)
         uses: actions/checkout@v4
