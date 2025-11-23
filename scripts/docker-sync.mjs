@@ -171,7 +171,7 @@ const syncPenpot = async () => {
     cwd: workspaceRoot,
     stdio: "inherit",
   });
-  let summary = { component: "penpot", updated: false };
+  const summary = { component: "penpot", updated: false };
   if (res.status !== 0) {
     summary.error = "update-script-failed";
   } else if (existsSync(outFile)) {

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 const filePath = path.resolve(process.cwd(), "n00menon", "CONTRIBUTING.md");
 if (!fs.existsSync(filePath)) {
@@ -35,7 +35,7 @@ for (let i = firstIndex; i < lines.length; i++) {
   }
 }
 
-const deduped = lines.slice(firstIndex, endIndex).join("\n") + "\n";
+const deduped = `${lines.slice(firstIndex, endIndex).join("\n")}\n`;
 fs.writeFileSync(filePath, deduped, "utf8");
 console.log("Cleaned CONTRIBUTING.md (replaced content from", filePath, ")");
 process.exit(0);
