@@ -119,6 +119,13 @@ Automation scripts live under `.dev/automation/scripts/` and surface through the
 | `guard-root-pnpm-install.mjs`     | Blocks accidental `pnpm install` at workspace root; set `ALLOW_ROOT_PNPM_INSTALL=1` only when you truly need a root install.                                                               |
 | `refresh-python-lock.sh`          | Regenerates or checks `requirements.workspace.lock` using `uv`; CI runs the check to enforce reproducible Python deps.                                                                      |
 | `check-runners.mjs`               | Lists GitHub self-hosted runners for the superrepo + submodules (uses `GH_TOKEN`); nightly workflow alerts if coverage drops to zero.                                                      |
+| `normalize-workspace-pnpm.sh`     | Canonical entry for re-installing JS deps in templates/examples; now fails if Node pins drift (override with `--allow-mismatch`).                                                          |
+
+### Alerts (Discord)
+
+- Set secret `DISCORD_WEBHOOK` to receive embeds for:
+  - `runners-nightly` (zero self-hosted runners or check errors)
+  - `python-lock-check` (lock drift on PRs or scheduled run)
 
 ## Quick start (fusion UI + graph)
 
