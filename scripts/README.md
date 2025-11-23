@@ -9,6 +9,8 @@ Canonical entry points (use these first):
 - `remove-nx-cache.sh`: clean Nx cache across the workspace.
 - `lint-python.mjs`: workspace Python lint orchestrator (ruff/black/isort) invoked by CI.
 - `validate-docs.mjs`: Antora/markdown validation wrapper.
+- `penpot:smoke` (root package script): dry-run check for newer Penpot Docker tags; fails on drift without modifying files.
+- `lint:imports` (root → n00plicate): enforces token import policy, rejecting `dist/` token paths.
 
 Deprecated in favor of `pnpm-migrate`:
 
