@@ -26,6 +26,9 @@
 2. **Refresh sources** – `./.dev/automation/scripts/refresh-workspace.sh`.
 3. **Meta-check** – `./.dev/automation/scripts/meta-check.sh` (runs lint/test suites per repo).
 4. **Release snapshot** – `./.dev/automation/scripts/workspace-release.sh` (writes `1. Cerebrum Docs/releases.yaml`).
+5. **Installs** – root `pnpm install` is blocked; use subrepo installs or `pnpm --filter`. JS subrepos have preinstall guards; rerun installs via `scripts/normalize-workspace-pnpm.sh` to enforce toolchain pins.
+6. **Python deps** – locked with `uv`; verify via `pnpm run python:lock:check`.
+7. **Alerts** – set `DISCORD_WEBHOOK` (and optional `REQUIRED_RUNNER_LABELS`) for runner and Python lock notifications.
 
 These scripts back the `workspace.*` capabilities exposed through `n00t/capabilities/manifest.json`.
 
