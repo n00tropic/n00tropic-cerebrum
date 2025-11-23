@@ -20,6 +20,11 @@ function listRepos() {
   return repos;
 }
 
+const requiredLabels = (process.env.REQUIRED_RUNNER_LABELS || "self-hosted,linux,x64,pnpm,uv")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 function checkRepo(repo) {
   // Expect origin to be GitHub and infer org/name from remote URL.
   const remote = execSync(`git -C ${repo.path} config --get remote.origin.url`, { encoding: "utf8" }).trim();
@@ -34,7 +39,9 @@ function checkRepo(repo) {
     const total = data.total_count || 0;
     const labels = new Set();
     (data.runners || []).forEach((r) => (r.labels || []).forEach((l) => labels.add(l.name)));
-    return { repo: full, total, labels: Array.from(labels).sort() };
+    const labelList = Array.from(labels).sort();
+    const missing = requiredLabels.filter((rl) => !labels.has(rl));
+    return { repo: full, total, labels: labelList, missing };
   } catch (e) {
     return { repo: full, status: `error: ${e.message}` };
   }
@@ -55,8 +62,14 @@ results.forEach((r) => {
   }
 });
 
-const missing = results.filter((r) => !r.status && r.total === 0);
-if (missing.length) {
-  console.error("Repos missing self-hosted runners: " + missing.map((m) => m.repo).join(", "));
+const missingCount = results.filter((r) => !r.status && r.total === 0);
+const missingLabels = results.filter((r) => !r.status && r.total > 0 && r.missing?.length);
+if (missingCount.length || missingLabels.length) {
+  if (missingCount.length)
+    console.error("Repos missing self-hosted runners: " + missingCount.map((m) => m.repo).join(", "));
+  if (missingLabels.length)
+    missingLabels.forEach((r) =>
+      console.error(`${r.repo} missing required labels: ${r.missing.join(", ")}`),
+    );
   process.exit(1);
 }

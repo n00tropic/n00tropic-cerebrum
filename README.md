@@ -120,12 +120,18 @@ Automation scripts live under `.dev/automation/scripts/` and surface through the
 | `refresh-python-lock.sh`          | Regenerates or checks `requirements.workspace.lock` using `uv`; CI runs the check to enforce reproducible Python deps.                                                                      |
 | `check-runners.mjs`               | Lists GitHub self-hosted runners for the superrepo + submodules (uses `GH_TOKEN`); nightly workflow alerts if coverage drops to zero.                                                      |
 | `normalize-workspace-pnpm.sh`     | Canonical entry for re-installing JS deps in templates/examples; now fails if Node pins drift (override with `--allow-mismatch`).                                                          |
+| `guard-subrepo-pnpm-install.mjs`  | Wired as `preinstall` in JS subrepos; blocks installs from the wrong directory/workspace context.                                                                                         |
 
 ### Alerts (Discord)
 
 - Set secret `DISCORD_WEBHOOK` to receive embeds for:
   - `runners-nightly` (zero self-hosted runners or check errors)
   - `python-lock-check` (lock drift on PRs or scheduled run)
+  - Runner checks honor `REQUIRED_RUNNER_LABELS` (default `self-hosted,linux,x64,pnpm,uv`).
+
+### Trunk
+
+- `.trunk/` is tracked with linters/actions disabled to avoid hook overhead. Run `trunk check` manually if desired; hooks remain off by default.
 
 ## Quick start (fusion UI + graph)
 

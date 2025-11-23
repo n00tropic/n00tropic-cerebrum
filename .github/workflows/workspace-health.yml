@@ -64,6 +64,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN || '' }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN || '' }}
+          REQUIRED_RUNNER_LABELS: ${{ secrets.REQUIRED_RUNNER_LABELS || 'self-hosted,linux,x64,pnpm,uv' }}
         run: pnpm run tools:check-runners || true
       - name: Scan for npm usage (fail if found)
         run: pnpm run tools:scan-npm -- --exclude=templates,examples,stuff,vendor,scripts/setup-pnpm.sh && echo "No npm usage found"
