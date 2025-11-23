@@ -28,7 +28,7 @@ jobs:
         id: runners
         run: |
           set -e
-          OUTPUT=$(pnpm run tools:check-runners 2>&1)
+          OUTPUT=$(pnpm run tools:check-runners --json 2>&1)
           echo "$OUTPUT"
           echo "output<<EOF" >> $GITHUB_OUTPUT
           echo "$OUTPUT" >> $GITHUB_OUTPUT

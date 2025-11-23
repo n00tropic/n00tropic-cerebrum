@@ -42,7 +42,7 @@ jobs:
       - name: Verify pnpm
         run: pnpm -v
       - name: Verify toolchain pins
-        run: pnpm run tools:check-toolchain
+        run: pnpm run tools:check-toolchain --json
       - name: Install OS packages (ripgrep)
         run: |
           sudo apt-get update
