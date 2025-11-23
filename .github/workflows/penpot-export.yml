@@ -1,13 +1,21 @@
-name: penpot-smoke
+name: penpot-export-smoke
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * *" # daily at 06:00 UTC
+  pull_request:
+    paths:
+      - 'n00plicate/packages/token-orchestrator/**'
+      - 'n00plicate/packages/design-tokens/**'
+      - '.github/workflows/penpot-export.yml'
 
 jobs:
-  penpot-smoke:
+  penpot-export:
     runs-on: ubuntu-latest
+    env:
+      ALLOW_SUBREPO_PNPM_INSTALL: "1"
+      PNPM_SKIP_RECURSIVE_CACHE: "1"
+      PNPM_ENABLE_PRELPOSTSCRIPTS: "false"
+      PNPM_VERIFY_STORE_INTEGRITY: "true"
     steps:
       - name: Checkout repo (with submodules)
         uses: actions/checkout@v4
@@ -26,12 +34,7 @@ jobs:
           version: 10.23.0
           run_install: false
 
-      - name: Install dependencies
-        env:
-          ALLOW_SUBREPO_PNPM_INSTALL: "1"
-          PNPM_SKIP_RECURSIVE_CACHE: "1"
-          PNPM_ENABLE_PRELPOSTSCRIPTS: "false"
-          PNPM_VERIFY_STORE_INTEGRITY: "true"
+      - name: Install JS deps (no lifecycle)
         run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Approve esbuild (non-interactive)
@@ -40,8 +43,12 @@ jobs:
       - name: Prune pnpm store
         run: pnpm store prune || true
 
-      - name: Penpot version drift (dry run)
-        run: pnpm penpot:smoke
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
 
-      - name: Build design-tokens
+      - name: Cargo test (penpot fixture ingest)
+        working-directory: n00plicate/packages/token-orchestrator
+        run: cargo test --tests
+
+      - name: Build design tokens (post-ingest)
         run: pnpm --filter @n00plicate/design-tokens run build
