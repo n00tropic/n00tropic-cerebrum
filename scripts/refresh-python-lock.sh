@@ -15,9 +15,9 @@ if ! command -v uv >/dev/null 2>&1; then
 fi
 
 if [[ "${1-}" == "--check" ]]; then
-  tmp=$(mktemp)
-  trap 'rm -f "$tmp"' EXIT
-  uv pip compile "$REQ" -o "$tmp"
+	tmp=$(mktemp)
+	trap 'rm -f "$tmp"' EXIT
+	uv pip compile "$REQ" -o "$tmp"
   if ! diff -u "$LOCK" "$tmp" >/dev/null 2>&1; then
     echo "requirements.workspace.lock is out of date" >&2
     diff -u "$LOCK" "$tmp" || true

@@ -17,6 +17,8 @@ const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const expectedNode = (manifest.toolchains?.node?.version || "").trim();
 const expectedPnpm = (manifest.toolchains?.pnpm?.version || "").trim();
 const webhook = process.env.DISCORD_WEBHOOK;
+const argv = process.argv.slice(2);
+const asJson = argv.includes("--json");
 
 const rootNvmrc = fs.readFileSync(path.join(root, ".nvmrc"), "utf8").trim();
 const issues = [];
@@ -82,6 +84,10 @@ if (failed) {
 		node: expectedNode,
 		pnpm: expectedPnpm,
 	});
+}
+
+if (asJson) {
+	console.log(JSON.stringify({ ok: !failed, issues, node: expectedNode, pnpm: expectedPnpm }));
 }
 
 if (webhook) {
