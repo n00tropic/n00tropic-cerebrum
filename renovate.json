@@ -1,4 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>renovate-presets/workspace.json"]
+  "extends": ["local>renovate-presets/workspace.json"],
+  "packageRules": [
+    {
+      "description": "Surface esbuild majors with dedicated label",
+      "matchPackageNames": ["esbuild"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dep:esbuild"],
+      "prPriority": 80
+    },
+    {
+      "description": "Surface Storybook majors with dedicated label",
+      "matchPackageNames": ["storybook", "@storybook/*"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dep:storybook"],
+      "prPriority": 75
+    }
+  ]
 }
