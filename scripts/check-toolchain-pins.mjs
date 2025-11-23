@@ -4,6 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { log } from "./lib/log.mjs";
+import { notifyDiscord } from "./lib/notify-discord.mjs";
 
 const root = process.cwd();
 const manifestPath = path.join(
@@ -15,6 +16,7 @@ const manifestPath = path.join(
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const expectedNode = (manifest.toolchains?.node?.version || "").trim();
 const expectedPnpm = (manifest.toolchains?.pnpm?.version || "").trim();
+const webhook = process.env.DISCORD_WEBHOOK;
 
 const rootNvmrc = fs.readFileSync(path.join(root, ".nvmrc"), "utf8").trim();
 const issues = [];
@@ -72,12 +74,24 @@ for (const p of paths) {
 	}
 }
 
-if (issues.length) {
+const failed = issues.length > 0;
+if (failed) {
 	log("error", "Toolchain pin mismatches detected", { issues });
-	process.exit(1);
+} else {
+	log("info", `Toolchain pins OK (Node ${expectedNode}, pnpm ${expectedPnpm})`, {
+		node: expectedNode,
+		pnpm: expectedPnpm,
+	});
 }
 
-log("info", `Toolchain pins OK (Node ${expectedNode}, pnpm ${expectedPnpm})`, {
-	node: expectedNode,
-	pnpm: expectedPnpm,
-});
+if (webhook) {
+	const desc = failed ? issues.join("\n") : `Node ${expectedNode}, pnpm ${expectedPnpm}`;
+	await notifyDiscord({
+		webhook,
+		title: failed ? "❌ Toolchain pin check failed" : "✅ Toolchain pins ok",
+		description: desc,
+		color: failed ? 15158332 : 3066993,
+	});
+}
+
+if (failed) process.exit(1);
