@@ -5,6 +5,7 @@ import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { log } from "./lib/log.mjs";
+import { notifyDiscord } from "./lib/notify-discord.mjs";
 
 function gh(args) {
   return execSync(`gh ${args}`, { encoding: "utf8", stdio: ["pipe", "pipe", "pipe"] });
@@ -25,6 +26,13 @@ const requiredLabels = (process.env.REQUIRED_RUNNER_LABELS || "self-hosted,linux
   .split(",")
   .map((s) => s.trim())
   .filter(Boolean);
+
+const argv = process.argv.slice(2);
+const opts = {
+  json: argv.includes("--json"),
+  webhook:
+    process.env.DISCORD_WEBHOOK || argv.find((a) => a.startsWith("--webhook="))?.split("=")[1],
+};
 
 function checkRepo(repo) {
   // Expect origin to be GitHub and infer org/name from remote URL.
@@ -68,12 +76,32 @@ results.forEach((r) => {
 
 const missingCount = results.filter((r) => !r.status && r.total === 0);
 const missingLabels = results.filter((r) => !r.status && r.total > 0 && r.missing?.length);
-if (missingCount.length || missingLabels.length) {
+const failed = missingCount.length || missingLabels.length;
+if (failed) {
   if (missingCount.length)
     log("error", "Repos missing self-hosted runners", { repos: missingCount.map((m) => m.repo) });
   if (missingLabels.length)
-    missingLabels.forEach((r) => log("error", `${r.repo} missing required labels`, { missing: r.missing }));
-  process.exit(1);
+    missingLabels.forEach((r) => log("error", `${r.repo} missing required labels", { missing: r.missing }));
 }
 
-log("info", "Runner check passed", { repos: results.length });
+log(failed ? "error" : "info", "Runner check completed", {
+  repos: results.length,
+  missing_runners: missingCount.map((m) => m.repo),
+  missing_labels: missingLabels.map((m) => ({ repo: m.repo, missing: m.missing })),
+});
+
+if (opts.webhook) {
+  const desc = failed
+    ? `Missing runners: ${missingCount.map((m) => m.repo).join(", ")}\nMissing labels: ${missingLabels
+        .map((m) => `${m.repo}=>${m.missing.join("|")}`)
+        .join(", ")}`
+    : "All required runners present";
+  await notifyDiscord({
+    webhook: opts.webhook,
+    title: failed ? "❌ Runner check failed" : "✅ Runner check passed",
+    description: desc || "(details in logs)",
+    color: failed ? 15158332 : 3066993,
+  });
+}
+
+if (failed) process.exit(1);
