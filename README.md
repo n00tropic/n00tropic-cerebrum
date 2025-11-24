@@ -113,6 +113,13 @@ This sequence highlights the typical cadence: adjust policy in `n00-cortex`, ada
 
 Automation scripts live under `.dev/automation/scripts/` and surface through the `n00t` capability manifest.
 
+### ControlTower CLI (Swift)
+
+- Location: `Package.swift` / `Sources/ControlTower/`.
+- Docs: `CONTROL_TOWER.md`.
+- Run: `swift run control-tower help`.
+- Commands: `status`, `validate-cortex`, `graph-live`, `graph-stub`.
+
 | Script                            | Purpose                                                                                                                                                                                    |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `meta-check.sh`                   | Orchestrates repo health checks, schema validation, and CVE scans before publishing changes.                                                                                               |

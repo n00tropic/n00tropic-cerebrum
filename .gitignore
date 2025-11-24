@@ -6,6 +6,8 @@ artifacts/
 .secrets/
 n00-dashboard/.build/
 n00-dashboard/.swiftpm/
+.build/
+.swiftpm/
 
 # Python
 __pycache__/
