@@ -3,63 +3,36 @@ site:
   start_page: n00tropic-cerebrum::index.adoc
 content:
   sources:
-    - url: .
-      branches: [HEAD]
-      start_paths: [docs]
-    - url: ./.git/modules/n00-frontiers
+    - url: https://github.com/n00tropic/n00tropic-cerebrum.git
       branches: [docs]
       start_paths: [docs]
-      worktrees:
-        - path: ./n00-frontiers
-          branches: [docs]
-    - url: ./.git/modules/n00-cortex
+    - url: https://github.com/n00tropic/n00-frontiers.git
       branches: [docs]
       start_paths: [docs]
-      worktrees:
-        - path: ./n00-cortex
-          branches: [docs]
-    - url: ./.git/modules/n00t
+    - url: https://github.com/n00tropic/n00-cortex.git
       branches: [docs]
       start_paths: [docs]
-      worktrees:
-        - path: ./n00t
-          branches: [docs]
-    - url: ./.git/modules/n00-horizons
+    - url: https://github.com/n00tropic/n00t.git
+      branches: [docs]
+      start_paths: [docs]
+    - url: https://github.com/n00tropic/n00-horizons.git
       branches: [main]
       start_paths: [docs]
-      worktrees:
-        - path: ./n00-horizons
-          branches: [main]
-    - url: ./.git/modules/n00-school
+    - url: https://github.com/n00tropic/n00-school.git
       branches: [main]
       start_paths: [docs]
-      worktrees:
-        - path: ./n00-school
-          branches: [main]
-    - url: ./.git/modules/n00plicate
+    - url: https://github.com/n00tropic/n00plicate.git
       branches: [chore/migrate-node-24]
       start_paths: [docs]
-      worktrees:
-        - path: ./n00plicate
-          branches: [chore/migrate-node-24]
-    - url: ./.git/modules/n00tropic
+    - url: https://github.com/n00tropic/n00tropic.git
       branches: [main]
       start_paths: [docs]
-      worktrees:
-        - path: ./n00tropic
-          branches: [main]
-    - url: ./.git/modules/n00clear-fusion
+    - url: https://github.com/n00tropic/n00clear-fusion.git
       branches: [main]
       start_paths: [docs]
-      worktrees:
-        - path: ./n00clear-fusion
-          branches: [main]
-    - url: ./n00menon
-      branches: [main]
+    - url: https://github.com/n00tropic/n00menon.git
+      branches: [docs, main]
       start_paths: [.]
-    # TODO(n00tropic): Add n00-horizons, n00-school, n00plicate, n00tropic, and
-    # n00clear-fusion once their Antora scaffolding ships (track via
-    # docs/modules/ROOT/pages/migration-status.adoc).
 ui:
   bundle:
     url: ./vendor/antora/ui-bundle.zip
@@ -73,4 +46,4 @@ asciidoc:
     icons: font
     source-highlighter: highlight.js
 runtime:
-  fetch: false
+  fetch: true
