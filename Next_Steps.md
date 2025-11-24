@@ -14,6 +14,21 @@
   - Dependency bumped to `mcp>=1.10.0` in `mcp/docs_server/requirements.txt`; rerun `osv-scanner` to verify closure.
 - [x] Restore superrepo health artifact (owner: codex)
   - Clean local-only submodule changes (`n00-horizons` untracked jobs, `n00t` tracked `capabilities/manifest.json`), then rerun `.dev/automation/scripts/workspace-health.py --publish-artifact`.
+- [ ] Proactive skeleton auto-apply + manifest backfill (owner: codex, due: 2025-12-05)
+  - Extend `check-workspace-skeleton.py --apply` to scaffold missing dirs/stubs and optionally inject manifest entries for new git repos.
+  - Emit ready-to-append manifest JSON blocks and enforce on-disk/gitmodule parity.
+- [ ] Workspace health auto-remediate & fix-plan output (owner: codex, due: 2025-12-06)
+  - Add `--auto-remediate` to `workspace-health.py` (skeleton apply, submodule sync, safe clean, optional branch creation) and emit a structured fix-plan in the artifact.
+- [ ] Manifest gate for new repos/gitmodules (owner: codex, due: 2025-12-05)
+  - Pre-commit/CI guard fails when `.gitmodules` or new `.git` dirs appear without matching `automation/workspace.manifest.json` entries; add `pnpm run lint:manifest` wrapper.
+- [ ] Bootstrap new-repo scaffolder (owner: codex, due: 2025-12-10)
+  - Add `scripts/bootstrap-repo.sh --name <repo> --role <role>` to create skeleton dirs/files, init git, append manifest entry, and seed README/ADR stub.
+- [ ] Mirror manifest/skeleton checks in key subrepos (owner: codex, due: 2025-12-10)
+  - Thin wrappers in `n00-frontiers`, `n00-cortex`, and `n00t` to run root checks when used standalone.
+- [ ] Proactivity doctrine ADR + docs (owner: docs, due: 2025-12-07)
+  - Add ADR in `1. Cerebrum Docs` and update root/START HERE with the proactivity + manifest requirements.
+- [ ] n00t capability for repair/apply (owner: automation/agent platform, due: 2025-12-12)
+  - Expose skeleton apply + health auto-remediate via n00t capability manifest (dry-run by default).
 - [ ] Repair workspace health sync for ephemeral agents (owner: codex)
   - Document bootstrap order for runners: `GH_SUBMODULE_TOKEN` → `scripts/bootstrap-workspace.sh` → `pnpm install` → `scripts/bootstrap-python.sh` → `pnpm exec antora antora-playbook.yml` (skip if private sources unavailable).
 - [ ] Fix Python bootstrap notes (owner: codex)
