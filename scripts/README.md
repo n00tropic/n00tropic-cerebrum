@@ -11,6 +11,7 @@ Canonical entry points (use these first):
 - `validate-docs.mjs`: Antora/markdown validation wrapper.
 - `penpot:smoke` (root package script): dry-run check for newer Penpot Docker tags; fails on drift without modifying files.
 - `lint:imports` (root → n00plicate): enforces token import policy, rejecting `dist/` token paths.
+- `bootstrap-repo.sh`: scaffold a new workspace repo and append it to `automation/workspace.manifest.json` (docs+scripts stubs, README).
 
 Deprecated in favor of `pnpm-migrate`:
 
