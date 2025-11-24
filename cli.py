@@ -17,12 +17,13 @@ from observability import initialize_tracing
 WORKSPACE_ROOT = Path(__file__).resolve().parent
 ORG_ROOT = WORKSPACE_ROOT.parent
 SCRIPTS_ROOT = ORG_ROOT / ".dev" / "automation" / "scripts"
+MANIFEST_PATH = WORKSPACE_ROOT / "automation" / "workspace.manifest.json"
 TRUNK_TIMEOUT = int(os.environ.get("TRUNK_UPGRADE_TIMEOUT", "600"))
 GIT_BIN = which("git") or "git"
 if not GIT_BIN:
     raise SystemExit("git executable not found in PATH")
 
-SUBREPO_CONTEXT = {
+_FALLBACK_SUBREPO_CONTEXT = {
     "workspace": {
         "path": WORKSPACE_ROOT,
         "language": "mixed",
@@ -152,6 +153,55 @@ SUBREPO_CONTEXT = {
     },
 }
 
+
+def _normalize_repo_entry(entry: dict) -> dict:
+    """Convert manifest strings into absolute paths and keep optional fields nullable."""
+
+    path = entry.get("path")
+    if not path:
+        raise ValueError("Repo entry missing 'path'")
+
+    def _maybe_path(key: str) -> Optional[Path]:
+        value = entry.get(key)
+        return WORKSPACE_ROOT / value if value else None
+
+    return {
+        "path": WORKSPACE_ROOT / path,
+        "language": entry.get("language"),
+        "pkg": entry.get("pkg"),
+        "venv": _maybe_path("venv"),
+        "cli": entry.get("cli"),
+        "tooling": _maybe_path("tooling"),
+        "scripts_dir": _maybe_path("scripts_dir"),
+        "role": entry.get("role"),
+        "ssot_for": entry.get("ssot_for", []),
+        "pulls_from": entry.get("pulls_from", []),
+        "feeds": entry.get("feeds", []),
+    }
+
+
+def load_subrepo_context() -> dict:
+    if MANIFEST_PATH.exists():
+        try:
+            payload = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+            repos = payload.get("repos", [])
+            context = {}
+            for entry in repos:
+                name = entry.get("name")
+                if not name:
+                    continue
+                context[name] = _normalize_repo_entry(entry)
+            if context:
+                return context
+        except Exception as exc:  # pragma: no cover - init guardrail
+            print(
+                f"[workspace-manifest] falling back to built-in mapping due to: {exc}",
+                file=sys.stderr,
+            )
+    return _FALLBACK_SUBREPO_CONTEXT
+
+
+SUBREPO_CONTEXT = load_subrepo_context()
 SUBREPO_MAP = {name: meta["path"] for name, meta in SUBREPO_CONTEXT.items()}
 
 

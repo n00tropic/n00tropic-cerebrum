@@ -6,16 +6,29 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 from pathlib import Path
 from typing import Dict, List
 
 import yaml
+
+MANIFEST_PATH = Path(__file__).resolve().parents[3] / "automation" / "workspace.manifest.json"
 
 
 def load_skeleton(skeleton_path: Path) -> Dict[str, object]:
     if not skeleton_path.exists():
         raise SystemExit(f"Skeleton file missing: {skeleton_path}")
     return yaml.safe_load(skeleton_path.read_text(encoding="utf-8")) or {}
+
+
+def load_manifest() -> Dict[str, object]:
+    if not MANIFEST_PATH.exists():
+        return {}
+    try:
+        return json.loads(MANIFEST_PATH.read_text(encoding="utf-8")) or {}
+    except Exception as exc:  # pragma: no cover - diagnostic
+        print(f"[manifest] unable to read {MANIFEST_PATH}: {exc}", file=sys.stderr)
+        return {}
 
 
 def ensure_dir(path: Path, apply: bool) -> bool:
@@ -41,9 +54,35 @@ def main() -> int:
     args = parser.parse_args()
 
     org_root = Path(__file__).resolve().parents[3]
+
+    # Prefer JSON manifest; fall back to YAML skeleton for required paths/branches.
+    manifest_payload = load_manifest()
+    manifest_repos = manifest_payload.get("repos") or []
+
     skeleton_path = org_root / ".dev" / "automation" / "workspace-skeleton.yaml"
-    payload = load_skeleton(skeleton_path)
-    repos_obj = payload.get("repos") or {}
+    skeleton_payload = load_skeleton(skeleton_path)
+    skeleton_repos = skeleton_payload.get("repos") or {}
+
+    repos_obj = {}
+    # Merge: manifest provides identity/paths; skeleton adds required/branches if present.
+    for entry in manifest_repos:
+        if not isinstance(entry, dict):
+            continue
+        name = entry.get("name")
+        if not name:
+            continue
+        repos_obj[name] = {
+            "path": entry.get("path"),
+            "required": [],
+            "branches": entry.get("branches", []),
+        }
+
+    for name, spec in skeleton_repos.items():
+        merged = repos_obj.setdefault(name, {})
+        if "path" not in merged and spec.get("path"):
+            merged["path"] = spec.get("path")
+        merged["required"] = spec.get("required") or merged.get("required") or []
+        merged["branches"] = spec.get("branches") or merged.get("branches") or []
 
     summary: Dict[str, object] = {"status": "ok", "repos": []}
     missing_total = 0

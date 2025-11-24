@@ -19,6 +19,11 @@ Frontiers --> Cortex
 
 Schemas published from `n00-cortex` drive automation in `n00-frontiers`, which then feeds downstream consumers such as `n00plicate` and the shared documentation set. `n00t` orchestrates the automation surface, while doctrine (`n00tropic`) and training signals (`n00-school`) complete the feedback loop.
 
+Source-of-truth policy:
+- `n00-frontiers` is the canonical SSoT for standards, templates, and governance; everything else should align to it.
+- `n00-cortex` enforces schemas/manifests derived from `n00-frontiers` so downstream automation stays pinned to the frontier rulebook.
+- `n00menon` is the docs SSoT (TechDocs/Antora content) that narrates the standards and their changes.
+
 > Looking for the people-facing handbook? It now lives alongside the filesystem in `../n00tropic_HQ/`.
 
 ## Repository profiles
@@ -34,18 +39,25 @@ Schemas published from `n00-cortex` drive automation in `n00-frontiers`, which t
 - **Mandate**: authoritative source for software, delivery, and design excellence. Defines the standards that every downstream system follows.
 - **Output**: templates, notebooks, CLI tooling, and the quality bar for frontier-grade work.
 - **Cadence**: updated frequently; every change should be reflected in `docs/`, `catalog.json`, and TASKS/ADR tracking.
+- **SSoT**: canonical for standards/templates/governance; upstream for `n00-cortex`, `n00tropic`, `n00t`, and `n00plicate`.
 
 ### `n00-cortex/`
 
 - **Mandate**: systematizes and enforces the rules issued by `n00-frontiers`. Publishes schemas, manifests, and documentation that downstream consumers must obey.
 - **Output**: JSON Schemas, toolchain manifests, canonical documentation site, and reusable templates.
-- **Dependency**: pulls rendered assets and policies from `n00-frontiers` before distributing them.
+- **Dependency**: pulls rendered assets and policies from `n00-frontiers` before distributing them; treat schemas/manifests here as derived from the frontier SSoT, not the origin of policy.
 
 ### `n00tropic/`
 
 - **Mandate**: organizational handbook and flagship generation engine. Houses briefs, discovery artifacts, and generators that translate context into scaffolded projects and assets.
 - **Output**: context ingestion, directory/project scaffolding, and operational doctrine for every service pillar.
 - **Integration**: feeds `n00t` with briefs and configuration; ensures generated artifacts comply with `n00-frontiers` and `n00-cortex`.
+
+### `n00menon/`
+
+- **Mandate**: documentation SSoT (TechDocs/Antora) for the workspace; narrates standards, ADRs, and changelogs for humans and agents.
+- **Output**: docs site content, ADR rollups, TechDocs bundles consumed by Backstage.
+- **Integration**: ingests standards from `n00-frontiers` and derived schemas from `n00-cortex`; referenced by automation and `n00t` for context.
 
 ### `n00t/`
 

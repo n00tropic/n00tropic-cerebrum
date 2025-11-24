@@ -1,3 +1,5 @@
+# Canonical repo metadata now lives in automation/workspace.manifest.json.
+# n00-frontiers is the standards/templates SSoT; n00menon is the docs SSoT; n00-cortex enforces schemas derived from frontiers.
 repos:
   workspace:
     path: .
