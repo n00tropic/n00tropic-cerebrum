@@ -20,6 +20,8 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 
+MANIFEST_PATH = ROOT / "automation" / "workspace.manifest.json"
+
 DEFAULT_ARTIFACT_PATH = ROOT / "artifacts" / "workspace-health.json"
 DIAGNOSTIC_PATH = ROOT / "artifacts" / "workspace-health-diagnostic.log"
 EXITED_WITH = "exited with"
@@ -201,6 +203,27 @@ def parse_gitmodules(path: Path) -> List[Dict[str, str]]:
     return modules
 
 
+def load_manifest_repos() -> List[Dict[str, str]]:
+    if not MANIFEST_PATH.exists():
+        return []
+    try:
+        payload = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        repos = payload.get("repos", [])
+        result: List[Dict[str, str]] = []
+        for entry in repos:
+            if not isinstance(entry, dict):
+                continue
+            name = entry.get("name")
+            path = entry.get("path")
+            if not name or not path:
+                continue
+            result.append({"name": name, "path": path})
+        return result
+    except Exception as exc:  # pragma: no cover - defensive init
+        logging.debug("failed to load manifest repos: %s", exc)
+        return []
+
+
 def _run_command(cmd: Sequence[str], cwd: Path) -> List[str]:
     completed = _run_process(cmd, cwd=cwd)
     logs: List[str] = []
@@ -281,7 +304,7 @@ def run_repo_commands(
 
 
 def build_report(args: argparse.Namespace) -> Dict[str, object]:
-    modules = parse_gitmodules(ROOT / ".gitmodules")
+    modules = load_manifest_repos() or parse_gitmodules(ROOT / ".gitmodules")
     logs: List[str] = []
     if args.fix_all or args.sync_submodules:
         logs.extend(sync_submodules(ROOT))
@@ -322,9 +345,10 @@ def snapshot_workspace(
     root_status = collect_repo_status("workspace", ROOT)
     submodule_statuses: List[RepoStatus] = []
     for module in modules:
-        module_path = ROOT / module.get("path", module["name"])
-        if module_path.exists():
-            submodule_statuses.append(collect_repo_status(module["name"], module_path))
+        module_path = ROOT / module.get("path", module.get("name"))
+        name = module.get("name", str(module_path.name))
+        if module_path and module_path.exists():
+            submodule_statuses.append(collect_repo_status(name, module_path))
     return root_status, submodule_statuses
 
 
