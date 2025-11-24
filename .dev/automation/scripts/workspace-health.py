@@ -64,6 +64,8 @@ class RepoStatus:
     branch: str
     upstream: str | None
     head: str
+    role: str | None = None
+    ssot_for: List[str] | None = None
 
     def summary(self) -> str:
         parts: List[str] = []
@@ -95,6 +97,8 @@ class RepoStatus:
             "dirty": list(self.dirty_lines),
             "tracked": list(self.tracked_lines),
             "untracked": list(self.untracked_lines),
+            "role": self.role,
+            "ssot_for": self.ssot_for or [],
         }
 
 
@@ -167,7 +171,7 @@ def parse_status(output: str) -> Dict[str, object]:
     }
 
 
-def collect_repo_status(name: str, path: Path) -> RepoStatus:
+def collect_repo_status(name: str, path: Path, *, role: str | None = None, ssot_for: List[str] | None = None) -> RepoStatus:
     status = run_git(["status", "--porcelain=2", "--branch"], path)
     data = parse_status(status.stdout)
     head = run_git(["rev-parse", "--short", "HEAD"], path).stdout.strip()
@@ -183,6 +187,8 @@ def collect_repo_status(name: str, path: Path) -> RepoStatus:
         branch=data["branch"],
         upstream=data["upstream"],
         head=head or "HEAD",
+        role=role,
+        ssot_for=ssot_for or [],
     )
 
 
@@ -368,13 +374,22 @@ def build_report(args: argparse.Namespace) -> Dict[str, object]:
 def snapshot_workspace(
     modules: List[Dict[str, str]],
 ) -> Tuple[RepoStatus, List[RepoStatus]]:
+    role_map = {m.get("name"): m for m in modules if isinstance(m, dict)}
     root_status = collect_repo_status("workspace", ROOT)
     submodule_statuses: List[RepoStatus] = []
     for module in modules:
         module_path = ROOT / module.get("path", module.get("name"))
         name = module.get("name", str(module_path.name))
+        meta = role_map.get(name, {})
         if module_path and module_path.exists():
-            submodule_statuses.append(collect_repo_status(name, module_path))
+            submodule_statuses.append(
+                collect_repo_status(
+                    name,
+                    module_path,
+                    role=meta.get("role"),
+                    ssot_for=meta.get("ssot_for", []),
+                )
+            )
     return root_status, submodule_statuses
 
 

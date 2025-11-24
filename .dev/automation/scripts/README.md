@@ -13,6 +13,7 @@
 - `plan-exec.sh`: execute plan templates for automation runs.
 - `doctor.sh`: workspace doctor (tokens, Trunk, dashboards).
 - `generate-renovate-dashboard.py`: snapshot Renovate dependency dashboards.
+- `lint-workspace-manifest.py`: lint `automation/workspace.manifest.json` for required fields/uniqueness before adding new repos; run in CI/PRs when manifest changes.
 
 Deprecated wrappers (prefer the entries above):
 
