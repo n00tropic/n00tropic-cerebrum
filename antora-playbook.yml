@@ -31,7 +31,7 @@ content:
       branches: [main]
       start_paths: [docs]
     - url: https://github.com/n00tropic/n00menon.git
-      branches: [docs, main]
+      branches: [main]
       start_paths: [.]
 ui:
   bundle:

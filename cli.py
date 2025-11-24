@@ -400,6 +400,25 @@ def build_parser() -> argparse.ArgumentParser:
         "docs-lint",
         help="Run spell/style/link linting across docs surfaces (workspace + n00menon).",
     )
+    subparsers.add_parser(
+        "n00menon-verify",
+        help="Install deps, sync docs, test, and build docs for n00menon.",
+    )
+    subparsers.add_parser(
+        "runner-upgrade",
+        help="Upgrade self-hosted GitHub Actions runner with backup/rollback.",
+    )
+    subparsers.add_parser(
+        "runner-prune-backups",
+        help="Remove old actions-runner backups (keeps newest two).",
+    )
+    subparsers.add_parser(
+        "runner-doctor", help="Show actions-runner health snapshot on this host."
+    )
+    subparsers.add_parser(
+        "venv-health",
+        help="Inspect/prune/refresh virtualenvs; enforces .venv-<scope> policy.",
+    )
 
     autofix_parser = subparsers.add_parser(
         "autofix-links", help="Repair metadata link blocks (default dry-run)."
@@ -736,6 +755,8 @@ COMMAND_HANDLERS = {
     "venv-health": lambda _: run_workspace_script("venv-health.sh"),
     "runner-doctor": lambda _: run_workspace_script("runner-doctor.sh"),
     "runner-upgrade": lambda _: run_workspace_script("runner-upgrade.sh"),
+    "runner-prune-backups": lambda _: run_workspace_script("runner-prune-backups.sh"),
+    "n00menon-verify": lambda _: run_workspace_script("n00menon-verify.sh"),
 }
 
 
