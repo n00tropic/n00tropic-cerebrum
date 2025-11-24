@@ -103,6 +103,8 @@ jobs:
         run: |
           python .dev/automation/scripts/lint-workspace-manifest.py
           bash .dev/automation/scripts/manifest-gate.sh
+      - name: Tidy submodules (sync + gate + skeleton dry-run)
+        run: bash scripts/tidy-submodules.sh
 
   health-selfhosted:
     name: workspace-health (self-hosted runner)
