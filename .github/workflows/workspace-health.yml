@@ -99,6 +99,8 @@ jobs:
         run: pnpm run ci:validate:cortex
       - name: Run workspace.gitDoctor capability
         run: ./.dev/automation/scripts/workspace-gitdoctor-capability.sh --sync-submodules --publish-artifact --strict
+      - name: Lint workspace manifest
+        run: python .dev/automation/scripts/lint-workspace-manifest.py
 
   health-selfhosted:
     name: workspace-health (self-hosted runner)
