@@ -11,16 +11,18 @@ fi
 
 install_hook() {
   local repo_path="$1"
-  if [[ ! -d "$repo_path/.git" ]]; then
+  if ! git -C "$repo_path" rev-parse --git-dir >/dev/null 2>&1; then
     echo "[skip] $repo_path is not a git repo" >&2
     return
   fi
-  mkdir -p "$repo_path/.git/hooks"
-  if cmp -s "$hook_src" "$repo_path/.git/hooks/pre-push" 2>/dev/null; then
-    echo "[up-to-date] $repo_path/.git/hooks/pre-push"
+  local hooks_dir
+  hooks_dir="$(git -C "$repo_path" rev-parse --git-path hooks)"
+  mkdir -p "$hooks_dir"
+  if cmp -s "$hook_src" "$hooks_dir/pre-push" 2>/dev/null; then
+    echo "[up-to-date] $hooks_dir/pre-push"
   else
-    cp "$hook_src" "$repo_path/.git/hooks/pre-push"
-    chmod +x "$repo_path/.git/hooks/pre-push"
+    cp "$hook_src" "$hooks_dir/pre-push"
+    chmod +x "$hooks_dir/pre-push"
     echo "[installed] pre-push in $repo_path"
   fi
 }
