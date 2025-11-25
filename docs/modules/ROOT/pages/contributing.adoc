@@ -120,6 +120,9 @@ All documentation PRs are validated against:
 | **Vale**
 | Prose linting for style and terminology
 
+| **AsciiDoc parse**
+| ascidoctor check for syntax errors (skips Antora resource includes like `partial$`)
+
 | **Lychee**
 | Link checking
 

@@ -49,7 +49,7 @@ On macOS/WSL, `host.docker.internal` routes containers back to the host HTTP ser
 
 == GitHub Actions integration
 
-`.github/workflows/search-reindex.yml` builds the docs, launches a short-lived Typesense container, runs the Typesense-maintained Docker image for the DocSearch scraper (`typesense/docsearch-scraper:0.9.0`), and tears everything down. Override the endpoint by setting repository secrets (`TYPESENSE_HOST`, etc.). The workflow fails fast on documentation lint (Vale + Lychee + attribute checks) via `pnpm run docs:lint` before reindexing.
+`.github/workflows/search-reindex.yml` builds the docs, launches a short-lived Typesense container, runs the Typesense-maintained Docker image for the DocSearch scraper (`typesense/docsearch-scraper:0.9.0`), and tears everything down. Override the endpoint by setting repository secrets (`TYPESENSE_HOST`, etc.). The workflow fails fast on documentation lint (Vale + Lychee + attribute + AsciiDoc parse checks) via `pnpm run docs:lint` before reindexing.
 
 == Remote clusters & validation log
 
