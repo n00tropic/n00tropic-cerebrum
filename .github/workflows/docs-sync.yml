@@ -26,6 +26,11 @@ jobs:
             corepack enable || true
             corepack prepare pnpm@10.23.0 --activate || true
           fi
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint docs before sync (Vale + Lychee + attrs)
+        run: pnpm run docs:lint
 
       - name: Run docs sync script
         env:

@@ -62,6 +62,7 @@
     "docs:vale-terms-test": "bash scripts/run-vale-terms-candidates-test.sh",
     "docker:sync": "node scripts/docker-sync.mjs",
     "validate-docs": "node scripts/validate-docs.mjs",
+    "docs:lint": "pnpm run validate-docs",
     "lint:imports": "pnpm -C n00plicate lint:imports",
     "cleanup:contrib": "node scripts/cleanup-contrib.mjs",
     "antora:ci": "pnpm exec antora antora-playbook.ci.yml --stacktrace",
