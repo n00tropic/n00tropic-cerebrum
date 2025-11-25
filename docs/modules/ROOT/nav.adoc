@@ -11,6 +11,7 @@
 ** xref:search/typesense.adoc[Typesense Operations]
 * xref:script-index.adoc[Script Index]
 * xref:pnpm-migration.adoc[pnpm Migration Guide]
+* xref:submodules.adoc[Submodule Playbook]
 * Legacy imports
 ** xref:++1. Cerebrum Docs/README.adoc++[Cerebrum Knowledge Hub]
 *** xref:++1. Cerebrum Docs/AI_WORKSPACE_PLAYBOOK.adoc++[AI Workspace Playbook]

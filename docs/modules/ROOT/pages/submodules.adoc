@@ -1,0 +1,40 @@
+= Submodule Maintenance Playbook
+:page-role: guide
+
+This page captures the crisp rules we use to keep the superrepo and every subrepo healthy, especially when agents are driving automation.
+
+== Golden workflow (per change)
+
+. Enter the submodule: `cd <subrepo>`
+. Do the work, then commit and push inside the subrepo.
+. Return to the superrepo root and advance the pointer: `git add <subrepo> && git commit -m "Update <subrepo> to <sha>"`
+. Push the superrepo: `git push`
+
+== Daily hygiene
+
+* Initialize and refresh: `git submodule update --init --recursive`
+* Check status without noise: `git status --short --branch --ignore-submodules=dirty`
+* Sweep all subrepos: `git submodule foreach --recursive 'git status --short --branch'`
+
+== What to never stage
+
+* Build artifacts (e.g., `.next/`, `dist/`, `storybook-static/`, temporary `artifacts/`).
+* Local virtualenvs (`.venv/`, `venv/`) and `.ruff_cache/`, `.pytest_cache/`.
+* Package managers’ stores (`node_modules/`, `.pnpm-store/`, `.cache/`).
+
+== CI / environment notes
+
+* Prefer `astral-sh/setup-uv@v2` + `uv sync` for Python in new workflows; it is faster and cached by default.
+* Keep template workflows under `applications/scaffolder/templates/**/.github/workflows/` minimal and cache-aware so sanity checks stay at 100%.
+
+== Repairing drift
+
+* If a submodule shows `+` (ahead) locally, finish its push before touching the superrepo.
+* If you see accidental artifacts (for example `.next/`), delete them locally, update the subrepo’s `.gitignore`, commit, and re-point the superrepo.
+
+== n00menon (docs hub)
+
+`n00menon` hosts the shared docs surface. When adding cross-cutting instructions, prefer:
+
+* A short note here in the superrepo (this file) for quick reference.
+* A deeper guide in `n00menon` mapped into the doc site via Antora so agents and humans see the same source of truth.
