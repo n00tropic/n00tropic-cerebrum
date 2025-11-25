@@ -37,4 +37,4 @@ This page captures the crisp rules we use to keep the superrepo and every subrep
 `n00menon` hosts the shared docs surface. When adding cross-cutting instructions, prefer:
 
 * A short note here in the superrepo (this file) for quick reference.
-* A deeper guide in `n00menon` mapped into the doc site via Antora so agents and humans see the same source of truth.
+* A deeper guide in `n00menon` mapped into the doc site via Antora so agents and humans see the same source of truth (see `n00menon/modules/ROOT/pages/branching.adoc`).
