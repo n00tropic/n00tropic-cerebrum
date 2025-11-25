@@ -40,7 +40,7 @@ If your host supports `--network host` (GitHub Actions runners, native Linux), y
 
 // vale off(Google.Headings)
 // vale off
-== DocSearch workflow in CI
+== DocSearch workflow in ci
 // vale on
 // vale on(Google.Headings)
 

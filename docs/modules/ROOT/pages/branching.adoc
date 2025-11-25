@@ -9,4 +9,4 @@ Key reminders:
 * Branch naming: `feat/*`, `fix/*`, `docs/*`; keep branches short lived and `rebase` before pushing.
 * Update submodules via the golden path: commit in the subrepo first, then advance the pointer here.
 * Avoid staging build artefacts (`.next/`, `dist/`, `docs/_build/`, `artifacts/`) or local environments (`.venv/`, `.pnpm-store/`, `node_modules/`).
-* Docs/search changes must refresh Typesense and leave the latest `typesense-reindex-*.log[.json]` under `docs/search/logs/` to satisfy Danger/CI.
+* Docs/search changes must refresh Typesense and leave the latest `typesense-reindex-*.log[.json]` under `docs/search/logs/` to satisfy Danger/ci.

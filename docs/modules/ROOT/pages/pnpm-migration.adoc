@@ -1,4 +1,4 @@
-= pnpm migration guide
+= Pnpm migration guide
 :page-tags: diataxis:howto, domain:platform, audience:maintainer, stability:beta
 :reviewed: 2025-11-18
 

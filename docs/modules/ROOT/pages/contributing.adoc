@@ -110,7 +110,7 @@ Factor repeated content into partials under `docs/modules/ROOT/partials/`:
 * Use code blocks for commands and outputs
 * Include examples and screenshots where helpful
 
-== ci/CD Checks
+== ci/CD checks
 
 All documentation PRs are validated against:
 
@@ -120,7 +120,7 @@ All documentation PRs are validated against:
 | **Vale**
 | Prose linting for style and terminology
 
-| **AsciiDoc parse**
+| **asciidoc parse**
 | ascidoctor check for syntax errors (skips Antora resource includes like `partial$`)
 
 | **Lychee**

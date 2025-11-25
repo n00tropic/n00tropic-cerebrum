@@ -6,6 +6,7 @@ import { glob } from "glob";
 const args = process.argv.slice(2);
 let patterns = ["docs/**/*.adoc", "n00menon/modules/**/*.adoc"];
 let dryRun = false;
+let fixHeadings = true;
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--pattern" && args[i + 1]) {
     patterns = args[i + 1]
@@ -16,6 +17,9 @@ for (let i = 0; i < args.length; i++) {
   }
   if (args[i] === "--dry-run") {
     dryRun = true;
+  }
+  if (args[i] === "--no-fix-headings") {
+    fixHeadings = false;
   }
 }
 const globPattern =
@@ -61,7 +65,26 @@ for (const f of files) {
   s = s.replace(/\b_not_\b/g, "not");
   // Normalize multiple spaces to single space (avoid code-blocks where possible)
   s = s.replace(/([^\S\n]){2,}/g, " ");
-  if (s !== original) {
+
+  // Sentence-case headings (=, ==, etc.) while avoiding inline code markers
+  if (fixHeadings) {
+    s = s
+      .split("\n")
+      .map((line) => {
+        if (!line.match(/^(=+)\s+\S/)) return line;
+        if (line.includes("`")) return line; // skip headings containing code
+        return line.replace(/^(=+)\s+(.+)$/, (_m, level, text) => {
+          const trimmed = text.trim();
+          if (trimmed.length === 0) return line;
+          const sentenceCased =
+            trimmed.charAt(0).toUpperCase() +
+            trimmed.slice(1).replace(/([A-Z]{2,})/g, (t) => t); // leave acronyms
+          return `${level} ${sentenceCased}`;
+        });
+      })
+      .join("\n");
+  }
+if (s !== original) {
     if (dryRun) {
       console.log("Would patch", f);
     } else {
