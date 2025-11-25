@@ -32,12 +32,29 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.11.14
+      - name: Cache uv downloads
+        uses: actions/cache@v4
+        with:
+          path: .cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('n00clear-fusion/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-${{ hashFiles('requirements.workspace.min.lock') }}
+      - name: Install uv + deps (fusion)
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          export UV_CACHE_DIR=${UV_CACHE_DIR:-$GITHUB_WORKSPACE/.cache/uv}
+          if [ -d n00clear-fusion ]; then
+            uv pip install -r n00clear-fusion/requirements.txt
+          else
+            echo "n00clear-fusion submodule not present; skipping install"
+          fi
       - name: Install deps (fusion)
         run: |
           if [ -d n00clear-fusion ]; then
-            python3 -m venv n00clear-fusion/.venv
-            source n00clear-fusion/.venv/bin/activate
-            pip install -r n00clear-fusion/requirements.txt
+            export UV_CACHE_DIR=${UV_CACHE_DIR:-$GITHUB_WORKSPACE/.cache/uv}
+            uv venv n00clear-fusion/.venv
+            uv pip install -r n00clear-fusion/requirements.txt --python n00clear-fusion/.venv/bin/python
           else
             echo "n00clear-fusion submodule not present; skipping install"
           fi

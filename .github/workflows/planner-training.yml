@@ -25,12 +25,25 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: 3.11.14
+      - name: Cache uv downloads
+        uses: actions/cache@v4
+        with:
+          path: .cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('n00-school/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-${{ hashFiles('requirements.workspace.min.lock') }}
+      - name: Install uv + workspace deps
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          export UV_CACHE_DIR=${UV_CACHE_DIR:-$GITHUB_WORKSPACE/.cache/uv}
+          uv pip sync requirements.workspace.min.lock
       - name: Install training dependencies
         working-directory: n00-school
         run: |
           if [ -d n00-school ]; then
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
+            export UV_CACHE_DIR=${UV_CACHE_DIR:-$GITHUB_WORKSPACE/.cache/uv}
+            uv pip install -r requirements.txt
           else
             echo "n00-school submodule not present; skipping training dependency install"
           fi
