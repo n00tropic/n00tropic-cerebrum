@@ -12,6 +12,8 @@ n00-dashboard/.swiftpm/
 # Python
 __pycache__/
 *.py[cod]
+# uv cache
+.cache/uv/
 *.pyc
 .mypy_cache/
 .ruff_cache/

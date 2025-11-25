@@ -1,12 +1,38 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-REQ="$ROOT_DIR/requirements.workspace.txt"
-LOCK="$ROOT_DIR/requirements.workspace.lock"
+DEFAULT_REQ_FULL="$ROOT_DIR/requirements.workspace.txt"
+DEFAULT_LOCK_FULL="$ROOT_DIR/requirements.workspace.lock"
+DEFAULT_REQ_MIN="$ROOT_DIR/requirements.workspace.min.txt"
+DEFAULT_LOCK_MIN="$ROOT_DIR/requirements.workspace.min.lock"
 
-if [[ ! -f $REQ ]]; then
-	echo "requirements file not found: $REQ" >&2
-	exit 1
+usage() {
+	cat <<'EOF'
+refresh-python-lock.sh [--full] [--minimal] [--check]
+  --full      refresh/check full workspace lock (includes n00-frontiers)
+  --minimal   refresh/check minimal workspace lock (default if none specified)
+  --check     verify locks are up to date (no rewrite)
+If no scope is provided, both locks are processed.
+EOF
+}
+
+SCOPE_FULL=false
+SCOPE_MIN=false
+CHECK=false
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	--full) SCOPE_FULL=true ;;
+	--minimal) SCOPE_MIN=true ;;
+	--check) CHECK=true ;;
+	-h|--help) usage; exit 0 ;;
+	*) echo "Unknown flag: $1" >&2; usage; exit 1 ;;
+	esac
+	shift
+done
+
+if ! $SCOPE_FULL && ! $SCOPE_MIN; then
+	SCOPE_FULL=true
+	SCOPE_MIN=true
 fi
 
 if ! command -v uv >/dev/null 2>&1; then
@@ -14,20 +40,36 @@ if ! command -v uv >/dev/null 2>&1; then
 	exit 1
 fi
 
-if [[ ${1-} == "--check" ]]; then
-	tmp=$(mktemp)
-	trap 'rm -f "$tmp"' EXIT
-	uv pip compile "$REQ" -o "$tmp"
-	if ! diff -u "$LOCK" "$tmp" >/dev/null 2>&1; then
-		echo "requirements.workspace.lock is out of date" >&2
-		diff -u "$LOCK" "$tmp" || true
-		exit 1
+process_lock() {
+	local req="$1" lock="$2"
+	local label="$3"
+	if [[ ! -f $req ]]; then
+		echo "requirements file not found: $req" >&2
+		return 1
 	fi
-	echo "Lockfile is up to date"
-	exit 0
+	if $CHECK; then
+		tmp=$(mktemp)
+		trap 'rm -f "$tmp"' RETURN
+		uv pip compile "$req" -o "$tmp"
+		if ! diff -u "$lock" "$tmp" >/dev/null 2>&1; then
+			echo "$label is out of date" >&2
+			diff -u "$lock" "$tmp" || true
+			return 1
+		fi
+		echo "$label up to date"
+	else
+		echo "Rebuilding $label with uv..."
+		uv pip compile "$req" -o "$lock"
+		printf "Updated %s -> %s\n" "$req" "$lock"
+	fi
+}
+
+STATUS=0
+if $SCOPE_MIN; then
+	process_lock "$DEFAULT_REQ_MIN" "$DEFAULT_LOCK_MIN" "requirements.workspace.min.lock" || STATUS=$?
+fi
+if $SCOPE_FULL; then
+	process_lock "$DEFAULT_REQ_FULL" "$DEFAULT_LOCK_FULL" "requirements.workspace.lock" || STATUS=$?
 fi
 
-echo "Rebuilding $LOCK with uv..."
-uv pip compile "$REQ" -o "$LOCK"
-
-echo "Done. If in CI, remember to commit the updated lockfile."
+exit $STATUS

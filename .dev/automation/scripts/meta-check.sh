@@ -5,6 +5,7 @@ ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
 AUTOMATION_DIR="$ROOT/.dev/automation"
 SCRIPTS_DIR="$AUTOMATION_DIR/scripts"
 ARTIFACTS_DIR="$AUTOMATION_DIR/artifacts"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-$ROOT/.cache/uv}"
 
 AUTO_FIX=${META_CHECK_AUTO_FIX:-0}
 DOCTOR=${META_CHECK_DOCTOR:-0}

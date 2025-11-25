@@ -143,7 +143,7 @@ Automation scripts live under `.dev/automation/scripts/` and surface through the
 | `manifest-gate.sh`                | Blocks CI when gitmodules/on-disk repos are missing from the manifest.                                                                                                                    |
 | `fusion-pipeline.sh`              | One-click PDF ingest → embed (auto backend) → generate → graph rebuild; moves processed PDFs to `n00clear-fusion/corpora/Processed/`, logs run envelopes, registers horizons/school stubs. |
 | `guard-root-pnpm-install.mjs`     | Blocks accidental `pnpm install` at workspace root; set `ALLOW_ROOT_PNPM_INSTALL=1` only when you truly need a root install.                                                               |
-| `refresh-python-lock.sh`          | Regenerates or checks `requirements.workspace.lock` using `uv`; CI runs the check to enforce reproducible Python deps.                                                                     |
+| `refresh-python-lock.sh`          | Regenerates or checks the Python lockfiles (`requirements.workspace.min.lock`, `requirements.workspace.lock`) using `uv`; CI can run the check to enforce reproducible deps.               |
 | `check-runners.mjs`               | Lists GitHub self-hosted runners for the superrepo + submodules (uses `GH_TOKEN`); nightly workflow alerts if coverage drops to zero.                                                      |
 | `normalize-workspace-pnpm.sh`     | Canonical entry for re-installing JS deps in templates/examples; now fails if Node pins drift (override with `--allow-mismatch`).                                                          |
 | `guard-subrepo-pnpm-install.mjs`  | Wired as `preinstall` in JS subrepos; blocks installs from the wrong directory/workspace context.                                                                                          |
@@ -203,11 +203,19 @@ scripts/bootstrap-workspace.sh
 # Repeat as needed:
 scripts/check-superrepo.sh               # verify subrepos exist
 pnpm install                             # install/update JS deps after lockfile changes
-scripts/bootstrap-python.sh              # refresh shared Python deps
+scripts/bootstrap-python.sh              # refresh shared Python deps (auto-installs uv; default = minimal)
 source .venv-workspace/bin/activate      # activate venv in each shell before running automation
 ```
 
-`scripts/check-superrepo.sh` aborts if any subrepo is missing (guiding you to `git submodule update --init --recursive`), while `scripts/bootstrap-python.sh` provisions `.venv-workspace` with the aggregated requirements defined in `requirements.workspace.txt` so automation (MCP servers, project-control-panel, planners) never hit `ModuleNotFoundError`.
+`scripts/check-superrepo.sh` aborts if any subrepo is missing (guiding you to `git submodule update --init --recursive`), while `scripts/bootstrap-python.sh` provisions `.venv-workspace` from the chosen requirements set so automation (MCP servers, project-control-panel, planners) never hit `ModuleNotFoundError`.
+
+Python env modes:
+- Default (minimal): `scripts/bootstrap-python.sh` installs `requirements.workspace.min.lock` (n00tropic + n00-school + mcp docs + pip-audit) for fast agent/automation setup.
+- Full: add `--full` (or set `WORKSPACE_REQUIREMENTS_FILE=requirements.workspace.txt`) to pull in the `n00-frontiers` Jupyter/tooling stack. Use this when running notebook builds or frontiers tests locally.
+
+`scripts/bootstrap-python.sh` installs [uv](https://github.com/astral-sh/uv) automatically (via curl/wget), uses a shared cache at `.cache/uv`, and syncs from the matching lockfile; it falls back to `pip` only if uv installation fails.
+
+Caching for runners/agents: use `scripts/python-cache-key.sh [--full]` to emit a cache key derived from the lockfile hash. Point your cache to `.cache/uv` to reuse downloads across subrepos; set `UV_CACHE_DIR` to override.
 
 > **Authentication tip:** when running inside Codex Cloud or other ephemeral runners, export `GH_SUBMODULE_TOKEN=<PAT with repo scope>` (or rely on `GITHUB_TOKEN`) before invoking `scripts/bootstrap-workspace.sh` so `git submodule update --init --recursive` can clone the private repos referenced in `.gitmodules`.
 
