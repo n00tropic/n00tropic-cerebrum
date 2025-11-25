@@ -65,6 +65,8 @@ for (const f of files) {
   s = s.replace(/\b_not_\b/g, "not");
   // Normalize multiple spaces to single space (avoid code-blocks where possible)
   s = s.replace(/([^\S\n]){2,}/g, " ");
+  // Tighten spaced em dashes (any space, including thin spaces) to unspaced em dashes
+  s = s.replace(/[\s\u2000-\u200A]*—[\s\u2000-\u200A]*/g, "—");
 
   // Sentence-case headings (=, ==, etc.) while avoiding inline code markers
   if (fixHeadings) {

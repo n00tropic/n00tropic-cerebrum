@@ -93,9 +93,13 @@ envs
 gitlinks
 gitmodules
 autoformat
+Autoformat
 autofix
+AutoFix
 rebuildable
 composable
 cookiecutters
 dlx
+DLX
 uv
+UV

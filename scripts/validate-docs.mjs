@@ -42,10 +42,7 @@ if (skipVale) {
     valeArgs.push("--config", ".vale.local.ini", "--ignore-syntax");
   }
   // Temporarily exclude agent-facing policy pages from Vale while we iterate on tone
-  valeArgs.push("--glob=docs/**/*.adoc");
-  valeArgs.push("--glob=!docs/modules/ROOT/pages/agent-ops.adoc");
-  valeArgs.push("--glob=!docs/modules/ROOT/pages/manifesto.adoc");
-  valeArgs.push("docs");
+  valeArgs.push("docs/**/*.adoc");
   exitCode = runCommand("vale", valeArgs);
 }
 
