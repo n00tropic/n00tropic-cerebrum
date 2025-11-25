@@ -27,7 +27,7 @@ This page captures concise rules to keep the superrepo and every subrepo healthy
 * Package managers’ stores (`node_modules/`, `.pnpm-store/`, `.cache/`).
 
 // vale off(Google.Headings)
-== ci / environment notes
+== Ci / environment notes
 // vale on
 
 * Prefer `astral-sh/setup-uv@v2` + `uv sync` for Python in new workflows; it’s faster and cached by default.
