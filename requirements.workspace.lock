@@ -421,8 +421,11 @@ pytest==9.0.0
     #   -r n00-frontiers/requirements.txt
     #   -r n00-school/requirements.txt
     #   nbmake
+    #   pytest-asyncio
     #   pytest-cookies
     #   pytest-xdist
+pytest-asyncio==1.3.0
+    # via -r n00-school/requirements.txt
 pytest-cookies==0.7.0
     # via -r n00-frontiers/requirements.txt
 pytest-xdist==3.8.0
@@ -564,6 +567,7 @@ typing-extensions==4.15.0
     #   py-key-value-shared
     #   pydantic
     #   pydantic-core
+    #   pytest-asyncio
     #   referencing
     #   starlette
     #   typing-inspection
