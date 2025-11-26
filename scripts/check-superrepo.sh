@@ -35,4 +35,7 @@ fi
 git submodule status
 popd >/dev/null
 
+echo "[superrepo-check] Validating workspace skeleton (cli/env/tests/automation)"
+python3 "$ROOT_DIR/.dev/automation/scripts/check-workspace-skeleton.py"
+
 echo "[superrepo-check] All required subrepos present."

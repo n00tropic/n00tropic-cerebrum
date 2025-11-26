@@ -17,7 +17,7 @@ LOCK_OVERRIDE=${WORKSPACE_LOCK_FILE-}
 usage() {
 	cat <<'EOF'
 Usage: scripts/bootstrap-python.sh [--full]
-  --full   Use full workspace requirements (includes n00-frontiers Jupyter/tooling)
+  --full   Install all subproject deps (agents, OCR, Jupyter, azure agent preview)
 By default, a minimal set is installed (n00tropic + n00-school + mcp docs server + pip-audit).
 Override with WORKSPACE_REQUIREMENTS_FILE / WORKSPACE_LOCK_FILE env vars if needed.
 EOF
@@ -26,8 +26,15 @@ EOF
 while [[ $# -gt 0 ]]; do
 	case "$1" in
 	--full) USE_FULL=true ;;
-	-h|--help) usage; exit 0 ;;
-	*) echo "[bootstrap-python] unknown flag: $1" >&2; usage; exit 1 ;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		echo "[bootstrap-python] unknown flag: $1" >&2
+		usage
+		exit 1
+		;;
 	esac
 	shift
 done

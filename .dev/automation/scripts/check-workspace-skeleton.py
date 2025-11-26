@@ -3,14 +3,54 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Dict, List
+
 import argparse
 import json
 import subprocess
 import sys
-from pathlib import Path
-from typing import Dict, List
-
 import yaml
+
+DOC_ROLES = {"docs-ssot", "docs", "techdocs", "docs-only"}
+CODE_REQUIRED_DEFAULTS = [
+    "cli",
+    "env",
+    "scripts",
+    "tests",
+    "artifacts",
+    "automation",
+    "tooling",
+]
+
+
+def is_doc_repo(role: str | None) -> bool:
+    if not role:
+        return False
+    lowered = role.lower()
+    return any(key in lowered for key in DOC_ROLES) or "docs" in lowered
+
+
+def normalize_required(required: List[str], role: str | None) -> List[str]:
+    """Augment required paths for code repos with standard defaults."""
+    if is_doc_repo(role):
+        return required
+    combined = set(required) | set(CODE_REQUIRED_DEFAULTS)
+    return sorted(combined)
+
+
+def discover_cli_targets(cli_cmd: str, repo_root: Path) -> List[str]:
+    """Return referenced files within CLI command that should exist."""
+    missing: List[str] = []
+    if not cli_cmd:
+        return ["<unset CLI command>"]
+    for token in cli_cmd.split():
+        if "/" not in token or token.startswith("-"):
+            continue
+        candidate = repo_root / token
+        if not candidate.exists():
+            missing.append(str(candidate))
+    return missing
 
 
 def parse_gitmodules(path: Path) -> List[Dict[str, str]]:
@@ -29,7 +69,10 @@ def parse_gitmodules(path: Path) -> List[Dict[str, str]]:
             current[key] = value
     return modules
 
-MANIFEST_PATH = Path(__file__).resolve().parents[3] / "automation" / "workspace.manifest.json"
+
+MANIFEST_PATH = (
+    Path(__file__).resolve().parents[3] / "automation" / "workspace.manifest.json"
+)
 
 
 def load_skeleton(skeleton_path: Path) -> Dict[str, object]:
@@ -48,8 +91,9 @@ def load_manifest() -> Dict[str, object]:
         return {}
 
 
-def ensure_dir(path: Path, apply: bool) -> bool:
-    if path.exists():
+def ensure_dir(path: Path, apply: bool, alternates: List[Path] | None = None) -> bool:
+    alternates = alternates or []
+    if path.exists() or any(alt.exists() for alt in alternates):
         return False
     if apply:
         path.mkdir(parents=True, exist_ok=True)
@@ -68,7 +112,9 @@ def scaffold_stub(path: Path, apply: bool) -> List[str]:
     if path.name == "docs":
         readme = path / "README.md"
         if not readme.exists():
-            readme.write_text("# Docs\n\nWorkspace docs placeholder.\n", encoding="utf-8")
+            readme.write_text(
+                "# Docs\n\nWorkspace docs placeholder.\n", encoding="utf-8"
+            )
             created.append(str(readme))
         tags = path / "TAGS.md"
         if not tags.exists():
@@ -86,7 +132,7 @@ def scaffold_stub(path: Path, apply: bool) -> List[str]:
         hook = path / "install-hooks.sh"
         if not hook.exists():
             hook.write_text(
-                "#!/usr/bin/env bash\ncd \"$(dirname \"$0\")/..\" && bash scripts/install-hooks.sh\n",
+                '#!/usr/bin/env bash\ncd "$(dirname "$0")/.." && bash scripts/install-hooks.sh\n',
                 encoding="utf-8",
             )
             hook.chmod(0o755)
@@ -98,7 +144,9 @@ def scaffold_stub(path: Path, apply: bool) -> List[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--apply", action="store_true", help="Create missing directories + stubs and backfill manifest entries."
+        "--apply",
+        action="store_true",
+        help="Create missing directories + stubs and backfill manifest entries.",
     )
     parser.add_argument(
         "--bootstrap",
@@ -128,17 +176,36 @@ def main() -> int:
             continue
         repos_obj[name] = {
             "path": entry.get("path"),
-            "required": entry.get("required") if "required" in entry else manifest_defaults.get("required") or [],
-            "branches": entry.get("branches") if "branches" in entry else manifest_defaults.get("branches") or [],
+            "required": (
+                entry.get("required")
+                if "required" in entry
+                else manifest_defaults.get("required") or []
+            ),
+            "branches": (
+                entry.get("branches")
+                if "branches" in entry
+                else manifest_defaults.get("branches") or []
+            ),
             "role": entry.get("role"),
         }
+        for key in ("cli", "language", "pkg", "venv", "tooling", "scripts_dir"):
+            if key in entry:
+                repos_obj[name][key] = entry.get(key)
 
     for name, spec in skeleton_repos.items():
         merged = repos_obj.setdefault(name, {})
         if "path" not in merged and spec.get("path"):
             merged["path"] = spec.get("path")
-        merged["required"] = spec.get("required") if "required" in spec else merged.get("required") or manifest_defaults.get("required") or []
-        merged["branches"] = spec.get("branches") if "branches" in spec else merged.get("branches") or manifest_defaults.get("branches") or []
+        merged["required"] = (
+            spec.get("required")
+            if "required" in spec
+            else merged.get("required") or manifest_defaults.get("required") or []
+        )
+        merged["branches"] = (
+            spec.get("branches")
+            if "branches" in spec
+            else merged.get("branches") or manifest_defaults.get("branches") or []
+        )
 
     # detect repos present on disk or in gitmodules but missing from manifest
     present_gitmodules = {
@@ -146,9 +213,7 @@ def main() -> int:
         for mod in parse_gitmodules(org_root / ".gitmodules")
     }
     present_git_roots = {
-        p.name: p
-        for p in org_root.iterdir()
-        if (p / ".git").exists() and p.is_dir()
+        p.name: p for p in org_root.iterdir() if (p / ".git").exists() and p.is_dir()
     }
 
     missing_manifest: List[str] = []
@@ -164,7 +229,9 @@ def main() -> int:
                     "branches": manifest_defaults.get("branches", []),
                     "role": "unknown",
                 }
-                generated_manifest_entries.append(repos_obj[mod_name] | {"name": mod_name})
+                generated_manifest_entries.append(
+                    repos_obj[mod_name] | {"name": mod_name}
+                )
 
     summary: Dict[str, object] = {"status": "ok", "repos": []}
     missing_total = 0
@@ -173,18 +240,40 @@ def main() -> int:
         if not isinstance(spec, dict):
             continue
         rel_path = spec.get("path")
-        required = spec.get("required") or []
+        role = spec.get("role")
+        required = normalize_required(spec.get("required") or [], role)
+        spec["required"] = required
         expected_branches = spec.get("branches") or []
         if not rel_path:
             continue
         repo_root = (org_root / str(rel_path)).resolve()
         repo_missing: List[str] = []
         created_stubs: List[str] = []
+        cli_missing: List[str] = []
+        env_missing: List[str] = []
         for req in required:
             req_path = repo_root / req
-            if ensure_dir(req_path, args.apply):
+            alternates: List[Path] = []
+            if req_path.name.lower() == "tests":
+                alternates.append(repo_root / "Tests")
+            if ensure_dir(req_path, args.apply, alternates=alternates):
                 repo_missing.append(str(req_path))
             created_stubs.extend(scaffold_stub(req_path, args.apply))
+
+        if not is_doc_repo(role):
+            cli_cmd = spec.get("cli", "")
+            cli_missing.extend(discover_cli_targets(cli_cmd, repo_root))
+            env_example = repo_root / ".env.example"
+            if not env_example.exists() and args.apply:
+                template = org_root / ".env.example"
+                if template.exists():
+                    env_example.write_text(
+                        template.read_text(encoding="utf-8"), encoding="utf-8"
+                    )
+                else:
+                    env_example.write_text("# env placeholder\n", encoding="utf-8")
+            if not env_example.exists():
+                env_missing.append(str(env_example))
 
         branch_missing: List[str] = []
         if expected_branches:
@@ -211,6 +300,12 @@ def main() -> int:
         if branch_missing:
             missing_total += len(branch_missing)
             summary["status"] = "attention"
+        if cli_missing:
+            missing_total += len(cli_missing)
+            summary["status"] = "attention"
+        if env_missing:
+            missing_total += len(env_missing)
+            summary["status"] = "attention"
         summary["repos"].append(
             {
                 "name": name,
@@ -219,6 +314,8 @@ def main() -> int:
                 "missing_branches": branch_missing,
                 "role": spec.get("role"),
                 "created_stubs": created_stubs,
+                "missing_cli_targets": cli_missing,
+                "missing_env_examples": env_missing,
             }
         )
 

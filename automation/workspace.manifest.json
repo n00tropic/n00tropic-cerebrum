@@ -8,14 +8,8 @@
       "All new repos should declare their role, required directories, and default branches here to stay evergreen."
     ],
     "defaults": {
-      "required": [
-        "docs",
-        "scripts"
-      ],
-      "branches": [
-        "main",
-        "docs"
-      ]
+      "required": ["docs", "scripts"],
+      "branches": ["main", "docs"]
     }
   },
   "repos": [
@@ -40,17 +34,8 @@
       "tooling": "tooling",
       "scripts_dir": ".dev/n00-frontiers/scripts",
       "role": "frontier-standards",
-      "ssot_for": [
-        "engineering-standards",
-        "templates",
-        "governance"
-      ],
-      "feeds": [
-        "n00-cortex",
-        "n00t",
-        "n00tropic",
-        "n00plicate"
-      ]
+      "ssot_for": ["engineering-standards", "templates", "governance"],
+      "feeds": ["n00-cortex", "n00t", "n00tropic", "n00plicate"]
     },
     {
       "name": "n00-cortex",
@@ -62,30 +47,30 @@
       "tooling": "tooling",
       "scripts_dir": "n00-cortex/.dev/n00-cortex/scripts",
       "role": "schemas-and-manifests",
-      "pulls_from": [
-        "n00-frontiers"
-      ],
-      "exports_to": [
-        "n00t",
-        "n00plicate",
-        "n00tropic"
-      ],
-      "ssot_for": [
-        "schemas",
-        "manifests"
-      ]
+      "pulls_from": ["n00-frontiers"],
+      "exports_to": ["n00t", "n00plicate", "n00tropic"],
+      "ssot_for": ["schemas", "manifests"]
     },
     {
       "name": "n00-dashboard",
       "path": "n00-dashboard",
-      "language": "node",
-      "pkg": "pnpm",
+      "language": "swift",
+      "pkg": "swiftpm",
       "venv": null,
-      "cli": "pnpm exec ts-node cli/index.ts",
+      "cli": "bash cli/run.sh",
       "tooling": "tooling",
-      "scripts_dir": "n00-dashboard/.dev/n00-dashboard/scripts",
+      "scripts_dir": "n00-dashboard/scripts",
       "role": "dashboard-ui",
-      "required": []
+      "required": [
+        "cli",
+        "env",
+        "automation",
+        "tooling",
+        "scripts",
+        "artifacts",
+        "docs",
+        "Tests"
+      ]
     },
     {
       "name": "n00-horizons",
@@ -126,7 +111,7 @@
       "language": "node",
       "pkg": "pnpm",
       "venv": null,
-      "cli": "pnpm exec ts-node cli/index.ts",
+      "cli": "node cli/index.mjs",
       "tooling": "tooling",
       "scripts_dir": "n00plicate/.dev/n00plicate/scripts",
       "role": "design-system-packager"
@@ -141,19 +126,9 @@
       "tooling": null,
       "scripts_dir": "scripts",
       "role": "docs-ssot",
-      "ssot_for": [
-        "docs",
-        "techdocs"
-      ],
-      "feeds": [
-        "n00-frontiers",
-        "n00-cortex",
-        "n00t"
-      ],
-      "branches": [
-        "main",
-        "docs"
-      ],
+      "ssot_for": ["docs", "techdocs"],
+      "feeds": ["n00-frontiers", "n00-cortex", "n00t"],
+      "branches": ["main", "docs"],
       "required": [
         "docs",
         "modules/ROOT/nav.adoc",
@@ -171,9 +146,7 @@
       "tooling": "tooling",
       "scripts_dir": "n00t/.dev/n00t/scripts",
       "role": "automation-surface",
-      "pulls_from": [
-        ".dev/automation/scripts"
-      ]
+      "pulls_from": [".dev/automation/scripts"]
     },
     {
       "name": "n00tropic",
@@ -185,26 +158,30 @@
       "tooling": "tooling",
       "scripts_dir": "n00tropic/.dev/n00tropic/scripts",
       "role": "generators-and-doctrine",
-      "pulls_from": [
-        "n00-frontiers",
-        "n00-cortex"
-      ]
+      "pulls_from": ["n00-frontiers", "n00-cortex"]
     },
     {
       "name": "n00man",
       "path": "n00man",
-      "language": "node",
-      "pkg": "pnpm",
+      "language": "python",
+      "pkg": null,
+      "cli": "python3 cli/main.py",
+      "tooling": "tooling",
+      "scripts_dir": "n00man/scripts",
       "role": "agent-foundry",
       "required": [
         "docs",
         "docs/agents",
         "agents",
-        "scripts"
+        "scripts",
+        "cli",
+        "env",
+        "tests",
+        "artifacts",
+        "automation",
+        "tooling"
       ],
-      "branches": [
-        "main"
-      ]
+      "branches": ["main"]
     }
   ]
 }
