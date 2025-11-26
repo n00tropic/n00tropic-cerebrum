@@ -20,6 +20,7 @@ Frontiers --> Cortex
 Schemas published from `n00-cortex` drive automation in `n00-frontiers`, which then feeds downstream consumers such as `n00plicate` and the shared documentation set. `n00t` orchestrates the automation surface, while doctrine (`n00tropic`) and training signals (`n00-school`) complete the feedback loop.
 
 Source-of-truth policy:
+
 - `n00-frontiers` is the canonical SSoT for standards, templates, and governance; everything else should align to it.
 - `n00-cortex` enforces schemas/manifests derived from `n00-frontiers` so downstream automation stays pinned to the frontier rulebook.
 - `n00menon` is the docs SSoT (TechDocs/Antora content) that narrates the standards and their changes.
@@ -89,6 +90,52 @@ Source-of-truth policy:
 - **Output**: `corpora/` manifests, `pipelines/` processors, and `exports/` bundles that downstream repos (n00-horizons jobs, n00-frontiers templates, n00t capabilities) can consume without extra glue code.
 - **Integration**: shares derived assets with `n00-cortex` taxonomies, feeds cookiecutters/templates in `n00-frontiers`, and backfills `n00t` capabilities so agents can scaffold projects from curated source material.
 
+## AI/Agent Capabilities
+
+The workspace implements production-grade AI agent patterns through the Microsoft Agent Framework adoption (see `n00-school/ADR/ADR-003-agent-framework-adoption.md`).
+
+### Multi-Agent Patterns (`n00-horizons/horizons_executors.py`)
+
+| Pattern        | Executor                     | Description                                                            |
+| -------------- | ---------------------------- | ---------------------------------------------------------------------- |
+| Reflection     | `ReflectionExecutor`         | Generate → Critique → Refine loop with configurable quality thresholds |
+| Fan-Out/Fan-In | `FanOutExecutor`             | Parallel execution across multiple agents with aggregation strategies  |
+| Sequential     | `SequentialWorkflowExecutor` | Step-by-step workflow with context passing between stages              |
+
+### Enhanced RAG Pipeline (`n00clear-fusion/`)
+
+| Component          | Module                | Features                                                             |
+| ------------------ | --------------------- | -------------------------------------------------------------------- |
+| Hybrid Search      | `fusion_rag.py`       | Dense (embedding) + sparse (BM25) search with reciprocal rank fusion |
+| Reranking          | `fusion_rag.py`       | Cross-encoder reranking using MS-MARCO models                        |
+| Citation Grounding | `fusion_rag.py`       | Sentence-level attribution to source documents                       |
+| Multi-Agent RAG    | `fusion_workflows.py` | VerifyAndRefineWorkflow, ConsensusWorkflow patterns                  |
+
+### Model Routing (`n00t/packages/agent-core/src/model_router.py`)
+
+Cost-aware model selection with:
+
+- Capability-based routing (reasoning, coding, chat, embedding)
+- Tiered cost management (FREE → VERY_HIGH)
+- Fallback chains for resilience
+- Host detection (GitHub Models, Azure AI Foundry, OpenAI)
+
+### Evaluation Framework (`n00-school/school_evaluation.py`)
+
+RAG-specific evaluators:
+
+- **Retrieval**: MRR, NDCG@k, Recall@k, Precision@k
+- **Quality**: Faithfulness (grounding), Answer Correctness, Context Relevance
+- **Integration**: RAGAS metrics with Azure AI Evaluation SDK fallbacks
+
+### Observability (`n00clear-fusion/fusion_otel.py`)
+
+OpenTelemetry instrumentation with semantic conventions:
+
+- `GenAIAttributes` - LLM call tracing (model, tokens, temperature)
+- `RAGAttributes` - Retrieval operation metrics
+- `AgentAttributes` - Multi-agent workflow tracing
+
 ## Cross-repo release flow
 
 ```mermaid
@@ -114,9 +161,11 @@ This sequence highlights the typical cadence: adjust policy in `n00-cortex`, ada
 Automation scripts live under `.dev/automation/scripts/` and surface through the `n00t` capability manifest.
 
 ### Backstage & Sync
+
 - Backstage actions required for frontiers templates: `fetch:template`, `publish:github`, `catalog:register` (configure GitHub token for publish/register).
 - Scaffolder descriptors live in `n00-frontiers/.backstage/scaffolder-templates/`; regenerate with `python3 tools/generate_scaffolder_descriptors.py`.
 - Ecosystem sync: `pnpm run sync:ecosystem` (wraps `scripts/sync-ecosystem.sh`), telemetry at `.dev/automation/artifacts/automation/sync-ecosystem-<ts>.json`.
+
 ### ControlTower CLI (Swift)
 
 - Location: `Package.swift` / `Sources/ControlTower/`.
@@ -124,30 +173,30 @@ Automation scripts live under `.dev/automation/scripts/` and surface through the
 - Run: `swift run control-tower help`.
 - Commands: `status`, `validate-cortex`, `graph-live`, `graph-stub`.
 
-| Script                            | Purpose                                                                                                                                                                                    |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `meta-check.sh`                   | Orchestrates repo health checks, schema validation, and CVE scans before publishing changes.                                                                                               |
-| `refresh-workspace.sh`            | Fast-forwards each repo and updates submodules to keep local clones aligned.                                                                                                               |
-| `trunk-upgrade.sh`                | Runs `trunk upgrade` across repos (supports repo filters and extra flags when invoked via capabilities).                                                                                   |
-| `check-cross-repo-consistency.py` | Ensures toolchain manifests and overrides remain aligned.                                                                                                                                  |
-| `workspace-release.sh`            | Verifies clean git state and writes `1. Cerebrum Docs/releases.yaml`.                                                                                                                      |
-| `ai-workflows/*`                  | Phase-specific scripts for the AI-assisted development workflow surfaced by `n00t`.                                                                                                        |
-| `project-preflight.sh`            | Chains capture + GitHub/ERPNext syncs and fails fast when review cadence, links, or IDs are missing.                                                                                       |
-| `project-lifecycle-radar.sh`      | Emits a JSON radar summarizing lifecycle totals, overdue reviews, and integration gaps for planning.                                                                                       |
-| `project-control-panel.sh`        | Builds `n00-horizons/docs/control-panel.md` so planning decks link runbooks, radar output, and preflights.                                                                                 |
-| `scripts/erpnext-run.sh`          | Run-and-gun ERPNext dev stack: bootstraps bench, verifies MySQL/Redis, launches browser, logs telemetry, and triggers PM/telemetry exports.                                                |
-| `project-preflight-batch.sh`      | Executes preflight across every registry entry to keep GitHub + ERPNext sync warnings visible.                                                                                             |
-| `workspace-health.py`             | Summarizes root + submodule git status, emits `artifacts/workspace-health.json`, cleans safe untracked files, and syncs submodules on demand.                                              |
-| `workspace-health.py --auto-remediate` | Proactively applies skeleton fixes, syncs submodules, safe-cleans, and ensures default branches (opt-in).                                                                             |
-| `lint-workspace-manifest.py`      | Lints `automation/workspace.manifest.json` for required fields/uniqueness so new repos/roles/paths stay compliant.                                                                        |
-| `manifest-gate.sh`                | Blocks CI when gitmodules/on-disk repos are missing from the manifest.                                                                                                                    |
-| `fusion-pipeline.sh`              | One-click PDF ingest → embed (auto backend) → generate → graph rebuild; moves processed PDFs to `n00clear-fusion/corpora/Processed/`, logs run envelopes, registers horizons/school stubs. |
-| `guard-root-pnpm-install.mjs`     | Blocks accidental `pnpm install` at workspace root; set `ALLOW_ROOT_PNPM_INSTALL=1` only when you truly need a root install.                                                               |
-| `refresh-python-lock.sh`          | Regenerates or checks the Python lockfiles (`requirements.workspace.min.lock`, `requirements.workspace.lock`) using `uv`; CI can run the check to enforce reproducible deps.               |
-| `check-runners.mjs`               | Lists GitHub self-hosted runners for the superrepo + submodules (uses `GH_TOKEN`); nightly workflow alerts if coverage drops to zero.                                                      |
-| `normalize-workspace-pnpm.sh`     | Canonical entry for re-installing JS deps in templates/examples; now fails if Node pins drift (override with `--allow-mismatch`).                                                          |
-| `guard-subrepo-pnpm-install.mjs`  | Wired as `preinstall` in JS subrepos; blocks installs from the wrong directory/workspace context.                                                                                          |
-| `cli.py health-*`                 | Front door commands wrapping health checks: toolchain, runners, Python lock, and JS normalization with consistent logging.                                                                 |
+| Script                                 | Purpose                                                                                                                                                                                    |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `meta-check.sh`                        | Orchestrates repo health checks, schema validation, and CVE scans before publishing changes.                                                                                               |
+| `refresh-workspace.sh`                 | Fast-forwards each repo and updates submodules to keep local clones aligned.                                                                                                               |
+| `trunk-upgrade.sh`                     | Runs `trunk upgrade` across repos (supports repo filters and extra flags when invoked via capabilities).                                                                                   |
+| `check-cross-repo-consistency.py`      | Ensures toolchain manifests and overrides remain aligned.                                                                                                                                  |
+| `workspace-release.sh`                 | Verifies clean git state and writes `1. Cerebrum Docs/releases.yaml`.                                                                                                                      |
+| `ai-workflows/*`                       | Phase-specific scripts for the AI-assisted development workflow surfaced by `n00t`.                                                                                                        |
+| `project-preflight.sh`                 | Chains capture + GitHub/ERPNext syncs and fails fast when review cadence, links, or IDs are missing.                                                                                       |
+| `project-lifecycle-radar.sh`           | Emits a JSON radar summarizing lifecycle totals, overdue reviews, and integration gaps for planning.                                                                                       |
+| `project-control-panel.sh`             | Builds `n00-horizons/docs/control-panel.md` so planning decks link runbooks, radar output, and preflights.                                                                                 |
+| `scripts/erpnext-run.sh`               | Run-and-gun ERPNext dev stack: bootstraps bench, verifies MySQL/Redis, launches browser, logs telemetry, and triggers PM/telemetry exports.                                                |
+| `project-preflight-batch.sh`           | Executes preflight across every registry entry to keep GitHub + ERPNext sync warnings visible.                                                                                             |
+| `workspace-health.py`                  | Summarizes root + submodule git status, emits `artifacts/workspace-health.json`, cleans safe untracked files, and syncs submodules on demand.                                              |
+| `workspace-health.py --auto-remediate` | Proactively applies skeleton fixes, syncs submodules, safe-cleans, and ensures default branches (opt-in).                                                                                  |
+| `lint-workspace-manifest.py`           | Lints `automation/workspace.manifest.json` for required fields/uniqueness so new repos/roles/paths stay compliant.                                                                         |
+| `manifest-gate.sh`                     | Blocks CI when gitmodules/on-disk repos are missing from the manifest.                                                                                                                     |
+| `fusion-pipeline.sh`                   | One-click PDF ingest → embed (auto backend) → generate → graph rebuild; moves processed PDFs to `n00clear-fusion/corpora/Processed/`, logs run envelopes, registers horizons/school stubs. |
+| `guard-root-pnpm-install.mjs`          | Blocks accidental `pnpm install` at workspace root; set `ALLOW_ROOT_PNPM_INSTALL=1` only when you truly need a root install.                                                               |
+| `refresh-python-lock.sh`               | Regenerates or checks the Python lockfiles (`requirements.workspace.min.lock`, `requirements.workspace.lock`) using `uv`; CI can run the check to enforce reproducible deps.               |
+| `check-runners.mjs`                    | Lists GitHub self-hosted runners for the superrepo + submodules (uses `GH_TOKEN`); nightly workflow alerts if coverage drops to zero.                                                      |
+| `normalize-workspace-pnpm.sh`          | Canonical entry for re-installing JS deps in templates/examples; now fails if Node pins drift (override with `--allow-mismatch`).                                                          |
+| `guard-subrepo-pnpm-install.mjs`       | Wired as `preinstall` in JS subrepos; blocks installs from the wrong directory/workspace context.                                                                                          |
+| `cli.py health-*`                      | Front door commands wrapping health checks: toolchain, runners, Python lock, and JS normalization with consistent logging.                                                                 |
 
 ### Alerts (Discord)
 
@@ -210,6 +259,7 @@ source .venv-workspace/bin/activate      # activate venv in each shell before ru
 `scripts/check-superrepo.sh` aborts if any subrepo is missing (guiding you to `git submodule update --init --recursive`), while `scripts/bootstrap-python.sh` provisions `.venv-workspace` from the chosen requirements set so automation (MCP servers, project-control-panel, planners) never hit `ModuleNotFoundError`.
 
 Python env modes:
+
 - Default (minimal): `scripts/bootstrap-python.sh` installs `requirements.workspace.min.lock` (n00tropic + n00-school + mcp docs + pip-audit) for fast agent/automation setup.
 - Full: add `--full` (or set `WORKSPACE_REQUIREMENTS_FILE=requirements.workspace.txt`) to pull in the `n00-frontiers` Jupyter/tooling stack. Use this when running notebook builds or frontiers tests locally.
 

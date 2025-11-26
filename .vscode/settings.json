@@ -70,5 +70,12 @@
     "projectKey": "n00tropic_n00-cerebrum"
   },
 
-  "chatgpt.openOnStartup": true
+  "chatgpt.openOnStartup": true,
+  "python-envs.pythonProjects": [
+    {
+      "path": "",
+      "envManager": "ms-python.python:venv",
+      "packageManager": "ms-python.python:pip"
+    }
+  ]
 }
