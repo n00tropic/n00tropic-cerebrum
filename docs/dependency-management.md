@@ -141,5 +141,12 @@ Prefer storing these in your SSH host `.env` (or env vars for the runner) if you
 - Trunk is the single entrypoint; each repo keeps its own `.trunk/trunk.yaml`. The upgrade workflow runs in every repo to respect per-language settings.
 - For “live” feedback locally: run `trunk check --watch` or `trunk check --changed --no-fix` to mirror IDE Problems.
 - To auto-init new repos: `TRUNK_INIT_MISSING=1 .dev/automation/scripts/trunk-upgrade.sh` (used in CI) will run `trunk init --ci --no-progress` only when a repo lacks Trunk config, avoiding overwrites of existing configs.
+- MCP lint hook: capability `deps.trunkLint` runs `trunk check` (default `--changed`) and returns the log path under `artifacts/trunk/`. Inputs: `scope` (`changed`|`all`), optional `filter`.
+
+## Lint visibility & guardrails
+
+- Trunk is the single entrypoint; each repo keeps its own `.trunk/trunk.yaml`. The upgrade workflow runs in every repo to respect per-language settings.
+- For “live” feedback locally: run `trunk check --watch` or `trunk check --changed --no-fix` to mirror IDE Problems.
+- To auto-init new repos: `TRUNK_INIT_MISSING=1 .dev/automation/scripts/trunk-upgrade.sh` (used in CI) will run `trunk init --ci --no-progress` only when a repo lacks Trunk config, avoiding overwrites of existing configs.
 - `.github/workflows/sbom.yml` – CI SBOM + upload workflow (AGENT_HOOK).
 - `ops/dependency-track/docker-compose.yml`, `ops/dependency-track/README.md`, `ops/dependency-track/projects.json` – Dependency-Track deployment + mapping (AGENT_HOOK).
