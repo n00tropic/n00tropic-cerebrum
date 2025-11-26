@@ -108,7 +108,11 @@ for repo in "${REPOS[@]}"; do
 		printf "\n== Running trunk check in %s ==\n" "${repo}"
 		pushd "${repo}" >/dev/null
 		# Ensure git commands invoked by trunk can resolve submodule metadata even when run from temp dirs.
-		export GIT_DIR="${DIR}/.git/modules/${repo}"
+		LOCAL_GIT_DIR="${DIR}/.git/modules/${repo}"
+		if [[ ! -d ${LOCAL_GIT_DIR} ]]; then
+			LOCAL_GIT_DIR="$(pwd)/.git"
+		fi
+		export GIT_DIR="${LOCAL_GIT_DIR}"
 		export GIT_WORK_TREE="$(pwd)"
 		# Ensure subrepo trunk config exists
 		if [[ -d ".trunk" ]]; then
