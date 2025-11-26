@@ -25,3 +25,4 @@
 [submodule "n00menon"]
 	path = n00menon
 	url = https://github.com/n00tropic/n00menon.git
+	branch = docs
