@@ -22,9 +22,9 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run drift analysis
+      - name: Run drift analysis (fail on any drift)
         run: |
-          .dev/automation/scripts/deps-drift.py --format both --output artifacts/deps-drift/latest.json --table-output artifacts/deps-drift/latest.md --plan-output artifacts/deps-drift/plan.json
+          .dev/automation/scripts/deps-drift.py --format both --output artifacts/deps-drift/latest.json --table-output artifacts/deps-drift/latest.md --plan-output artifacts/deps-drift/plan.json --fail-on any
 
       - name: Upload drift report
         uses: actions/upload-artifact@v4
