@@ -33,13 +33,13 @@ This guide keeps the federated workspace healthy whether you are preparing a pul
 
 This script runs schema validation, Renovate preset verification, CVE scans, and other repo-specific linters.
 
-For a fast human-friendly snapshot of the workspace state while you are iterating locally, you can also run:
+For a fast human-friendly snapshot of the workspace state while you are iterating locally, call the MCP capability `workspace.status` (preferred for agents) or run the helper script directly:
 
 ```bash
 ./.dev/automation/scripts/workspace-status.sh
 ```
 
-This prints a short root `git status`, submodule summary, and (when installed) a Trunk summary for the root repo.
+Both entrypoints print a short root `git status`, submodule summary, and (when installed) a Trunk summary for the root repo.
 
 When submodules have moved forward (for example, after you have committed and pushed changes inside `n00-cortex` or `n00-frontiers`), you can capture the new "machine state" in the superrepo with:
 

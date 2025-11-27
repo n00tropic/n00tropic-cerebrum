@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-11-27T14:26:02.983211+00:00",
+  "generated_at": "2025-11-27T14:39:46.703030+00:00",
   "candidateScripts": [
     ".dev/automation/scripts/ai-workflows/workflow-utils.sh",
     ".dev/automation/scripts/autofix-project-metadata.py",
@@ -46,7 +46,6 @@
     ".dev/automation/scripts/wait-for-pr-checks.py",
     ".dev/automation/scripts/workspace-commit-submodules.sh",
     ".dev/automation/scripts/workspace-gitdoctor-capability.sh",
-    ".dev/automation/scripts/workspace-status.sh",
     ".dev/automation/scripts/wrangle-branches.sh",
     "scripts/antora-local-clone.sh",
     "scripts/bootstrap-python.sh",
