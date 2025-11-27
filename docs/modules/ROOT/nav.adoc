@@ -9,6 +9,7 @@
 * xref:guides/running-automation.adoc[Running Automation]
 * xref:guides/adding-mcp-capability.adoc[Adding MCP Capability]
 * xref:guides/creating-adr.adoc[Creating ADRs]
+* xref:guides/documentation-governance.adoc[Documentation Governance]
 
 .Planning & Workflows
 * xref:planning.adoc[Planning & Typesense]
@@ -43,6 +44,9 @@
 
 .Troubleshooting
 * xref:troubleshooting/workspace.adoc[Workspace Issues]
+* xref:troubleshooting/n00t.adoc[n00t Issues]
+* xref:troubleshooting/n00tropic.adoc[n00tropic Issues]
+* xref:troubleshooting/n00-frontiers.adoc[n00-frontiers Issues]
 
 .Reference
 * xref:reference/architecture.adoc[Architecture Overview]
