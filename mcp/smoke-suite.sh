@@ -21,7 +21,7 @@ MCP_PROXY_BIN="mcp-proxy"
 if ! command -v mcp-proxy >/dev/null 2>&1; then
 	MCP_PROXY_BIN="python -m mcp_proxy.cli"
 fi
-env WORKSPACE_ROOT="$WORKSPACE_ROOT" ${MCP_PROXY_BIN} --config "${WORKSPACE_ROOT}/mcp/mcp-suite.yaml" list
+env WORKSPACE_ROOT="$WORKSPACE_ROOT" "${MCP_PROXY_BIN}" --config "${WORKSPACE_ROOT}/mcp/mcp-suite.yaml" list
 
 echo "[smoke] docs server page fetch (index) via local import"
 python - <<'PY'

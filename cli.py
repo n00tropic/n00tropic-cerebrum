@@ -23,6 +23,8 @@ GIT_BIN = which("git") or "git"
 if not GIT_BIN:
     raise SystemExit("git executable not found in PATH")
 
+SUBREPO_PYTHON_CLI = "python3 cli/main.py"
+
 _FALLBACK_SUBREPO_CONTEXT = {
     "workspace": {
         "path": WORKSPACE_ROOT,
@@ -38,7 +40,7 @@ _FALLBACK_SUBREPO_CONTEXT = {
         "language": "python",
         "pkg": "pnpm",
         "venv": WORKSPACE_ROOT / "n00-cortex" / ".venv",
-        "cli": "python3 cli/main.py",
+        "cli": SUBREPO_PYTHON_CLI,
         "tooling": WORKSPACE_ROOT / "n00-cortex" / "tooling",
         "scripts_dir": WORKSPACE_ROOT
         / "n00-cortex"
@@ -64,7 +66,7 @@ _FALLBACK_SUBREPO_CONTEXT = {
         "language": "python",
         "pkg": "pnpm",
         "venv": WORKSPACE_ROOT / "n00-frontiers" / ".venv-frontiers",
-        "cli": "python3 cli/main.py",
+        "cli": SUBREPO_PYTHON_CLI,
         "tooling": WORKSPACE_ROOT / "n00-frontiers" / "tooling",
         "scripts_dir": WORKSPACE_ROOT
         / "n00-frontiers"
@@ -77,7 +79,7 @@ _FALLBACK_SUBREPO_CONTEXT = {
         "language": "python",
         "pkg": "pnpm",
         "venv": WORKSPACE_ROOT / "n00-horizons" / ".venv-horizons",
-        "cli": "python3 cli/main.py",
+        "cli": SUBREPO_PYTHON_CLI,
         "tooling": WORKSPACE_ROOT / "n00-horizons" / "tooling",
         "scripts_dir": WORKSPACE_ROOT
         / "n00-horizons"
@@ -90,7 +92,7 @@ _FALLBACK_SUBREPO_CONTEXT = {
         "language": "python",
         "pkg": "pnpm",
         "venv": WORKSPACE_ROOT / "n00-school" / ".venv-school",
-        "cli": "python3 cli/main.py",
+        "cli": SUBREPO_PYTHON_CLI,
         "tooling": WORKSPACE_ROOT / "n00-school" / "tooling",
         "scripts_dir": WORKSPACE_ROOT
         / "n00-school"
@@ -103,7 +105,7 @@ _FALLBACK_SUBREPO_CONTEXT = {
         "language": "python",
         "pkg": "pnpm",
         "venv": WORKSPACE_ROOT / "n00clear-fusion" / ".venv-fusion",
-        "cli": "python3 cli/main.py",
+        "cli": SUBREPO_PYTHON_CLI,
         "tooling": WORKSPACE_ROOT / "n00clear-fusion" / "tooling",
         "scripts_dir": WORKSPACE_ROOT
         / "n00clear-fusion"
@@ -147,7 +149,7 @@ _FALLBACK_SUBREPO_CONTEXT = {
         "language": "python",
         "pkg": "pnpm",
         "venv": WORKSPACE_ROOT / "n00tropic" / ".venv",
-        "cli": "python3 cli/main.py",
+        "cli": SUBREPO_PYTHON_CLI,
         "tooling": WORKSPACE_ROOT / "n00tropic" / "tooling",
         "scripts_dir": WORKSPACE_ROOT / "n00tropic" / ".dev" / "n00tropic" / "scripts",
     },

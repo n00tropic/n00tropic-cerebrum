@@ -10,7 +10,7 @@ import argparse
 import json
 import mcp as mcp_package
 import os
-import subprocess
+import subprocess  # nosec B404 - trusted workspace commands only
 import time
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -102,7 +102,7 @@ def run_health_command(command: HealthCommand, cwd: Path) -> dict[str, Any]:
     env.update(command.env)
     start = time.perf_counter()
     try:
-        proc = subprocess.run(  # noqa: S603,S607 - controlled inputs
+        proc = subprocess.run(  # noqa: S603,S607  # nosec B603 - controlled inputs
             command.command,
             cwd=cwd,
             env=env,
