@@ -7,7 +7,7 @@ ARTIFACT_DIR="${ROOT_DIR}/artifacts/trunk"
 mkdir -p "${ARTIFACT_DIR}"
 
 if ! command -v trunk >/dev/null 2>&1; then
-	echo "[trunk-lint] trunk CLI not found; install via trunk.io or set TRUNK_INSTALL=1 for auto-install in trunk-upgrade.sh" >&2
+	echo "[trunk-lint] trunk CLI not found; install via trunk.io or run trunk-lint-setup.sh" >&2
 	exit 1
 fi
 
