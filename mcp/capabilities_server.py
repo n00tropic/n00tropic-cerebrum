@@ -12,8 +12,10 @@ Stdout/stderr/exit code are returned to the caller.
 
 from __future__ import annotations
 
+from mcp.server.fastmcp.utilities.func_metadata import ArgModelBase, FuncMetadata
 from pathlib import Path
-from typing import Any, Callable, Dict
+from pydantic import ConfigDict, create_model
+from typing import Any, Dict, Type
 
 import asyncio
 import json
@@ -25,6 +27,72 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST_PATH = REPO_ROOT / "n00t" / "capabilities" / "manifest.json"
 mcp = None  # FastMCP will be loaded lazily
+
+
+class _CapabilityArgBase(ArgModelBase):
+    """Base arg model that preserves optional inputs and extras."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True, extra="allow")
+
+    def model_dump_one_level(self) -> dict[str, Any]:
+        data: dict[str, Any] = {}
+        for field_name, field_info in self.__class__.model_fields.items():
+            if (
+                field_name not in self.model_fields_set
+                and field_info.default is not Ellipsis
+            ):
+                continue
+            value = getattr(self, field_name)
+            output_name = field_info.alias or field_name
+            data[output_name] = value
+        extra = getattr(self, "model_extra", None)
+        if isinstance(extra, dict):
+            data.update(extra)
+        return data
+
+
+def _sanitize_model_name(cap_id: str) -> str:
+    sanitized = re.sub(r"[^0-9a-zA-Z]+", "_", cap_id).strip("_")
+    return sanitized or "capability"
+
+
+def _normalize_schema(schema: Dict[str, Any] | None) -> Dict[str, Any]:
+    if not isinstance(schema, dict):
+        return {"type": "object"}
+    normalized = dict(schema)
+    normalized.setdefault("type", "object")
+    return normalized
+
+
+def _arg_model_for_capability(
+    cap_id: str, schema: Dict[str, Any]
+) -> Type[ArgModelBase]:
+    properties = schema.get("properties") if isinstance(schema, dict) else None
+    required = set(schema.get("required", []) if isinstance(schema, dict) else [])
+    field_defs: dict[str, tuple[type[Any], Any]] = {}
+    if isinstance(properties, dict):
+        for prop_name in properties.keys():
+            default = ... if prop_name in required else None
+            field_defs[prop_name] = (Any, default)
+    extra_behavior = "allow"
+    additional = (
+        schema.get("additionalProperties") if isinstance(schema, dict) else None
+    )
+    if isinstance(additional, bool) and additional is False:
+        extra_behavior = "forbid"
+    config = ConfigDict(arbitrary_types_allowed=True, extra=extra_behavior)
+    model_name = f"{_sanitize_model_name(cap_id)}Inputs"
+    return create_model(
+        model_name,
+        __base__=_CapabilityArgBase,
+        __config__=config,
+        **field_defs,
+    )
+
+
+def _func_metadata_for_capability(cap_id: str, schema: Dict[str, Any]) -> FuncMetadata:
+    arg_model = _arg_model_for_capability(cap_id, schema)
+    return FuncMetadata(arg_model=arg_model)
 
 
 def _load_manifest() -> Dict[str, Any]:
@@ -62,7 +130,7 @@ def _build_command(entrypoint: str) -> list[str]:
 
 def _register_capability(cap: Dict[str, Any]) -> None:
     cap_id = cap["id"]
-    inputs_schema: Dict[str, Any] = cap.get("inputs", {"type": "object"})
+    inputs_schema = _normalize_schema(cap.get("inputs"))
     entrypoint = cap["entrypoint"]
     summary = cap.get("summary", cap_id)
 
@@ -95,7 +163,15 @@ def _register_capability(cap: Dict[str, Any]) -> None:
         }
 
     tool_name = cap_id.replace(".", "_")
-    mcp.tool(name=tool_name, input_schema=inputs_schema, description=summary)(_run)
+    assert mcp is not None
+    mcp.add_tool(_run, name=tool_name, description=summary)
+    registered_tool = mcp._tool_manager.get_tool(
+        tool_name
+    )  # noqa: SLF001 - FastMCP lacks a public accessor
+    if registered_tool is None:
+        raise RuntimeError(f"Failed to register capability '{cap_id}' as MCP tool")
+    registered_tool.parameters = inputs_schema
+    registered_tool.fn_metadata = _func_metadata_for_capability(cap_id, inputs_schema)
 
 
 def _discover_and_register() -> None:
