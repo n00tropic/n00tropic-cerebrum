@@ -19,6 +19,26 @@
       "target": "DashboardApp",
       "configuration": "release",
       "preLaunchTask": "swift: Build Release DashboardApp (n00-dashboard)"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:n00tropic-cerebrum}",
+      "name": "Debug control-tower",
+      "target": "control-tower",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug control-tower"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:n00tropic-cerebrum}",
+      "name": "Release control-tower",
+      "target": "control-tower",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release control-tower"
     }
   ]
 }

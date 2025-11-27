@@ -17,6 +17,12 @@ This directory centralises all MCP endpoints we expect agents to use:
 
 ```bash
 cd /path/to/n00tropic-cerebrum
+# Provision both virtual environments from the lockfiles (once per clone or after dependency bumps)
+./mcp/provision-venvs.sh
+
+# Make sure the MCP tools from .venv are available (or `source .venv/bin/activate`)
+export PATH="$PWD/.venv/bin:$PATH"
+
 # Start suite (docs + capability shim + proxy)
 ./mcp/start-suite.sh
 
@@ -27,6 +33,18 @@ WORKSPACE_ROOT=$(pwd) ./mcp/health-suite.sh
 # Quick smoke (parses config, lists capabilities, exercises docs.get_page)
 WORKSPACE_ROOT=$(pwd) ./mcp/smoke-suite.sh
 ```
+
+If VS Code still fails to launch the local Python servers, run the config validator:
+
+```bash
+# Checks the default ~/Library/.../mcp.json entries by default
+python mcp/check-vscode-mcp-config.py
+
+# Or point it at a custom config file
+python mcp/check-vscode-mcp-config.py --config ~/.vscode/mcp.json
+```
+
+It verifies that the `docs` and `n00t-capabilities` entries reference real files inside this repo and that `WORKSPACE_ROOT` matches the repository path.
 
 ## VS Code / Copilot (Agent Mode)
 
@@ -73,6 +91,20 @@ Point VS Code to the master suite with a single config file:
 ```
 
 After saving, open Copilot Chat → Agent → Tools (🔧) → Start to launch the servers.
+
+### Environment guardrails
+
+The `./mcp/provision-venvs.sh` helper ensures the two MCP-facing virtualenvs stay in sync with the lockfiles:
+
+```bash
+# Minimal tooling for docs + capabilities
+UV_BIN=/usr/local/bin/uv ./mcp/provision-venvs.sh
+```
+
+- `.venv` → `requirements.workspace.min.lock` (fast, used by docs/capability servers)
+- `.venv-workspace` → `requirements.workspace.lock` (full stack for agents/tests)
+
+Run it after pulling dependency bumps or onboarding a new machine to avoid missing-module errors the next time MCP servers launch.
 
 ## mcp-proxy federation
 
