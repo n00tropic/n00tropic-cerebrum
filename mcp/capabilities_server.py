@@ -12,6 +12,7 @@ Stdout/stderr/exit code are returned to the caller.
 
 from __future__ import annotations
 
+from mcp.capabilities_manifest import Capability, CapabilityManifest
 from mcp.server.fastmcp.utilities.func_metadata import ArgModelBase, FuncMetadata
 from pathlib import Path
 from pydantic import ConfigDict, create_model
@@ -19,14 +20,30 @@ from typing import Any, Dict, Type
 
 import asyncio
 import json
+import logging
 import os
 import re
 import shlex
 import sys
+import time
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST_PATH = REPO_ROOT / "n00t" / "capabilities" / "manifest.json"
+MANIFEST_DIR = MANIFEST_PATH.parent
 mcp = None  # FastMCP will be loaded lazily
+manifest_model: CapabilityManifest | None = None
+
+LOG_LEVEL = os.environ.get("N00T_MCP_LOG", "INFO").upper()
+logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO))
+logger = logging.getLogger("n00t.mcp.capabilities")
+
+
+def _manifest() -> CapabilityManifest:
+    global manifest_model
+    if manifest_model is None:
+        manifest_model = CapabilityManifest.load(MANIFEST_PATH, REPO_ROOT)
+        logger.info("Loaded capability manifest", extra={"path": str(MANIFEST_PATH)})
+    return manifest_model
 
 
 class _CapabilityArgBase(ArgModelBase):
@@ -95,19 +112,8 @@ def _func_metadata_for_capability(cap_id: str, schema: Dict[str, Any]) -> FuncMe
     return FuncMetadata(arg_model=arg_model)
 
 
-def _load_manifest() -> Dict[str, Any]:
-    text = MANIFEST_PATH.read_text(encoding="utf-8")
-    return json.loads(text)
-
-
-def _enabled_caps(manifest: Dict[str, Any]) -> list[Dict[str, Any]]:
-    caps = []
-    for cap in manifest.get("capabilities", []):
-        agent_cfg = cap.get("agent", {})
-        mcp_cfg = agent_cfg.get("mcp", {}) if isinstance(agent_cfg, dict) else {}
-        if mcp_cfg.get("enabled", False):
-            caps.append(cap)
-    return caps
+def _enabled_caps() -> list[Capability]:
+    return list(_manifest().enabled_capabilities())
 
 
 def _to_upper_snake(name: str) -> str:
@@ -116,32 +122,40 @@ def _to_upper_snake(name: str) -> str:
     return s.upper().strip("_")
 
 
-def _build_command(entrypoint: str) -> list[str]:
-    ep_path = (REPO_ROOT / entrypoint).resolve()
-    if ep_path.suffix == ".py":
-        return ["python", str(ep_path)]
-    if ep_path.suffix == ".sh":
-        return ["bash", str(ep_path)]
-    # If executable, run directly; otherwise default to bash
-    if os.access(ep_path, os.X_OK):
-        return [str(ep_path)]
-    return ["bash", str(ep_path)]
+def _build_command(entrypoint: Path) -> list[str]:
+    if entrypoint.suffix == ".py":
+        return ["python", str(entrypoint)]
+    if entrypoint.suffix == ".sh":
+        return ["bash", str(entrypoint)]
+    if os.access(entrypoint, os.X_OK):
+        return [str(entrypoint)]
+    return ["bash", str(entrypoint)]
 
 
-def _register_capability(cap: Dict[str, Any]) -> None:
-    cap_id = cap["id"]
-    inputs_schema = _normalize_schema(cap.get("inputs"))
-    entrypoint = cap["entrypoint"]
-    summary = cap.get("summary", cap_id)
+def _register_capability(cap: Capability) -> None:
+    cap_id = cap.id
+    inputs_schema = _normalize_schema(cap.inputs)
+    entrypoint = cap.resolved_entrypoint(REPO_ROOT, MANIFEST_DIR)
+    summary = cap.summary
+    guardrails = cap.guardrails
 
     async def _run(**kwargs: Any) -> Dict[str, Any]:
         cmd = _build_command(entrypoint)
-        env = os.environ.copy()
+        env = {k: os.environ[k] for k in guardrails.allowed_env if k in os.environ}
         env["WORKSPACE_ROOT"] = str(REPO_ROOT)
         env["CAPABILITY_ID"] = cap_id
         env["CAPABILITY_INPUTS"] = json.dumps(kwargs)
         for key, value in kwargs.items():
             env[f"INPUT_{_to_upper_snake(key)}"] = str(value)
+
+        logger.info(
+            "capability_start",
+            extra={
+                "capability": cap_id,
+                "command": cmd,
+                "inputs": sorted(kwargs.keys()),
+            },
+        )
 
         proc = await asyncio.create_subprocess_exec(
             *cmd,
@@ -150,17 +164,47 @@ def _register_capability(cap: Dict[str, Any]) -> None:
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
-        out_b, err_b = await proc.communicate()
+        timed_out = False
+        start = time.perf_counter()
+        try:
+            out_b, err_b = await asyncio.wait_for(
+                proc.communicate(), timeout=guardrails.max_runtime_seconds
+            )
+        except asyncio.TimeoutError:
+            timed_out = True
+            proc.kill()
+            out_b, err_b = await proc.communicate()
+
         out = out_b.decode(errors="replace")
         err = err_b.decode(errors="replace")
-        status = "ok" if proc.returncode == 0 else "error"
-        return {
+        duration = time.perf_counter() - start
+        exit_code = proc.returncode
+        exit_ok = exit_code in guardrails.allowed_exit_codes
+        status = "ok" if (exit_ok and not timed_out) else "error"
+        if timed_out:
+            status = "timeout"
+
+        payload = {
             "status": status,
-            "exitCode": proc.returncode,
-            "stdout": out[-4000:],  # tail to avoid overload
-            "stderr": err[-4000:],
+            "exitCode": exit_code,
+            "stdout": out[-8000:],
+            "stderr": err[-8000:],
             "command": " ".join(shlex.quote(p) for p in cmd),
+            "duration": round(duration, 3),
+            "timedOut": timed_out,
         }
+
+        logger.info(
+            "capability_finish",
+            extra={
+                "capability": cap_id,
+                "status": status,
+                "exit_code": exit_code,
+                "duration": payload["duration"],
+                "timed_out": timed_out,
+            },
+        )
+        return payload
 
     tool_name = cap_id.replace(".", "_")
     assert mcp is not None
@@ -184,34 +228,29 @@ def _discover_and_register() -> None:
             raise
         mcp = FastMCP("n00t-capabilities")
 
-    manifest = _load_manifest()
-    for cap in _enabled_caps(manifest):
+    for cap in _enabled_caps():
         _register_capability(cap)
 
 
 def list_capabilities() -> list[str]:
-    manifest = _load_manifest()
-    return [cap["id"] for cap in _enabled_caps(manifest)]
+    return [cap.id for cap in _enabled_caps()]
 
 
 def list_capability_meta() -> list[Dict[str, Any]]:
-    manifest = _load_manifest()
-    result: list[Dict[str, Any]] = []
-    for cap in _enabled_caps(manifest):
-        entry = {
-            "id": cap.get("id"),
-            "summary": cap.get("summary"),
-            "entrypoint": cap.get("entrypoint"),
-            "tags": (
-                cap.get("metadata", {}).get("tags")
-                if isinstance(cap.get("metadata"), dict)
-                else None
-            ),
-            "inputs": cap.get("inputs"),
-            "outputs": cap.get("outputs"),
-        }
-        result.append(entry)
-    return result
+    entries: list[Dict[str, Any]] = []
+    for cap in _enabled_caps():
+        entries.append(
+            {
+                "id": cap.id,
+                "summary": cap.summary,
+                "entrypoint": cap.entrypoint,
+                "metadata": cap.metadata.model_dump(),
+                "guardrails": cap.guardrails.model_dump(),
+                "inputs": cap.inputs,
+                "outputs": cap.outputs,
+            }
+        )
+    return entries
 
 
 def main() -> None:
