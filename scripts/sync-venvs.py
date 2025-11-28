@@ -7,7 +7,9 @@ Defaults:
   - Creates venv at manifest["venv"] (fallback: <repo>/.venv-<name> or .venv)
   - Installs requirements in priority order:
       requirements.txt, requirements-dev.txt, requirements-doctr.txt (if present)
-  - Uses uv for reproducible sync; installs uv if missing.
+  - Uses uv; installs uv if missing.
+  - Mode `install` (default) resolves transitive deps (`uv pip install -r ...`).
+    Mode `sync` expects fully pinned requirement files (`uv pip sync ...`).
 
 Examples:
   python3 scripts/sync-venvs.py --all --check
@@ -77,6 +79,7 @@ def sync_repo(
     venv_path: Path,
     reqs: List[Path],
     perform_check: bool,
+    mode: str,
 ) -> Tuple[str, bool]:
     venv_path.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run([uv_bin, "venv", str(venv_path)], check=True)
@@ -86,11 +89,16 @@ def sync_repo(
     cmd = [
         uv_bin,
         "pip",
-        "sync",
+        "install" if mode == "install" else "sync",
         "--python",
         str(venv_path / "bin" / "python"),
-        *[str(r) for r in reqs],
     ]
+    if mode == "install":
+        cmd.append("--upgrade")
+        for r in reqs:
+            cmd.extend(["-r", str(r)])
+    else:
+        cmd += [str(r) for r in reqs]
     subprocess.run(cmd, check=True)
     if perform_check:
         check_cmd = [
@@ -141,6 +149,13 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Run `uv pip check` after sync to flag version mismatches",
     )
+    parser.add_argument(
+        "--mode",
+        choices=["install", "sync"],
+        default="install",
+        help="install: resolve transitive deps (uv pip install --upgrade -r ...); "
+        "sync: expect fully pinned requirement files (uv pip sync ...)",
+    )
     args = parser.parse_args(argv)
 
     manifest = load_manifest()
@@ -162,7 +177,9 @@ def main(argv: list[str] | None = None) -> int:
             f"[sync-venvs] syncing {name} -> {venv_path} using {', '.join(r.name for r in reqs) or 'no reqs'}"
         )
         try:
-            _, ok = sync_repo(uv_bin, name, repo_root, venv_path, reqs, args.check)
+            _, ok = sync_repo(
+                uv_bin, name, repo_root, venv_path, reqs, args.check, args.mode
+            )
             if not ok:
                 failures.append(name)
         except subprocess.CalledProcessError as exc:

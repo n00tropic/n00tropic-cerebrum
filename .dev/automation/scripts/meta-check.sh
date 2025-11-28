@@ -157,6 +157,12 @@ if [[ $DOCTOR -eq 1 ]]; then
 	fi
 fi
 
+if has_command python3 && [[ -f "$ROOT/scripts/sync-venvs.py" ]]; then
+	run_check "sync-venvs" "." "Sync Python venvs with uv" python3 scripts/sync-venvs.py --all --full --check
+else
+	skip_check "sync-venvs" "Sync Python venvs with uv" "python3 or scripts/sync-venvs.py missing"
+fi
+
 if [[ -z ${RENOVATE_TOKEN-} && -f $RENOVATE_SECRET_FILE ]]; then
 	# shellcheck disable=SC1090
 	source "$RENOVATE_SECRET_FILE"

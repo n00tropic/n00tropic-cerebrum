@@ -33,6 +33,26 @@ log() {
 	printf '[doctor] %s\n' "$1"
 }
 
+ensure_uv() {
+	if command -v uv >/dev/null 2>&1; then
+		log "✅ uv present."
+		return
+	fi
+	log "⚠️  uv not found; attempting install via Astral installer."
+	install_cmd="curl -LsSf https://astral.sh/uv/install.sh | sh"
+	if ! bash -c "$install_cmd" >/dev/null 2>&1; then
+		log "⚠️  uv install attempt failed; continuing without uv."
+		STATUS=1
+		return
+	fi
+	if command -v uv >/dev/null 2>&1; then
+		log "✅ uv installed."
+	else
+		log "⚠️  uv still unavailable after install attempt."
+		STATUS=1
+	fi
+}
+
 check_token() {
 	local secret_file="$ROOT/.secrets/renovate/config.js"
 	if [[ ! -f $secret_file ]]; then
@@ -139,6 +159,7 @@ refresh_dashboard() {
 }
 
 check_token
+ensure_uv
 sync_trunk
 ensure_example_dependencies
 ensure_n00t_dependencies
