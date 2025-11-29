@@ -115,15 +115,16 @@ EOF
 }
 
 prepare_pdf_fixture() {
-  local pdf="$TMP_DIR/fixture.pdf"
+  local pdf="$TMP_DIR/fixture.txt"
   python3 - <<'PY'
 import os
 from pathlib import Path
 pdf = Path(os.environ["TMP_DIR"]) / "fixture.pdf"
 pdf.parent.mkdir(parents=True, exist_ok=True)
-content = b"%PDF-1.4\n1 0 obj <<>> endobj\ntrailer <<>>\n%%EOF\n"
-pdf.write_bytes(content)
-print(pdf)
+txt = pdf.with_suffix(".txt")
+lines = "\n".join(f"fixture line {i} for fusion validation" for i in range(120))
+txt.write_text(lines, encoding="utf-8")
+print(txt)
 PY
 }
 
@@ -158,11 +159,16 @@ if should_run docs; then
       export GIT_ASKPASS="$TMP_DIR/git-askpass.sh"
       cat > "$GIT_ASKPASS" <<EOF
 #!/usr/bin/env bash
-echo "$GH_SUBMODULE_TOKEN"
+if [[ "$1" == "Username for"* ]]; then
+  echo "${GH_SUBMODULE_USER:-x-access-token}"
+else
+  echo "$GH_SUBMODULE_TOKEN"
+fi
 EOF
       chmod +x "$GIT_ASKPASS"
     fi
-    pnpm exec antora antora-playbook.ci.yml --stacktrace
+    PLAYBOOK=${ANTORA_PLAYBOOK:-antora-playbook.local.yml}
+    pnpm exec antora "$PLAYBOOK" --stacktrace
   '
 fi
 
@@ -194,9 +200,9 @@ PY
       if [[ ! -x \$VENV_PY ]]; then
         echo 'fusion venv python missing' >&2; exit 1
       fi
-      \$VENV_PY -m pip install --quiet --upgrade pip
-      \$VENV_PY -m pip install --quiet -r n00clear-fusion/requirements.txt
-      FUSION_EMBED_BACKEND=${FUSION_EMBED_BACKEND:-stub} bash .dev/automation/scripts/fusion-pipeline.sh '${PDF_FIXTURE}' validation-fixture
+      \"\$VENV_PY\" -m pip install --quiet --upgrade pip
+      \"\$VENV_PY\" -m pip install --quiet -r n00clear-fusion/requirements.txt
+      FUSION_EMBED_BACKEND=${FUSION_EMBED_BACKEND:-hashed} bash .dev/automation/scripts/fusion-pipeline.sh '${PDF_FIXTURE}' validation-fixture
     "
   else
     echo "[validate] fusion skipped (missing n00clear-fusion/.venv)" | tee "$ARTIFACT_DIR/fusion-skip.log"

@@ -51,6 +51,7 @@
 ### Pipeline validation
 
 - `scripts/validate-pipelines.sh --clean` creates temp fixtures, runs preflight → graph export → docs build → fusion (if venv present), and writes logs to `.dev/automation/artifacts/pipeline-validation/latest.json`.
+- Validator defaults to the local playbook (`antora-playbook.local.yml`) to avoid remote creds; set `ANTORA_PLAYBOOK=antora-playbook.ci.yml` if you want remote fetch. Provide `GH_SUBMODULE_TOKEN` when hitting private sources.
 
 ### Local runners, creds, and CLIs (use local first)
 

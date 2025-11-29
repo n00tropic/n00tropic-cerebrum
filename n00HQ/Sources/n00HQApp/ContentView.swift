@@ -339,7 +339,8 @@ struct ManagementView: View {
     private let guardActions: [GuardAction] = [
         GuardAction(id: "toolchain", title: "Toolchain pins", systemImage: "bolt.fill", command: "node scripts/check-toolchain-pins.mjs --json", label: "toolchain pins"),
         GuardAction(id: "token", title: "Token drift", systemImage: "aqi.medium", command: ".dev/automation/scripts/token-drift.sh", label: "token drift"),
-        GuardAction(id: "typesense", title: "Typesense", systemImage: "network", command: ".dev/automation/scripts/typesense-freshness.sh 7", label: "typesense")
+        GuardAction(id: "typesense", title: "Typesense", systemImage: "network", command: ".dev/automation/scripts/typesense-freshness.sh 7", label: "typesense"),
+        GuardAction(id: "pipelines", title: "Validate pipelines", systemImage: "arrow.triangle.2.circlepath", command: "scripts/validate-pipelines.sh --clean", label: "pipeline validation")
     ]
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
