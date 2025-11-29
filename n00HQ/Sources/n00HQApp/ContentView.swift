@@ -390,6 +390,35 @@ struct ManagementView: View {
                     .cornerRadius(10)
                 }
             }
+
+            if let summary = repo.pipelineSummary {
+                Text("Pipeline Validation")
+                    .font(.subheadline.bold())
+                if let ts = summary.generated_at {
+                    Text("Generated: \(ts)")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+                ForEach(summary.runs) { run in
+                    HStack(spacing: 8) {
+                        Circle()
+                            .fill(run.status.lowercased() == "ok" ? Color.green : Color.orange)
+                            .frame(width: 8, height: 8)
+                        Text(run.name)
+                        if let dur = run.duration_ms {
+                            Text("\(dur) ms").font(.footnote).foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        if let url = repo.resolvedURL(for: run.log) {
+                            Link("Log", destination: url)
+                                .font(.footnote)
+                        }
+                    }
+                    .padding(10)
+                    .background(Color(NSColor.windowBackgroundColor))
+                    .cornerRadius(8)
+                }
+            }
             Spacer()
         }
         .padding()
