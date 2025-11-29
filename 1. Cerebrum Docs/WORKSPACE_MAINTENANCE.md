@@ -63,6 +63,17 @@ For any metadata-bearing document (ideas, jobs, projects):
 
 Preflight chains capture, GitHub sync, and ERPNext sync to confirm IDs, links, and review cadence before you share updates.
 
+**Frontiers Evergreen Charter** – If you change
+`n00-cortex/data/toolchain-manifest.json`, frontiers schemas, or any template
+metadata, immediately run
+`.dev/automation/scripts/frontiers-evergreen.py` (or the n00t capability
+`frontiers.evergreen`). The script wraps
+`n00-frontiers/.dev/validate-templates.sh --all` and publishes the resulting
+JSON/log artifacts under
+`.dev/automation/artifacts/automation/frontiers-evergreen-*.json` so
+`project.lifecycleRadar` and control panel automation can ingest the latest
+status. Failing to record these artifacts will block preflight.
+
 ## 5. Document & Ship
 
 1. Capture relevant ADRs in `1. Cerebrum Docs/ADR/`.

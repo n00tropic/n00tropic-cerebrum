@@ -67,7 +67,7 @@
 
   "sonarlint.connectedMode.project": {
     "connectionId": "n00tropic",
-    "projectKey": "n00tropic_n00-cortex"
+    "projectKey": "n00tropic_n00-cerebrum"
   },
 
   "chatgpt.openOnStartup": true,

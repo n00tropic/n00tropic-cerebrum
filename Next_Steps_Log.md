@@ -52,3 +52,10 @@
 - [x] Added edge scaffolds (RPi/Jetson) with FastAPI + llama.cpp/ONNX, manifest wiring, and trunk-clean renders via `nox -s validate_templates_all -- --template edge-rpi --template edge-jetson`.
 - [x] Extended guardrail/workflow schemas + agent registry; wired agent-core routing for edge models and MPC federation bridges.
 - [x] Introduced GuardrailExecutor, telemetry hooks, and meta-learner stubs in n00-school; A/B harness appended to evaluation utilities.
+
+## 2025-11-29 backlog (actor: Codex)
+
+- [ ] Execute `job-frontiers-evergreen-ssot` workstreams (docs charter,
+      automation hooks, template expansion, telemetry, generator contracts)
+      so n00-frontiers remains the canonical SSoT. Tracked via ADR-008 and
+      the new horizons job directory.
