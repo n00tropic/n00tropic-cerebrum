@@ -131,19 +131,34 @@ struct GraphView: View {
     @EnvironmentObject var repo: DataRepository
     @State private var selectedKind: String = "all"
     @State private var search: String = ""
+    @State private var edgeType: String = "all"
     @StateObject private var vm = GraphViewModel()
     var kinds: [String] {
         let ks = Set(repo.graph.nodes.map { $0.kind })
         return ["all"] + ks.sorted()
     }
+    var edgeTypes: [String] {
+        let ts = Set(repo.graph.edges.map { $0.type })
+        return ["all"] + ts.sorted()
+    }
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Picker("Kind", selection: $selectedKind) {
-                ForEach(kinds, id: \.self) { kind in
-                    Text(kind.capitalized).tag(kind)
+            HStack {
+                Picker("Kind", selection: $selectedKind) {
+                    ForEach(kinds, id: \.self) { kind in
+                        Text(kind.capitalized).tag(kind)
+                    }
                 }
+                .pickerStyle(.segmented)
+
+                Picker("Edges", selection: $edgeType) {
+                    ForEach(edgeTypes, id: \.self) { edge in
+                        Text(edge.capitalized).tag(edge)
+                    }
+                }
+                .pickerStyle(.menu)
+                .frame(maxWidth: 180)
             }
-            .pickerStyle(.segmented)
 
             TextField("Search nodes", text: $search)
                 .textFieldStyle(.roundedBorder)
@@ -155,6 +170,7 @@ struct GraphView: View {
                         Text(node.kind).font(.footnote).foregroundColor(.secondary)
                         if let tags = node.tags { Text(tags.joined(separator: ", ")).font(.footnote) }
                     }
+                    .listRowBackground(vm.selection?.id == node.id ? Color.accentColor.opacity(0.08) : Color.clear)
                     .onTapGesture { vm.selection = node }
                 }
                 .frame(minWidth: 280)
@@ -162,7 +178,7 @@ struct GraphView: View {
                 Divider()
 
                 VStack {
-                    ForceGraphView(nodes: vm.filtered, edges: filteredEdges)
+                    ForceGraphView(nodes: vm.filtered, edges: filteredEdges, selection: $vm.selection)
                         .frame(minHeight: 260)
                     if let sel = vm.selection {
                         VStack(alignment: .leading, spacing: 8) {
@@ -195,16 +211,20 @@ struct GraphView: View {
         .onChange(of: search, initial: false) { new, _ in
             vm.apply(nodes: repo.graph.nodes, kind: selectedKind, search: new)
         }
+        .onChange(of: repo.graph.nodes) { nodes, _ in
+            vm.apply(nodes: nodes, kind: selectedKind, search: search)
+        }
     }
 
     private var filteredEdges: [GraphEdge] {
-        if selectedKind == "all" { return repo.graph.edges }
+        let baseEdges = edgeType == "all" ? repo.graph.edges : repo.graph.edges.filter { $0.type == edgeType }
+        if selectedKind == "all" { return baseEdges }
         let nodeIds = Set(vm.filtered.map { $0.id })
-        return repo.graph.edges.filter { nodeIds.contains($0.from) && nodeIds.contains($0.to) }
+        return baseEdges.filter { nodeIds.contains($0.from) && nodeIds.contains($0.to) }
     }
 
     private func relatedEdges(for node: GraphNode) -> [GraphEdge]? {
-        repo.graph.edges.filter { $0.from == node.id || $0.to == node.id }
+        filteredEdges.filter { $0.from == node.id || $0.to == node.id }
     }
 }
 
@@ -224,6 +244,7 @@ struct TagCloud: View {
 
 struct RunsView: View {
     @EnvironmentObject var repo: DataRepository
+    @Environment(\.openURL) var openURL
     @State private var statusFilter: String = "all"
     var statuses: [String] {
         let s = Set(repo.runs.compactMap { $0.status })
@@ -242,13 +263,44 @@ struct RunsView: View {
             } else {
                 List(filteredRuns.prefix(50)) { run in
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(run.capability_id ?? run.id).font(.headline)
+                        Text(run.capabilityId ?? run.id).font(.headline)
                         Text(run.summary ?? "").font(.subheadline)
                         HStack {
-                            Label(run.status ?? "", systemImage: run.status == "ok" ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
-                                .foregroundColor(run.status == "ok" ? .green : .orange)
-                            if let started = run.started_at { Text(started).font(.footnote).foregroundColor(.secondary) }
-                            if let completed = run.completed_at { Text("→ \(completed)").font(.footnote).foregroundColor(.secondary) }
+                            Label(run.status ?? "", systemImage: (run.status ?? "").lowercased().contains("ok") || (run.status ?? "").lowercased().contains("success") ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
+                                .foregroundColor(statusColor(run.status))
+                            if let started = run.startedAt { Text(started).font(.footnote).foregroundColor(.secondary) }
+                            if let completed = run.completedAt { Text("→ \(completed)").font(.footnote).foregroundColor(.secondary) }
+                        }
+                        if let tags = run.tags, !tags.isEmpty {
+                            Text(tags.joined(separator: ", "))
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                        }
+                        HStack(spacing: 8) {
+                            if let logURL = repo.resolvedURL(for: run.logPath ?? run.telemetryPath) {
+                                Button {
+                                    openURL(logURL)
+                                } label: {
+                                    Label("Log", systemImage: "doc.richtext")
+                                }
+                                .buttonStyle(.borderless)
+                            }
+                            if !run.artifacts.isEmpty {
+                                Menu {
+                                    ForEach(run.artifacts, id: \.self) { artifact in
+                                        if let url = repo.resolvedURL(for: artifact) {
+                                            Button {
+                                                openURL(url)
+                                            } label: { Text(shortPath(artifact)) }
+                                        }
+                                    }
+                                } label: {
+                                    Label("Artifacts (\(run.artifacts.count))", systemImage: "paperclip")
+                                }
+                            }
+                            if let dataset = run.datasetId {
+                                Text(dataset).font(.footnote).foregroundColor(.secondary)
+                            }
                         }
                     }
                 }
@@ -261,16 +313,34 @@ struct RunsView: View {
         if statusFilter == "all" { return repo.runs }
         return repo.runs.filter { $0.status == statusFilter }
     }
+
+    private func statusColor(_ status: String?) -> Color {
+        guard let status else { return .secondary }
+        let lower = status.lowercased()
+        if lower.contains("ok") || lower.contains("success") || lower.contains("succeed") { return .green }
+        return .orange
+    }
+
+    private func shortPath(_ path: String) -> String {
+        if let url = URL(string: path), url.scheme?.hasPrefix("http") == true {
+            return url.lastPathComponent
+        }
+        return URL(fileURLWithPath: path).lastPathComponent
+    }
 }
 
 struct ManagementView: View {
     @EnvironmentObject var repo: DataRepository
     @StateObject private var runner = ScriptRunner()
-    @State private var running: Bool = false
+    @State private var runningActionID: String?
     @State private var lastCommand: String = ""
     @State private var lastStatusLabel: String = ""
     @State private var history: [GuardRun] = []
-    @State private var loadingHistory: Bool = true
+    private let guardActions: [GuardAction] = [
+        GuardAction(id: "toolchain", title: "Toolchain pins", systemImage: "bolt.fill", command: "node scripts/check-toolchain-pins.mjs --json", label: "toolchain pins"),
+        GuardAction(id: "token", title: "Token drift", systemImage: "aqi.medium", command: ".dev/automation/scripts/token-drift.sh", label: "token drift"),
+        GuardAction(id: "typesense", title: "Typesense", systemImage: "network", command: ".dev/automation/scripts/typesense-freshness.sh 7", label: "typesense")
+    ]
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Management & Drift Guards")
@@ -280,8 +350,8 @@ struct ManagementView: View {
             GuardList(title: "Toolchain Pins", status: .ok, detail: "Checked in policy-sync")
             GuardList(title: "Typesense Freshness", status: .ok, detail: "See nightly guard")
 
-            GuardActions(running: $running) { cmd, label in
-                await runCmd(cmd, label: label)
+            GuardActions(actions: guardActions, runningActionID: $runningActionID) { action in
+                await runCmd(action)
             }
 
             if !runner.lastOutput.isEmpty {
@@ -313,29 +383,31 @@ struct ManagementView: View {
                             .foregroundColor(.secondary)
                             .font(.footnote)
                     }
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background((item.status == .ok ? Color.green : Color.orange).opacity(0.12))
+                    .cornerRadius(10)
                 }
             }
             Spacer()
         }
         .padding()
-        .disabled(running)
         .onAppear {
             history = repo.guardHistory
-            loadingHistory = false
         }
     }
 
-    private func runCmd(_ cmd: String, label: String) async {
-        running = true
-        lastCommand = cmd
+    private func runCmd(_ action: GuardAction) async {
+        runningActionID = action.id
+        lastCommand = action.command
         lastStatusLabel = "running"
-        await runner.run(command: cmd)
+        await runner.run(command: action.command)
         let status: GuardStatus = runner.lastStatus == 0 ? .ok : .issue
         lastStatusLabel = status == .ok ? "ok" : "issue"
-        history.insert(GuardRun(id: UUID(), label: label, status: status, timestamp: Date()), at: 0)
+        history.insert(GuardRun(id: UUID(), label: action.label, status: status, timestamp: Date()), at: 0)
         repo.guardHistory = history
         repo.saveHistory(history)
-        running = false
+        runningActionID = nil
     }
 
     var capabilityStatus: GuardStatus {
@@ -348,62 +420,155 @@ struct RemoteFetchSection: View {
     @EnvironmentObject var repo: DataRepository
     @State private var remoteURL: String = ""
     @State private var fetching = false
+
+    private var statusText: String {
+        switch repo.dataSource {
+        case .local:
+            return "Using local workspace artifacts (bundled fallback if missing)."
+        case .remote:
+            switch repo.remoteStatus {
+            case "ok": return "Remote data loaded" + (remoteURL.isEmpty ? "" : " from \(remoteURL)")
+            case "fetching": return "Fetching remote data…"
+            case "error": return "Remote fetch failed; showing last loaded data."
+            default: return "Remote data idle"
+            }
+        }
+    }
+
+    private var statusTint: Color {
+        switch repo.dataSource {
+        case .local: return .gray
+        case .remote:
+            switch repo.remoteStatus {
+            case "ok": return .green
+            case "fetching": return .blue
+            case "error": return .orange
+            default: return .secondary
+            }
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Data Source")
-                .font(.headline)
             HStack {
-                TextField("Remote base URL (optional)", text: $remoteURL)
-                    .textFieldStyle(.roundedBorder)
-                Button("Fetch latest") {
-                    guard let url = URL(string: remoteURL), !remoteURL.isEmpty else { return }
-                    fetching = true
-                    Task { await repo.fetchRemote(baseURL: url); fetching = false }
+                Text("Data Source")
+                    .font(.headline)
+                Spacer()
+                Picker("Source", selection: $repo.dataSource) {
+                    ForEach(DataSource.allCases) { source in
+                        Text(source.title).tag(source)
+                    }
                 }
-                .buttonStyle(.bordered)
-                .disabled(fetching || remoteURL.isEmpty)
+                .pickerStyle(.segmented)
+                .frame(maxWidth: 260)
             }
-            if fetching { Text("Fetching...").foregroundColor(.secondary).font(.footnote) }
-            else if repo.remoteStatus == "ok" { Text("Remote data loaded").foregroundColor(.green).font(.footnote) }
-            else if repo.remoteStatus == "error" { Text("Remote fetch failed").foregroundColor(.orange).font(.footnote) }
+
+            HStack(spacing: 10) {
+                Circle().fill(statusTint).frame(width: 10, height: 10)
+                Text(statusText)
+                    .font(.footnote)
+                    .foregroundColor(.primary)
+                Spacer()
+            }
+            .padding(10)
+            .background(statusTint.opacity(0.08))
+            .cornerRadius(10)
+
+            if repo.dataSource == .remote {
+                HStack {
+                    TextField("Remote base URL", text: $remoteURL)
+                        .textFieldStyle(.roundedBorder)
+                    Button {
+                        guard let url = URL(string: remoteURL), !remoteURL.isEmpty else { return }
+                        fetching = true
+                        Task {
+                            await repo.fetchRemote(baseURL: url)
+                            fetching = false
+                        }
+                    } label: {
+                        if fetching || repo.remoteStatus == "fetching" {
+                            ProgressView().controlSize(.small)
+                        } else {
+                            Label("Fetch latest", systemImage: "arrow.clockwise")
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(fetching || remoteURL.isEmpty)
+                }
+            } else {
+                Text("Switch to Remote to pull live JSON from a base URL (expects graph.json, capability-health.json, token-drift.json, and run-envelopes.jsonl or agent-runs.json).")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .onAppear {
+            if remoteURL.isEmpty, let existing = repo.remoteBaseURL?.absoluteString { remoteURL = existing }
+        }
+        .onChange(of: repo.dataSource, initial: false) { new, _ in
+            if new == .local {
+                repo.loadLocalArtifacts()
+            } else if let url = URL(string: remoteURL), !remoteURL.isEmpty {
+                fetching = true
+                Task { await repo.fetchRemote(baseURL: url); fetching = false }
+            }
         }
     }
 }
 
-struct ActionButton: View {
+struct GuardAction: Identifiable {
+    let id: String
     let title: String
     let systemImage: String
-    let action: () async -> Void
-    @State private var isRunning = false
+    let command: String
+    let label: String
+}
+
+struct ActionButton: View {
+    let action: GuardAction
+    @Binding var isRunning: Bool
+    let run: () async -> Void
+    var disabled: Bool
+
     var body: some View {
         Button {
             isRunning = true
-            Task { await action(); isRunning = false }
+            Task { await run(); isRunning = false }
         } label: {
-            Label(title, systemImage: systemImage)
+            if isRunning {
+                ProgressView()
+                    .controlSize(.small)
+                    .frame(width: 80)
+            } else {
+                Label(action.title, systemImage: action.systemImage)
+            }
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.small)
-        .disabled(isRunning)
+        .frame(minWidth: 140)
+        .disabled(disabled)
     }
 }
 
 struct GuardActions: View {
-    @Binding var running: Bool
-    let run: (String, String) async -> Void
+    let actions: [GuardAction]
+    @Binding var runningActionID: String?
+    let run: (GuardAction) async -> Void
+
     var body: some View {
+        let anyRunning = runningActionID != nil
         HStack(spacing: 12) {
-            ActionButton(title: "Toolchain pins", systemImage: "bolt.fill") {
-                await run("node scripts/check-toolchain-pins.mjs --json", "toolchain pins")
-            }
-            ActionButton(title: "Token drift", systemImage: "aqi.medium") {
-                await run(".dev/automation/scripts/token-drift.sh", "token drift")
-            }
-            ActionButton(title: "Typesense", systemImage: "network") {
-                await run(".dev/automation/scripts/typesense-freshness.sh 7", "typesense")
+            ForEach(actions) { action in
+                ActionButton(
+                    action: action,
+                    isRunning: Binding(
+                        get: { runningActionID == action.id },
+                        set: { runningActionID = $0 ? action.id : nil }
+                    ),
+                    run: { await run(action) },
+                    disabled: anyRunning && runningActionID != action.id
+                )
             }
         }
-        .disabled(running)
     }
 }
 

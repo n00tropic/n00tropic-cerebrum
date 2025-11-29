@@ -1,13 +1,13 @@
 import Foundation
 
-struct GraphNode: Codable, Identifiable {
+struct GraphNode: Codable, Identifiable, Equatable {
     let id: String
     let kind: String
     let title: String?
     let tags: [String]?
 }
 
-struct GraphEdge: Codable, Identifiable {
+struct GraphEdge: Codable, Identifiable, Equatable {
     var id: String { "\(from)->\(type)->\(to)" }
     let from: String
     let to: String

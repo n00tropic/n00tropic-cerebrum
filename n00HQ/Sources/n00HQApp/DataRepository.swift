@@ -1,5 +1,13 @@
 import Foundation
 
+enum DataSource: String, CaseIterable, Identifiable {
+    case local
+    case remote
+
+    var id: String { rawValue }
+    var title: String { rawValue.capitalized }
+}
+
 @MainActor
 final class DataRepository: ObservableObject {
     @Published var graph: WorkspaceGraph = WorkspaceGraph(nodes: [], edges: [])
@@ -7,13 +15,22 @@ final class DataRepository: ObservableObject {
     @Published var tokenDrift: TokenDriftReport = TokenDriftReport(generated_at: nil, drift: nil, validation: nil, validation_reason: nil)
     @Published var runs: [AgentRunEntry] = []
     @Published var remoteStatus: String = "local"
+    @Published var dataSource: DataSource = .local
+    @Published var remoteBaseURL: URL?
 
     func loadAll() {
-        graph = loadJSON(named: "graph", as: WorkspaceGraph.self) ?? WorkspaceGraph(nodes: [], edges: [])
-        capabilityHealth = loadJSON(named: "capability-health", as: CapabilityHealthReport.self) ?? CapabilityHealthReport(generated_at: nil, capabilities: [])
-        tokenDrift = loadJSON(named: "token-drift", as: TokenDriftReport.self) ?? tokenDrift
-        runs = loadRuns()
+        loadLocalArtifacts()
         loadHistory()
+    }
+
+    func loadLocalArtifacts() {
+        dataSource = .local
+        remoteStatus = "local"
+        let artifacts = workspaceArtifactsRoot()
+        graph = loadGraph(from: artifacts) ?? loadJSON(named: "graph", as: WorkspaceGraph.self) ?? WorkspaceGraph(nodes: [], edges: [])
+        capabilityHealth = loadCapabilityHealth(from: artifacts) ?? loadJSON(named: "capability-health", as: CapabilityHealthReport.self) ?? CapabilityHealthReport(generated_at: nil, capabilities: [])
+        tokenDrift = loadTokenDrift(from: artifacts) ?? loadJSON(named: "token-drift", as: TokenDriftReport.self) ?? tokenDrift
+        runs = loadRuns(fromArtifacts: artifacts) ?? loadRunsFromBundle()
     }
 
     // Simple persistence for guard run history (used in ManagementView)
@@ -39,6 +56,8 @@ final class DataRepository: ObservableObject {
 
     func fetchRemote(baseURL: URL) async {
         remoteStatus = "fetching"
+        dataSource = .remote
+        remoteBaseURL = baseURL
         defer { if remoteStatus == "fetching" { remoteStatus = "error" } }
         do {
             let g = try await fetchJSON(baseURL.appendingPathComponent("graph.json"), as: WorkspaceGraph.self)
@@ -73,48 +92,15 @@ final class DataRepository: ObservableObject {
             let (data, resp) = try await URLSession.shared.data(from: url)
             guard let http = resp as? HTTPURLResponse, 200..<300 ~= http.statusCode else { throw URLError(.badServerResponse) }
             let text = String(decoding: data, as: UTF8.self)
-            let decoder = JSONDecoder(); decoder.keyDecodingStrategy = .convertFromSnakeCase
-            let items = text.split(separator: "\n").compactMap { line -> AgentRunEntry? in
-                guard let d = line.data(using: .utf8) else { return nil }
-                return try? decoder.decode(AgentRunEntry.self, from: d)
-            }
+            let items = parseRunLines(text)
             if !items.isEmpty { return items }
         } catch {}
 
         let url = baseURL.appendingPathComponent("agent-runs.json")
         let (data, resp) = try await URLSession.shared.data(from: url)
         guard let http = resp as? HTTPURLResponse, 200..<300 ~= http.statusCode else { throw URLError(.badServerResponse) }
-        let decoder = JSONDecoder(); decoder.keyDecodingStrategy = .convertFromSnakeCase
-        if let arr = try? decoder.decode([AgentRunEntry].self, from: data) { return arr }
-        if let wrap = try? decoder.decode(RunEnvelopes.self, from: data) { return wrap.runs }
-        return []
-    }
-
-    private func loadRuns() -> [AgentRunEntry] {
-        // Try JSON lines (run-envelopes.jsonl) then JSON (agent-runs.json)
-        let bundle = Bundle.module
-        if let url = bundle.url(forResource: "run-envelopes", withExtension: "jsonl", subdirectory: "data") ?? bundle.url(forResource: "run-envelopes", withExtension: "jsonl") {
-            do {
-                let text = try String(contentsOf: url)
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let items = text.split(separator: "\n").compactMap { line -> AgentRunEntry? in
-                    guard let data = line.data(using: .utf8) else { return nil }
-                    return try? decoder.decode(AgentRunEntry.self, from: data)
-                }
-                if !items.isEmpty { return items }
-            } catch {}
-        }
-        if let url = bundle.url(forResource: "agent-runs", withExtension: "json", subdirectory: "data") ?? bundle.url(forResource: "agent-runs", withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let arr = try? decoder.decode([AgentRunEntry].self, from: data) { return arr }
-                if let wrap = try? decoder.decode(RunEnvelopes.self, from: data) { return wrap.runs }
-            } catch {}
-        }
-        return []
+        let items = parseRunData(data)
+        return items
     }
 
     private func loadJSON<T: Decodable>(named: String, as type: T.Type) -> T? {
@@ -131,5 +117,111 @@ final class DataRepository: ObservableObject {
             print("[data] Failed to load \(named): \(error)")
             return nil
         }
+    }
+
+    private func loadGraph(from artifacts: URL?) -> WorkspaceGraph? {
+        guard let url = artifacts?.appendingPathComponent("workspace-graph.json") else { return nil }
+        return loadJSON(at: url)
+    }
+
+    private func loadCapabilityHealth(from artifacts: URL?) -> CapabilityHealthReport? {
+        guard let url = artifacts?.appendingPathComponent("capability-health.json") else { return nil }
+        return loadJSON(at: url)
+    }
+
+    private func loadTokenDrift(from artifacts: URL?) -> TokenDriftReport? {
+        guard let url = artifacts?.appendingPathComponent("token-drift.json") else { return nil }
+        return loadJSON(at: url)
+    }
+
+    private func loadJSON<T: Decodable>(at url: URL) -> T? {
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            return nil
+        }
+    }
+
+    private func workspaceArtifactsRoot() -> URL? {
+        guard let root = WorkspaceLocator.workspaceRoot() else { return nil }
+        let artifacts = root.appendingPathComponent(".dev/automation/artifacts")
+        return FileManager.default.fileExists(atPath: artifacts.path) ? artifacts : nil
+    }
+
+    private func loadRuns(fromArtifacts artifacts: URL?) -> [AgentRunEntry]? {
+        guard let artifacts else { return nil }
+        let automation = artifacts.appendingPathComponent("automation")
+        let jsonl = automation.appendingPathComponent("run-envelopes.jsonl")
+        if let text = try? String(contentsOf: jsonl) {
+            let items = parseRunLines(text)
+            if !items.isEmpty { return items }
+        }
+        let json = automation.appendingPathComponent("agent-runs.json")
+        if let data = try? Data(contentsOf: json) {
+            let items = parseRunData(data)
+            if !items.isEmpty { return items }
+        }
+        return nil
+    }
+
+    private func loadRunsFromBundle() -> [AgentRunEntry] {
+        let bundle = Bundle.module
+        if let url = bundle.url(forResource: "run-envelopes", withExtension: "jsonl", subdirectory: "data") ?? bundle.url(forResource: "run-envelopes", withExtension: "jsonl") {
+            if let text = try? String(contentsOf: url) {
+                let items = parseRunLines(text)
+                if !items.isEmpty { return items }
+            }
+        }
+        if let url = bundle.url(forResource: "agent-runs", withExtension: "json", subdirectory: "data") ?? bundle.url(forResource: "agent-runs", withExtension: "json") {
+            if let data = try? Data(contentsOf: url) {
+                let items = parseRunData(data)
+                if !items.isEmpty { return items }
+            }
+        }
+        return []
+    }
+
+    private func parseRunLines(_ text: String) -> [AgentRunEntry] {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return text
+            .split(separator: "\n")
+            .compactMap { line in
+                guard let data = line.data(using: .utf8) else { return nil }
+                return try? decoder.decode(AgentRunEntry.self, from: data)
+            }
+    }
+
+    private func parseRunData(_ data: Data) -> [AgentRunEntry] {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        if let arr = try? decoder.decode([AgentRunEntry].self, from: data) { return arr }
+        if let wrap = try? decoder.decode(RunEnvelopes.self, from: data) { return wrap.runs }
+        return []
+    }
+
+    func resolvedURL(for path: String?) -> URL? {
+        guard let path, !path.isEmpty else { return nil }
+        if let url = URL(string: path), url.scheme?.hasPrefix("http") == true { return url }
+        if dataSource == .remote, let remoteBaseURL {
+            return remoteBaseURL.appendingPathComponent(path)
+        }
+        if let root = WorkspaceLocator.workspaceRoot() {
+            let direct = root.appendingPathComponent(path)
+            if FileManager.default.fileExists(atPath: direct.path) { return direct }
+
+            let artifactsRoot = root.appendingPathComponent(".dev/automation/artifacts")
+            let automation = artifactsRoot.appendingPathComponent("automation").appendingPathComponent(path)
+            if FileManager.default.fileExists(atPath: automation.path) { return automation }
+
+            let artifactsPath = artifactsRoot.appendingPathComponent(path)
+            if FileManager.default.fileExists(atPath: artifactsPath.path) { return artifactsPath }
+
+            return direct
+        }
+        return nil
     }
 }
