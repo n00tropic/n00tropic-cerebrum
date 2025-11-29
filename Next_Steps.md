@@ -52,6 +52,13 @@
 
 - `scripts/validate-pipelines.sh --clean` creates temp fixtures, runs preflight → graph export → docs build → fusion (if venv present), and writes logs to `.dev/automation/artifacts/pipeline-validation/latest.json`.
 
+### Local runners, creds, and CLIs (use local first)
+
+- Each repo has its own environment; prefer running pipelines locally (superproject scripts under `scripts/`, subrepo helpers under their `scripts/` or `.dev/automation/scripts/` folders) before relying on remote runners.
+- For private fetches (Antora, submodules), set `GH_SUBMODULE_TOKEN` in your shell; validator auto-wires it via a temporary `git-askpass` if present.
+- When credentials are unavailable, fall back to local artifacts and CLIs: run `scripts/validate-pipelines.sh --skip docs` (or `--only graph`) to keep other checks green while you sort access.
+- Keep local actions runners/CLIs installed so dev flows stay unblocked; during dev, aim to resolve with local execution first, then remote once credentials are restored/rotated.
+
 ## Deliverables
 
 - Restored pnpm toolchain with default pnpm store location and documented external Trunk management.

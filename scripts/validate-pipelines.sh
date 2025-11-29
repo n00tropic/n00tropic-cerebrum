@@ -143,7 +143,7 @@ PDF_FIXTURE=$(prepare_pdf_fixture)
 
 # pipeline: preflight
 if should_run preflight; then
-  log_step preflight bash -lc "pnpm run local:preflight"
+  log_step preflight bash -lc "SKIP_DIRTY=${SKIP_DIRTY:-1} pnpm run local:preflight"
 fi
 
 # pipeline: graph export
@@ -153,18 +153,49 @@ fi
 
 # pipeline: docs build (uses fixture page automatically discovered by Antora)
 if should_run docs; then
-  log_step docs bash -lc "pnpm exec antora antora-playbook.ci.yml --stacktrace"
+  log_step docs bash -lc '
+    if [[ -n "${GH_SUBMODULE_TOKEN:-}" ]]; then
+      export GIT_ASKPASS="$TMP_DIR/git-askpass.sh"
+      cat > "$GIT_ASKPASS" <<EOF
+#!/usr/bin/env bash
+echo "$GH_SUBMODULE_TOKEN"
+EOF
+      chmod +x "$GIT_ASKPASS"
+    fi
+    pnpm exec antora antora-playbook.ci.yml --stacktrace
+  '
 fi
 
 # pipeline: fusion (skip softly if venv missing)
 if should_run fusion; then
-  if [[ -d "${ROOT_DIR}/n00clear-fusion/.venv" ]]; then
+  PY_CANDIDATES=(${FUSION_PYTHON:-} python3.12 python3.11 python3.10 python3.9 python3)
+  FUSION_PY=""
+  for c in "${PY_CANDIDATES[@]}"; do
+    [[ -z "$c" ]] && continue
+    if command -v "$c" >/dev/null 2>&1; then
+      ver=$("$c" - <<'PY'
+import sys
+print(".".join(map(str, sys.version_info[:2])))
+PY
+)
+      major=${ver%%.*}; minor=${ver##*.}
+      if (( major == 3 && minor <= 12 )); then
+        FUSION_PY="$c"
+        break
+      fi
+    fi
+  done
+  if [[ -z "$FUSION_PY" ]]; then
+    echo "[validate] fusion skipped (need Python <=3.12); found none" | tee "$ARTIFACT_DIR/fusion-skip.log"
+  elif [[ -d "${ROOT_DIR}/n00clear-fusion/.venv" ]]; then
     log_step fusion bash -lc "
       source n00clear-fusion/.venv/bin/activate
-      SYMLINK=\"$TMP_DIR/fusion-python\"
-      mkdir -p \"$TMP_DIR\"
-      ln -sf \"${ROOT_DIR}/n00clear-fusion/.venv/bin/python\" \"\$SYMLINK\"
-      \"\$SYMLINK\" -m pip install -q -r n00clear-fusion/requirements.txt
+      VENV_PY=\"${ROOT_DIR}/n00clear-fusion/.venv/bin/python\"
+      if [[ ! -x \$VENV_PY ]]; then
+        echo 'fusion venv python missing' >&2; exit 1
+      fi
+      \$VENV_PY -m pip install --quiet --upgrade pip
+      \$VENV_PY -m pip install --quiet -r n00clear-fusion/requirements.txt
       FUSION_EMBED_BACKEND=${FUSION_EMBED_BACKEND:-stub} bash .dev/automation/scripts/fusion-pipeline.sh '${PDF_FIXTURE}' validation-fixture
     "
   else
