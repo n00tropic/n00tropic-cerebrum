@@ -46,3 +46,9 @@
 - [x] Stabilize Trunk bootstrap across subrepos
   - notes: added `scripts/trunk-upgrade-workspace.sh` (wraps trunk upgrade + config sync + optional checks), exported git metadata in `run-trunk-subrepos.sh`, pinned trunk runtimes in canonical config; trunk checks now pass across all subrepos.
   - checks: `TRUNK_BIN=/usr/local/bin/trunk .dev/automation/scripts/run-trunk-subrepos.sh` (pass).
+
+## 2025-11-29 (branch: main, actor: Codex)
+
+- [x] Added edge scaffolds (RPi/Jetson) with FastAPI + llama.cpp/ONNX, manifest wiring, and trunk-clean renders via `nox -s validate_templates_all -- --template edge-rpi --template edge-jetson`.
+- [x] Extended guardrail/workflow schemas + agent registry; wired agent-core routing for edge models and MPC federation bridges.
+- [x] Introduced GuardrailExecutor, telemetry hooks, and meta-learner stubs in n00-school; A/B harness appended to evaluation utilities.

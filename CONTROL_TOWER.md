@@ -19,3 +19,4 @@ Notes:
 - The binary assumes `n00-cortex` lives at `<workspace-root>/n00-cortex`.
 - Commands stream stdout/stderr directly; non-zero exits are surfaced.
 - pnpm 10.23.0 is invoked via `npx pnpm@10.23.0` for cortex validation.
+- Edge scaffolds (RPi/Jetson) and agent guardrail routes land in this run; add tracing via `ai-mlstudio.tracing.open` before simulation.
