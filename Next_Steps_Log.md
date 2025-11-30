@@ -59,3 +59,10 @@
       automation hooks, template expansion, telemetry, generator contracts)
       so n00-frontiers remains the canonical SSoT. Tracked via ADR-008 and
       the new horizons job directory.
+
+## 2025-11-30 (branch: main, actor: Codex)
+
+- [x] Push agent-core coverage and CLI QA
+  - notes: Added targeted tests for model router scoring/circuit paths, tag registry/CLI analytics, unified telemetry propagation/OTEL stubs, and planning workflow phases. Coverage lifted to ~77% (from ~53%); next push targets tracing/unified_telemetry/model_router deep branches to reach the 85% policy bar.
+  - checks: `python -m pytest` in `n00t/packages/agent-core` (pass, coverage ~77%); `pnpm -C n00t run test` (pass, vitest suite).
+  - follow-ups: add tracing branch coverage, exporter/propagator edge cases, and record the next run in `.dev/automation/artifacts/automation/agent-runs.json`.

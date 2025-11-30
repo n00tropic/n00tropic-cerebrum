@@ -11,10 +11,12 @@ import asyncio
 import json
 import os
 import sys
+import yaml
 
 ROOT = Path(__file__).resolve().parents[3]
 AGENT_CORE_SRC = ROOT / "n00t" / "packages" / "agent-core" / "src"
 N00T_SRC = ROOT / "n00t"
+DEFAULT_AGENTS_CONFIG = ROOT / "n00t" / "packages" / "agent-core" / "config" / "agents.yaml"
 for candidate in (AGENT_CORE_SRC, N00T_SRC):
     if candidate.exists():
         sys.path.insert(0, str(candidate))
@@ -61,6 +63,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--conflict-limit", type=int, help="Fail if conflict count exceeds this limit"
+    )
+    parser.add_argument(
+        "--agents-config",
+        default=str(DEFAULT_AGENTS_CONFIG),
+        help="Path to agent-core agents.yaml (exported in payload for sims)",
     )
     return parser
 
@@ -151,6 +158,17 @@ async def main() -> int:
     if not brief_value:
         raise SystemExit("A brief path or inline brief content is required")
 
+    agents_config_path = Path(merged_inputs.get("agents_config", DEFAULT_AGENTS_CONFIG))
+    agents_config: dict[str, Any] | None = None
+    if agents_config_path.exists():
+        try:
+            agents_config = yaml.safe_load(agents_config_path.read_text(encoding="utf-8"))
+        except Exception as exc:  # pragma: no cover - surfaced to operator
+            print(
+                f"[workspace-plan-workflow] Warning: failed to load agents config {agents_config_path}: {exc}",
+                file=sys.stderr,
+            )
+
     workflow = WorkspacePlanningWorkflow(repo_root=ROOT)
     result = await workflow.run(
         brief=brief_value,
@@ -170,6 +188,8 @@ async def main() -> int:
         "planPath": result.outputs.get("planPath"),
         "briefPath": result.outputs.get("briefPath"),
         "telemetryPath": result.outputs.get("telemetryPath"),
+        "agentsConfigPath": str(agents_config_path),
+        "agents": agents_config,
         "metrics": result.outputs.get("metrics", {}),
         "steps": [
             {
