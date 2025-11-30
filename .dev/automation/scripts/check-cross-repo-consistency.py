@@ -4,8 +4,9 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple, Union
+from typing import Any, Dict, Iterable, List, Literal, Tuple, Union, cast
 
 import argparse
 import datetime as dt
@@ -24,7 +25,8 @@ FRONTIERS_TRUNK = ROOT / "n00-frontiers" / ".trunk" / "trunk.yaml"
 FRONTIERS_EXPORT_ROOT = ROOT / "n00-frontiers" / "exports" / "cortex"
 FRONTIERS_EXPORT_TEMPLATES = FRONTIERS_EXPORT_ROOT / "templates" / "cookiecutter.json"
 FRONTIERS_EXPORT_METADATA = FRONTIERS_EXPORT_ROOT / "metadata.json"
-FRONTIERS_EXPORT_ASSETS = FRONTIERS_EXPORT_ROOT / "assets" / "index.json"
+INDEX_FILE_NAME = "index.json"
+FRONTIERS_EXPORT_ASSETS = FRONTIERS_EXPORT_ROOT / "assets" / INDEX_FILE_NAME
 CANONICAL_TRUNK = (
     ROOT / "n00-cortex" / "data" / "trunk" / "base" / ".trunk" / "trunk.yaml"
 )
@@ -43,10 +45,11 @@ CORTEX_FRONTIERS_ASSETS = (
 CORTEX_FRONTIERS_EXPORT_DIR = (
     ROOT / "n00-cortex" / "data" / "exports" / "frontiers" / "templates"
 )
+LOCAL_RENOVATE_PRESET = "local>renovate-presets/workspace.json"
 RENOVATE_FILES: Dict[str, Tuple[Path, Union[str, list[str]]]] = {
     "n00-cortex": (
         ROOT / "n00-cortex" / "renovate.json",
-        "local>renovate-presets/workspace.json",
+        LOCAL_RENOVATE_PRESET,
     ),
     "n00-frontiers": (
         ROOT / "n00-frontiers" / "renovate.json",
@@ -73,6 +76,133 @@ CANONICAL_GITHUB_PRESET = (
 )
 TRUNK_LINTER_COMMENT = re.compile(r"\s+#.*$")
 ALLOWED_DOWNGRADES: List[str] = []
+FRONTIERS_EXPORT_HINT = "Run python tools/export_cortex_assets.py."
+FRONTIERS_INGEST_HINT = "Run npm run ingest:frontiers."
+PNPM_SKIP_DIRS = {
+    ".git",
+    "node_modules",
+    ".pnpm",
+    ".trunk",
+    "dist",
+    "build",
+    ".dev",
+    "artifacts",
+}
+PNPM_SKIP_SUFFIXES = {
+    ".md",
+    ".adoc",
+    ".txt",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".svg",
+    ".jsonl",
+}
+TRUNK_SYNC_TEMPLATE = ".dev/automation/scripts/sync-trunk.py --pull --repo {repo}."
+
+
+@dataclass(frozen=True)
+class ToolchainVersions:
+    python: str | None
+    node: str | None
+    go: str | None
+    pnpm: str | None
+
+
+def _tool_version(toolchains: Dict[str, dict], tool: str) -> str | None:
+    entry = toolchains.get(tool, {})
+    if not isinstance(entry, dict):
+        return None
+    version = entry.get("version")
+    return str(version) if isinstance(version, str) else None
+
+
+def _build_toolchain_versions(toolchains: Dict[str, dict]) -> ToolchainVersions:
+    return ToolchainVersions(
+        python=_tool_version(toolchains, "python"),
+        node=_tool_version(toolchains, "node"),
+        go=_tool_version(toolchains, "go"),
+        pnpm=_tool_version(toolchains, "pnpm"),
+    )
+
+
+def _expected_version_value(
+    project: str,
+    tool: Literal["python", "node", "go"],
+    versions: ToolchainVersions,
+    overrides: Dict[str, Dict[str, Dict[str, object]]],
+    errors: list[str],
+) -> str | None:
+    canonical = getattr(versions, tool)
+    return _effective_version(project, tool, canonical, overrides, errors)
+
+
+def _trunk_divergence_message(repo: str) -> str:
+    return (
+        f"{repo}/.trunk/trunk.yaml diverges from canonical copy in "
+        "n00-cortex/data/trunk/base/.trunk/trunk.yaml. "
+        f"Run {TRUNK_SYNC_TEMPLATE.format(repo=repo)}"
+    )
+
+
+def _split_tool_version(entry: str) -> tuple[str, str | None]:
+    if "@" in entry:
+        tool, version = entry.split("@", 1)
+        return tool.strip(), version.strip() or None
+    return entry.strip(), None
+
+
+def _parse_override_details(details: object) -> Dict[str, object] | None:
+    if not isinstance(details, dict):
+        return None
+    version = details.get("version")
+    if not isinstance(version, str):
+        return None
+    entry: Dict[str, object] = {"version": version}
+    if "allow_lower" in details:
+        entry["allow_lower"] = bool(details["allow_lower"])
+    return entry
+
+
+def _load_override_manifest(
+    manifest_path: Path,
+) -> tuple[str, Dict[str, Dict[str, object]]] | None:
+    data = _load_json(manifest_path)
+    project = data.get("project")
+    overrides = data.get("overrides")
+    if not isinstance(project, str) or not isinstance(overrides, dict):
+        return None
+    parsed: Dict[str, Dict[str, object]] = {}
+    for tool, details in overrides.items():
+        parsed_entry = _parse_override_details(details)
+        if parsed_entry:
+            parsed[tool] = parsed_entry
+    if not parsed:
+        return None
+    return project, parsed
+
+
+class _TrunkLinterTracker:
+    def __init__(self) -> None:
+        self._in_enabled_block = False
+
+    def consume(self, raw_line: str) -> str | None:
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            return None
+        if raw_line.startswith("lint:"):
+            self._in_enabled_block = False
+            return None
+        if raw_line.startswith("  enabled:"):
+            self._in_enabled_block = True
+            return None
+        if raw_line.startswith("  disabled:") or raw_line.startswith("actions:"):
+            self._in_enabled_block = False
+            return None
+        if not self._in_enabled_block or not stripped.startswith("- "):
+            return None
+        entry = TRUNK_LINTER_COMMENT.sub("", stripped[2:]).strip()
+        return entry or None
 
 
 def _discover_trunk_targets() -> Dict[str, Path]:
@@ -85,34 +215,13 @@ def _discover_trunk_targets() -> Dict[str, Path]:
 
 def _parse_trunk_linters(payload: str) -> Dict[str, str | None]:
     linters: Dict[str, str | None] = {}
-    in_enabled_block = False
+    tracker = _TrunkLinterTracker()
     for raw_line in payload.splitlines():
-        if not raw_line.strip():
-            continue
-        if raw_line.lstrip().startswith("#"):
-            continue
-        if raw_line.startswith("lint:"):
-            in_enabled_block = False
-            continue
-        if raw_line.startswith("  enabled:"):
-            in_enabled_block = True
-            continue
-        if raw_line.startswith("  disabled:") or raw_line.startswith("actions:"):
-            in_enabled_block = False
-        if not in_enabled_block:
-            continue
-        stripped = raw_line.strip()
-        if not stripped.startswith("- "):
-            continue
-        entry = stripped[2:]
-        entry = TRUNK_LINTER_COMMENT.sub("", entry).strip()
+        entry = tracker.consume(raw_line)
         if not entry:
             continue
-        if "@" in entry:
-            tool, version = entry.split("@", 1)
-            linters[tool.strip()] = version.strip()
-        else:
-            linters[entry.strip()] = None
+        tool, version = _split_tool_version(entry)
+        linters[tool] = version
     return linters
 
 
@@ -219,19 +328,11 @@ def _load_overrides() -> Dict[str, Dict[str, Dict[str, object]]]:
     if not OVERRIDE_DIR.exists():
         return overrides
     for manifest_path in sorted(OVERRIDE_DIR.glob("*.json")):
-        data = _load_json(manifest_path)
-        project = data.get("project")
-        if not isinstance(project, str):
+        loaded = _load_override_manifest(manifest_path)
+        if not loaded:
             continue
-        project_overrides: Dict[str, Dict[str, object]] = {}
-        for tool, details in (data.get("overrides") or {}).items():
-            if isinstance(details, dict) and isinstance(details.get("version"), str):
-                entry: Dict[str, object] = {"version": details["version"]}
-                if "allow_lower" in details:
-                    entry["allow_lower"] = bool(details["allow_lower"])
-                project_overrides[tool] = entry
-        if project_overrides:
-            overrides[project] = project_overrides
+        project, project_overrides = loaded
+        overrides[project] = project_overrides
     return overrides
 
 
@@ -276,6 +377,373 @@ def _effective_version(
     if isinstance(override, str):
         return override
     return canonical
+
+
+def _validate_context_block(
+    errors: list[str],
+    template_name: str,
+    contexts: object,
+    attr: str,
+    label: str,
+    expected: str | None,
+) -> None:
+    if not expected or not isinstance(contexts, dict):
+        return
+    for name, ctx in contexts.items():
+        if not isinstance(ctx, dict):
+            continue
+        declared = ctx.get(attr)
+        if declared and str(declared) != expected:
+            errors.append(
+                f"{template_name} sample context '{name}' pins {label}={declared}, expected {expected}."
+            )
+
+
+def _validate_frontiers_manifest(
+    errors: list[str],
+    overrides: Dict[str, Dict[str, Dict[str, object]]],
+    versions: ToolchainVersions,
+    manifest: dict | None,
+) -> None:
+    if manifest is None:
+        errors.append(
+            "n00-frontiers/templates/manifest.json not found. Run sync_manifest first."
+        )
+        return
+    templates = manifest.get("templates", {})
+    python_contexts = templates.get("python-service", {}).get("sample_contexts", {})
+    node_contexts = templates.get("node-service", {}).get("sample_contexts", {})
+    expected_python = _expected_version_value(
+        "n00-frontiers", "python", versions, overrides, errors
+    )
+    expected_node = _expected_version_value(
+        "n00-frontiers", "node", versions, overrides, errors
+    )
+    _validate_context_block(
+        errors,
+        "python-service",
+        python_contexts,
+        "python_version",
+        "python_version",
+        expected_python,
+    )
+    _validate_context_block(
+        errors,
+        "node-service",
+        node_contexts,
+        "node_version",
+        "node_version",
+        expected_node,
+    )
+
+
+def _validate_frontiers_workflows(
+    errors: list[str],
+    overrides: Dict[str, Dict[str, Dict[str, object]]],
+    versions: ToolchainVersions,
+) -> None:
+    expected_node = _expected_version_value(
+        "n00-frontiers", "node", versions, overrides, errors
+    )
+    for workflow in FRONTIERS_WORKFLOWS:
+        if not workflow.exists():
+            errors.append(f"Workflow missing: {workflow}")
+            continue
+        for declared in _extract_workflow_node_version(workflow):
+            if expected_node and declared != expected_node:
+                errors.append(
+                    f"{workflow.name} sets node-version={declared}, expected {expected_node}."
+                )
+
+
+def _validate_workspace_workflows(
+    errors: list[str],
+    overrides: Dict[str, Dict[str, Dict[str, object]]],
+    versions: ToolchainVersions,
+) -> None:
+    expected_node = _expected_version_value(
+        "workspace", "node", versions, overrides, errors
+    )
+    expected_python = _expected_version_value(
+        "workspace", "python", versions, overrides, errors
+    )
+    for wf in sorted(set(_discover_all_workflows())):
+        try:
+            for declared_node in _extract_workflow_node_version(wf):
+                if expected_node and declared_node != expected_node:
+                    errors.append(
+                        f"{wf} sets node-version={declared_node}, expected {expected_node}."
+                    )
+            for declared_py in _extract_workflow_python_version(wf):
+                if not expected_python:
+                    continue
+                exp_major_minor = str(expected_python).split(".")[:2]
+                declared_major_minor = str(declared_py).split(".")[:2]
+                if exp_major_minor != declared_major_minor:
+                    errors.append(
+                        f"{wf} sets python-version={declared_py}, expected {expected_python}."
+                    )
+        except OSError as exc:
+            errors.append(f"Failed to read {wf}: {exc}")
+    if versions.pnpm:
+        _validate_pnpm_versions(errors, versions.pnpm)
+
+
+def _validate_pnpm_versions(errors: list[str], expected_pnpm: str) -> None:
+    for path in sorted(ROOT.glob("**/*")):
+        if not path.is_file():
+            continue
+        if path.suffix in PNPM_SKIP_SUFFIXES:
+            continue
+        if set(path.parts) & PNPM_SKIP_DIRS:
+            continue
+        try:
+            for version in _extract_pnpm_versions_in_file(path):
+                if version != expected_pnpm:
+                    errors.append(
+                        f"{path} references pnpm@{version}, expected pnpm@{expected_pnpm}."
+                    )
+        except OSError:
+            continue
+
+
+def _validate_trunk_configs(
+    errors: list[str],
+    metadata: dict[str, object],
+) -> None:
+    if not CANONICAL_TRUNK.exists():
+        errors.append(f"Canonical Trunk config missing at {CANONICAL_TRUNK}")
+        return
+    canonical_payload = CANONICAL_TRUNK.read_text(encoding="utf-8")
+    canonical_linters = _parse_trunk_linters(canonical_payload)
+    trunk_targets = _discover_trunk_targets()
+    metadata["trunkTargets"] = sorted(trunk_targets)
+    for repo, path in trunk_targets.items():
+        try:
+            downstream_payload = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            errors.append(f"Failed to read {path}: {exc}")
+            continue
+        if canonical_payload != downstream_payload:
+            errors.append(_trunk_divergence_message(repo))
+        for message in _diff_trunk_linters(repo, canonical_linters, downstream_payload):
+            errors.append(message)
+
+
+def _validate_frontiers_trunk_runtime(
+    errors: list[str],
+    overrides: Dict[str, Dict[str, Dict[str, object]]],
+    versions: ToolchainVersions,
+) -> None:
+    if not FRONTIERS_TRUNK.exists():
+        errors.append(f"Missing Trunk config at {FRONTIERS_TRUNK}")
+        return
+    expected_python = _expected_version_value(
+        "n00-frontiers", "python", versions, overrides, errors
+    )
+    expected_node = _expected_version_value(
+        "n00-frontiers", "node", versions, overrides, errors
+    )
+    expected_go = _expected_version_value(
+        "n00-frontiers", "go", versions, overrides, errors
+    )
+    for declared in _extract_trunk_runtime(FRONTIERS_TRUNK, "python"):
+        if expected_python and declared != expected_python:
+            errors.append(
+                f".trunk runtime python@{declared} does not match expected {expected_python}."
+            )
+    for declared in _extract_trunk_runtime(FRONTIERS_TRUNK, "node"):
+        if expected_node and declared != expected_node:
+            errors.append(
+                f".trunk runtime node@{declared} does not match expected {expected_node}."
+            )
+    for declared in _extract_trunk_runtime(FRONTIERS_TRUNK, "go"):
+        if expected_go and declared != expected_go:
+            errors.append(
+                f".trunk runtime go@{declared} does not match expected {expected_go}."
+            )
+
+
+def _ensure_cortex_templates_in_sync(
+    errors: list[str], normalised_templates: List[Dict[str, object]]
+) -> None:
+    if not CORTEX_FRONTIERS_TEMPLATES.exists():
+        errors.append(
+            f"n00-cortex/catalog missing frontiers templates at {CORTEX_FRONTIERS_TEMPLATES}. "
+            f"{FRONTIERS_INGEST_HINT}"
+        )
+        return
+    cortex_templates = _load_json(CORTEX_FRONTIERS_TEMPLATES)
+    if not isinstance(cortex_templates, list):
+        errors.append(
+            "n00-cortex/data/catalog/frontiers-templates.json has unexpected structure. "
+            f"{FRONTIERS_INGEST_HINT}"
+        )
+        return
+    if cortex_templates != normalised_templates:
+        errors.append(
+            "n00-cortex/data/catalog/frontiers-templates.json is out of sync with n00-frontiers exports. "
+            f"{FRONTIERS_INGEST_HINT}"
+        )
+
+
+def _ensure_template_index_in_sync(
+    errors: list[str], normalised_templates: List[Dict[str, object]]
+) -> None:
+    index_path = CORTEX_FRONTIERS_EXPORT_DIR / "index.json"
+    expected_ids = [entry.get("id") for entry in normalised_templates]
+    if not index_path.exists():
+        errors.append(
+            f"n00-cortex missing frontiers template index at {index_path}. {FRONTIERS_INGEST_HINT}"
+        )
+        return
+    index_payload = _load_json(index_path)
+    if not isinstance(index_payload, list):
+        errors.append(
+            f"Frontiers template index at {index_path} has unexpected structure. {FRONTIERS_INGEST_HINT}"
+        )
+        return
+    if index_payload != expected_ids:
+        errors.append(
+            "n00-cortex/data/exports/frontiers/templates/index.json does not match the n00-frontiers export. "
+            f"{FRONTIERS_INGEST_HINT}"
+        )
+
+
+def _ensure_template_files(
+    errors: list[str], normalised_templates: List[Dict[str, object]]
+) -> None:
+    if not CORTEX_FRONTIERS_EXPORT_DIR.exists():
+        errors.append(
+            f"n00-cortex missing frontiers template exports directory at {CORTEX_FRONTIERS_EXPORT_DIR}."
+        )
+        return
+    for entry in normalised_templates:
+        slug = entry.get("id")
+        if not slug:
+            continue
+        template_path = CORTEX_FRONTIERS_EXPORT_DIR / f"{slug}.json"
+        if not template_path.exists():
+            errors.append(
+                f"Missing exported template for '{slug}' at {template_path}. {FRONTIERS_INGEST_HINT}"
+            )
+            continue
+        template_payload = _load_json(template_path)
+        if template_payload != entry:
+            errors.append(
+                f"Exported template '{slug}' differs from n00-frontiers catalog. {FRONTIERS_INGEST_HINT}"
+            )
+
+
+def _ensure_metadata_exports(errors: list[str]) -> None:
+    if not FRONTIERS_EXPORT_METADATA.exists():
+        return
+    metadata_payload = _load_json(FRONTIERS_EXPORT_METADATA)
+    if not CORTEX_FRONTIERS_METADATA.exists():
+        errors.append(
+            f"n00-cortex missing frontiers metadata at {CORTEX_FRONTIERS_METADATA}. {FRONTIERS_INGEST_HINT}"
+        )
+        return
+    cortex_payload = _load_json(CORTEX_FRONTIERS_METADATA)
+    if cortex_payload != metadata_payload:
+        errors.append(
+            "n00-cortex/data/catalog/frontiers-metadata.json is out of sync with n00-frontiers exports. "
+            f"{FRONTIERS_INGEST_HINT}"
+        )
+
+
+def _ensure_asset_exports(errors: list[str]) -> None:
+    if not FRONTIERS_EXPORT_ASSETS.exists():
+        return
+    assets_payload = _load_json(FRONTIERS_EXPORT_ASSETS)
+    if not CORTEX_FRONTIERS_ASSETS.exists():
+        errors.append(
+            f"n00-cortex missing frontiers assets catalog at {CORTEX_FRONTIERS_ASSETS}. {FRONTIERS_INGEST_HINT}"
+        )
+        return
+    cortex_payload = _load_json(CORTEX_FRONTIERS_ASSETS)
+    if cortex_payload != assets_payload:
+        errors.append(
+            "n00-cortex/data/catalog/frontiers-assets.json is out of sync with n00-frontiers exports. "
+            f"{FRONTIERS_INGEST_HINT}"
+        )
+
+
+def _validate_frontiers_exports(
+    errors: list[str],
+    metadata: dict[str, object],
+) -> None:
+    if not FRONTIERS_EXPORT_TEMPLATES.exists():
+        errors.append(
+            f"n00-frontiers exports not generated at {FRONTIERS_EXPORT_TEMPLATES}. {FRONTIERS_EXPORT_HINT}"
+        )
+        return
+    raw_templates = _load_json(FRONTIERS_EXPORT_TEMPLATES)
+    normalised_templates: List[Dict[str, object]] = (
+        [
+            _normalise_frontiers_template(entry)
+            for entry in raw_templates
+            if isinstance(entry, dict)
+        ]
+        if isinstance(raw_templates, list)
+        else []
+    )
+    metadata["frontiersTemplates"] = len(normalised_templates)
+    _ensure_cortex_templates_in_sync(errors, normalised_templates)
+    _ensure_template_index_in_sync(errors, normalised_templates)
+    _ensure_template_files(errors, normalised_templates)
+    _ensure_metadata_exports(errors)
+    _ensure_asset_exports(errors)
+
+
+def _validate_project_catalog_dependencies(errors: list[str]) -> None:
+    if not (PROJECT_KITS.exists() and BOILERPLATES.exists()):
+        return
+    project_kits = _load_json(PROJECT_KITS)
+    boilerplates = _load_json(BOILERPLATES)
+    boilerplate_versions = {
+        item.get("boilerplate_id"): item.get("version")
+        for item in boilerplates
+        if isinstance(item, dict)
+    }
+    for kit in project_kits:
+        dependencies = kit.get("dependencies", [])
+        for dependency in dependencies:
+            if dependency.get("type") != "boilerplate":
+                continue
+            target = dependency.get("id")
+            minimum = dependency.get("minimum_version")
+            current = boilerplate_versions.get(target)
+            if not target or not minimum or not current:
+                continue
+            if _version_tuple(str(current)) < _version_tuple(str(minimum)):
+                errors.append(
+                    f"Project kit '{kit.get('kit_id')}' expects {target}>={minimum}, but catalog reports {current}."
+                )
+
+
+def _validate_renovate_configs(errors: list[str]) -> None:
+    for discovered in ROOT.glob("*/renovate.json"):
+        repo = discovered.parent.name
+        if repo not in RENOVATE_FILES:
+            RENOVATE_FILES[repo] = (
+                discovered,
+                [LOCAL_RENOVATE_PRESET, CANONICAL_GITHUB_PRESET],
+            )
+    for repo, (path, expected_extend) in RENOVATE_FILES.items():
+        if not path.exists():
+            errors.append(f"{repo} missing renovate.json at {path}.")
+            continue
+        config = _load_json(path)
+        extends = config.get("extends", [])
+        if isinstance(expected_extend, (list, tuple)):
+            if not any(candidate in extends for candidate in expected_extend):
+                errors.append(
+                    f"{repo} renovate.json does not extend any of {expected_extend}."
+                )
+            continue
+        if expected_extend not in extends:
+            errors.append(f"{repo} renovate.json does not extend '{expected_extend}'.")
 
 
 def _parse_args() -> argparse.Namespace:
@@ -609,7 +1077,7 @@ def main() -> int:
         if repo not in RENOVATE_FILES:
             RENOVATE_FILES[repo] = (
                 discovered,
-                ["local>renovate-presets/workspace.json", CANONICAL_GITHUB_PRESET],
+                [LOCAL_RENOVATE_PRESET, CANONICAL_GITHUB_PRESET],
             )
 
     for repo, (path, expected_extend) in RENOVATE_FILES.items():
