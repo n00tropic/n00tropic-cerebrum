@@ -245,6 +245,51 @@ def _normalise_node_version(raw: str) -> str:
     return cleaned[1:] if cleaned.startswith(("v", "V")) else cleaned
 
 
+def _required_nvmrc_projects(manifest_repos: object) -> set[str]:
+    required = _manifest_node_projects(manifest_repos)
+    required.add(WORKSPACE_IDENTIFIER)
+    return required
+
+
+def _missing_nvmrc_message(project: str, expected: str | None) -> str:
+    if expected:
+        return f"{project} missing {NVMRC_FILENAME} pin for node {expected}."
+    return (
+        f"{project} missing {NVMRC_FILENAME} to declare node toolchain version."
+    )
+
+
+def _read_nvmrc_payload(
+    project: str, path: Path, expected: str | None, errors: list[str]
+) -> str | None:
+    try:
+        declared_raw = path.read_text(encoding="utf-8").strip()
+    except OSError as exc:
+        errors.append(f"Failed to read {path}: {exc}")
+        return None
+    if declared_raw:
+        return declared_raw
+    if expected:
+        errors.append(f"{project} {NVMRC_FILENAME} is empty; expected node {expected}.")
+    else:
+        errors.append(f"{project} {NVMRC_FILENAME} is empty; declare a node version.")
+    return None
+
+
+def _validate_required_nvmrc_presence(
+    required: set[str],
+    targets: Dict[str, Path],
+    overrides: Dict[str, Dict[str, Dict[str, object]]],
+    versions: ToolchainVersions,
+    errors: list[str],
+) -> None:
+    for project in sorted(required):
+        if project in targets:
+            continue
+        expected = _expected_version_value(project, "node", versions, overrides, errors)
+        errors.append(_missing_nvmrc_message(project, expected))
+
+
 def _parse_trunk_linters(payload: str) -> Dict[str, str | None]:
     linters: Dict[str, str | None] = {}
     tracker = _TrunkLinterTracker()
@@ -497,33 +542,14 @@ def _validate_nvmrc_files(
     targets = _discover_nvmrc_targets()
     if targets:
         metadata["nvmrcTargets"] = sorted(targets)
-    required = _manifest_node_projects(manifest_repos)
-    required.add(WORKSPACE_IDENTIFIER)
-    for project in sorted(required):
-        if project in targets:
-            continue
-        expected = _expected_version_value(project, "node", versions, overrides, errors)
-        if expected:
-            errors.append(
-                f"{project} missing {NVMRC_FILENAME} pin for node {expected}."
-            )
-        else:
-            errors.append(
-                f"{project} missing {NVMRC_FILENAME} to declare node toolchain version."
-            )
+    required = _required_nvmrc_projects(manifest_repos)
+    _validate_required_nvmrc_presence(required, targets, overrides, versions, errors)
     for project, path in targets.items():
         expected = _expected_version_value(project, "node", versions, overrides, errors)
         if not expected:
             continue
-        try:
-            declared_raw = path.read_text(encoding="utf-8").strip()
-        except OSError as exc:
-            errors.append(f"Failed to read {path}: {exc}")
-            continue
+        declared_raw = _read_nvmrc_payload(project, path, expected, errors)
         if not declared_raw:
-            errors.append(
-                f"{project} {NVMRC_FILENAME} is empty; expected node {expected}."
-            )
             continue
         declared = _normalise_node_version(declared_raw)
         if declared != expected:
