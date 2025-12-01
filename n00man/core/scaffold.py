@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import json
+from .profile import AgentProfile
 from pathlib import Path
 
-from .profile import AgentProfile
+import json
 
 
 class AgentScaffold:
@@ -55,8 +55,11 @@ class AgentScaffold:
             lines.append("")
         lines.append("== Guardrails")
         lines.append("")
-        for guardrail in profile.guardrails:
-            lines.append(f"* {guardrail}")
+        if profile.guardrails:
+            for guardrail in profile.guardrails:
+                lines.append(f"* {guardrail.to_summary()}")
+        else:
+            lines.append("* No guardrails defined")
         lines.append("")
         lines.append("== Model Configuration")
         lines.append("")
@@ -75,8 +78,8 @@ class AgentScaffold:
                     "id": f"{profile.agent_id}.{cap.id}",
                     "name": cap.name,
                     "description": cap.description,
-                    "inputs": cap.parameters.get("inputs", {}),
-                    "outputs": cap.parameters.get("outputs", {}),
+                    "inputs": cap.inputs,
+                    "outputs": cap.outputs,
                 }
                 for cap in profile.capabilities
             ],

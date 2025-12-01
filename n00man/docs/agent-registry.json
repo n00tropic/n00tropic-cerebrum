@@ -5,7 +5,7 @@
     {
       "agent_id": "n00veau",
       "name": "n00veau Art Director",
-      "role": "Creative direction and brand consistency for visual assets",
+      "role": "reviewer",
       "description": "n00veau ensures all n00tropic visual assets meet brand, creative, and experiential standards across the ecosystem.",
       "version": "0.1.0",
       "owner": "brand-studio",
@@ -15,57 +15,71 @@
           "id": "review-design",
           "name": "Review Design",
           "description": "Review a design artefact for brand consistency and quality",
-          "parameters": {
-            "inputs": {
-              "asset_path": {
-                "type": "string",
-                "description": "Path to design asset"
-              },
-              "context": {
-                "type": "string",
-                "description": "Design context or brief"
-              }
+          "inputs": {
+            "asset_path": {
+              "type": "string",
+              "description": "Path to design asset"
             },
-            "outputs": {
-              "score": {
-                "type": "number",
-                "description": "Quality score from 0-100"
-              },
-              "feedback": {
-                "type": "array",
-                "description": "Annotated feedback items"
-              }
+            "context": {
+              "type": "string",
+              "description": "Design context or brief"
             }
-          }
+          },
+          "outputs": {
+            "score": {
+              "type": "number",
+              "description": "Quality score from 0-100"
+            },
+            "feedback": {
+              "type": "array",
+              "description": "Annotated feedback items"
+            }
+          },
+          "parameters": {}
         },
         {
           "id": "suggest-palette",
           "name": "Suggest Color Palette",
           "description": "Suggest on-brand color palettes for a given theme and mood",
-          "parameters": {
-            "inputs": {
-              "theme": {
-                "type": "string",
-                "description": "Design theme"
-              },
-              "mood": {
-                "type": "string",
-                "description": "Desired mood"
-              }
+          "inputs": {
+            "theme": {
+              "type": "string",
+              "description": "Design theme"
             },
-            "outputs": {
-              "palettes": {
-                "type": "array",
-                "description": "Suggested palettes"
-              }
+            "mood": {
+              "type": "string",
+              "description": "Desired mood"
             }
-          }
+          },
+          "outputs": {
+            "palettes": {
+              "type": "array",
+              "description": "Suggested palettes"
+            }
+          },
+          "parameters": {}
         }
       ],
-      "model_config": {},
+      "model_config": {
+        "provider": "openai",
+        "model": "gpt-5.1-codex",
+        "fallbacks": ["openai/gpt-5.1-codex-mini"]
+      },
       "guardrails": [
-        "Never approve assets that violate frontiers brand lint",
-        "Escalate to human reviewer if templates appear outdated"
+        {
+          "id": "n00veau-brand-policy",
+          "description": "Never approve assets that violate frontiers brand lint",
+          "enforcement": "required",
+          "severity": "medium",
+          "owner": "brand-studio"
+        },
+        {
+          "id": "n00veau-human-escalation",
+          "description": "Escalate to human reviewer when templates appear outdated",
+          "enforcement": "required",
+          "severity": "high",
+          "owner": "brand-studio"
+        }
       ],
       "tags": ["brand", "creative", "review"],
       "metadata": {}

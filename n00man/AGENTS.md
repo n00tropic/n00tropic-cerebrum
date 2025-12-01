@@ -6,8 +6,10 @@ A concise, agent-facing guide for n00man. Keep it short, concrete, and enforceab
 
 - **Purpose**: Agent factory for n00tropic—scaffolds, governs, and registers new
   agents so they meet frontier standards and integrate cleanly with the superrepo.
-- **Critical modules**: (scaffolding only)
-- **Non-goals**: Not yet production-ready; agent scaffolding logic is pending.
+- **Critical modules**: `n00man/core/foundry.py`, `n00man/core/governance.py`,
+  `n00man/docs/agent-registry.json`, `n00man/schemas/agent-profile.schema.json`
+- **Non-goals**: Do not hand-edit generated docs in `n00man/docs/agents/**`; rerun
+  the scaffold instead. Guardrails live in frontiers policy (`n00-frontiers/frontiers/policy/agent-roles.yml`).
 
 ## Status
 
@@ -18,18 +20,19 @@ Available features:
 
 - CLI-driven scaffolding with JSON registry updates
 - Agent profile, capability manifest, and executor stub generation
+- Schema-driven governance validation (JSON Schema + frontiers roles)
 
 Planned features:
 
-- Governance rules and validation
-- Registration with n00t capability manifest
-- Integration testing for new agents
+- n00t MCP capability wiring (`n00man.scaffold`, `n00man.validate`, `n00man.list`)
+- Integration/evaluation harnesses before production rollout
 
 ## Build & Run
 
 ### Prerequisites
 
-- TBD (likely Python 3.11+ or Node 20+)
+- Python 3.11+
+- `pip install -r requirements.workspace.txt` (root) or `uv pip install jsonschema`
 
 ### Common Commands
 
@@ -37,8 +40,12 @@ Planned features:
 # Scaffold a new agent profile + executor
 python -m n00man.cli scaffold \
   --name brand-reviewer \
-  --role "Brand Reviewer" \
+  --role reviewer \
   --description "Reviews assets for brand compliance" \
+  --owner brand-studio \
+  --model-provider openai \
+  --model-name gpt-5.1-codex \
+  --model-fallback openai/gpt-5.1-codex-mini \
   --tag brand --tag creative
 
 # List registered agents from docs/agent-registry.json
@@ -59,9 +66,9 @@ python -m n00man.cli list
 
 ## Definition of Done
 
-- [ ] Build succeeds (when implemented).
-- [ ] Tests pass (when added).
-- [ ] Scaffolded agents meet frontier standards.
+- [ ] `python -m pytest n00man/tests` passes.
+- [ ] `python -m n00man.cli scaffold ...` produces docs + updates registry.
+- [ ] Governance validation passes (schema + roles + guardrails).
 - [ ] PR body includes rationale and test evidence.
 
 ## Integration with Workspace
@@ -76,7 +83,7 @@ When in the superrepo context:
 
 _For ecosystem context, see the root `AGENTS.md` in n00tropic-cerebrum._
 
-_Status: Scaffolding only — under construction._
+_Status: Scaffolding + governance complete; MCP wiring in progress._
 
 ---
 

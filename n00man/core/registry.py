@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import json
+from .profile import AgentCapability, AgentGuardrail, AgentProfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict
 
-from .profile import AgentCapability, AgentProfile
+import json
 
 
 class AgentRegistry:
@@ -26,7 +26,15 @@ class AgentRegistry:
             caps = [
                 AgentCapability(**cap) for cap in agent_data.pop("capabilities", [])
             ]
-            profile = AgentProfile(**agent_data, capabilities=caps)
+            guardrails = [
+                AgentGuardrail(**guardrail)
+                for guardrail in agent_data.pop("guardrails", [])
+            ]
+            profile = AgentProfile(
+                **agent_data,
+                capabilities=caps,
+                guardrails=guardrails,
+            )
             self.agents[profile.agent_id] = profile
 
     def save(self) -> None:

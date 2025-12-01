@@ -3,11 +3,12 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import argparse
 import asyncio
 import json
 import sys
-from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS_ROOT = ROOT / "docs"
@@ -15,7 +16,11 @@ REGISTRY_PATH = DOCS_ROOT / "agent-registry.json"
 
 sys.path.insert(0, str(ROOT))
 
-from n00man.core import AgentFoundryExecutor, AgentRegistry  # noqa: E402
+from n00man.core import (  # noqa: E402
+    AgentFoundryExecutor,
+    AgentGovernanceError,
+    AgentRegistry,
+)
 
 
 def _load_capabilities(path: str | None) -> list[dict[str, object]]:
@@ -29,6 +34,15 @@ def _load_capabilities(path: str | None) -> list[dict[str, object]]:
     raise SystemExit("Capabilities file must be a list or include 'capabilities'.")
 
 
+def _load_metadata(path: str | None) -> dict[str, object]:
+    if not path:
+        return {}
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if isinstance(data, dict):
+        return data
+    raise SystemExit("Metadata file must be a JSON object.")
+
+
 def scaffold_agent(args: argparse.Namespace) -> None:
     """Invoke the Agent Foundry executor with CLI parameters."""
 
@@ -40,10 +54,21 @@ def scaffold_agent(args: argparse.Namespace) -> None:
         "tags": args.tag or [],
         "guardrails": args.guardrail or [],
         "capabilities": _load_capabilities(args.capabilities),
+        "model_config": {
+            "provider": args.model_provider,
+            "model": args.model_name,
+            "fallbacks": args.model_fallback or [],
+        },
+        "owner": args.owner,
+        "status": args.status,
+        "metadata": _load_metadata(args.metadata),
     }
 
     executor = AgentFoundryExecutor(docs_root=DOCS_ROOT, registry_path=REGISTRY_PATH)
-    result = asyncio.run(executor.execute(**payload))
+    try:
+        result = asyncio.run(executor.execute(**payload))
+    except AgentGovernanceError as exc:  # pragma: no cover - CLI formatting
+        raise SystemExit(f"[n00man] Governance validation failed:\n{exc}")
 
     print(f"[n00man] Scaffolded agent {result['agent_id']}")
     for generated in result["generated_files"]:
@@ -62,7 +87,7 @@ def list_agents() -> int:
         return 0
 
     for profile in agents:
-        print(f"{profile.agent_id}\t{profile.status}\t{profile.name}")
+        print(f"{profile.agent_id}\t{profile.status}\t{profile.role}\t{profile.name}")
     return 0
 
 
@@ -96,6 +121,37 @@ def main(argv: list[str] | None = None) -> int:
     scaffold.add_argument(
         "--capabilities",
         help="Path to JSON file with capability definitions",
+    )
+    scaffold.add_argument(
+        "--model-provider",
+        default="openai",
+        help="LLM provider identifier",
+    )
+    scaffold.add_argument(
+        "--model-name",
+        default="gpt-5.1-codex",
+        help="Primary model name",
+    )
+    scaffold.add_argument(
+        "--model-fallback",
+        action="append",
+        dest="model_fallback",
+        help="Fallback model identifier (repeatable)",
+    )
+    scaffold.add_argument(
+        "--owner",
+        default="platform-ops",
+        help="Owning team slug",
+    )
+    scaffold.add_argument(
+        "--status",
+        default="draft",
+        choices=["draft", "beta", "active", "deprecated"],
+        help="Agent lifecycle status",
+    )
+    scaffold.add_argument(
+        "--metadata",
+        help="Path to JSON file containing metadata payload",
     )
 
     subparsers.add_parser("list", help="List registered agents")
