@@ -21,7 +21,10 @@ if TYPE_CHECKING:  # pragma: no cover - used for static analysis only
     from agent_core.types import HandlerType
 else:  # pragma: no cover - runtime import with graceful fallback
     try:
-        from agent_core import CapabilityExecutor, trace_operation  # type: ignore
+        from agent_core import (  # type: ignore  # isort: skip
+            CapabilityExecutor,
+            trace_operation,
+        )
         from agent_core.types import HandlerType  # type: ignore
     except ImportError:  # pragma: no cover
         from contextlib import contextmanager
