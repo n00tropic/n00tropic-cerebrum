@@ -1,21 +1,20 @@
-# Automation scripts (canonical entry points)
+# Automation Script Index
 
-- `meta-check.sh`: umbrella health check for the superrepo (used in CI).
-- `check-cross-repo-consistency.py`: enforces toolchain pins and template/workflow drift.
-- `trunk-manage.sh`: single entry for Trunk ops (sync check/pull/push, upgrade, fmt via run-trunk-subrepos).
-- `sync-trunk.py`: canonical Trunk config sync; invoked by `trunk-manage.sh`.
-- `run-trunk-subrepos.sh`: Trunk fmt/check across subrepos (used by workspace-health, wrapped by `trunk-manage.sh fmt`).
-- `sync-trunk-autopush.py`: CI helper to apply Trunk config changes automatically (still valid).
-- `workspace-health.sh` / `workspace-health.py`: high-level workspace gate.
-- `wrangle-branches.sh` / `tmp-branch-audit.sh`: branch hygiene utilities; consolidate here as the entry point.
-- `normalize-workspace-pnpm.sh`: normalizes pnpm store/config for runners.
-- `sync-nvmrc.sh`: links subrepos back to the workspace `.nvmrc` so Node bumps propagate automatically (skip overrides like `n00tropic` unless `--force`).
-- `plan-exec.sh`: execute plan templates for automation runs.
-- `doctor.sh`: workspace doctor (tokens, Trunk, dashboards).
-- `generate-renovate-dashboard.py`: snapshot Renovate dependency dashboards.
-- `lint-workspace-manifest.py`: lint `automation/workspace.manifest.json` for required fields/uniqueness before adding new repos; run in CI/PRs when manifest changes.
+Canonical entrypoints (also available via `bin/workspace`):
+- `workspace-health.sh` — health snapshot, submodule sync, clean-untracked (optional), artifact publish
+- `meta-check.sh` — cross-repo lint/test/ingest orchestration
+- `workspace-release.sh` — release dry-run/manifest emit
+- `deps-audit.sh` — osv-scanner + pip-audit wrappers
+- `ingest-frontiers.sh` — frontiers export ingestion helper
+- `refresh-workspace.sh` — fetch/sync helpers
 
-Deprecated wrappers (prefer the entries above):
+Category helpers:
+- **Docs**: `docs-build.sh`, `docs-lint.sh`, `docs-sync-super.sh`, `docs-verify.sh`
+- **Deps**: `deps-drift.py`, `deps-renovate-dry-run.sh`, `deps-sbom.sh`, `deps-dependency-track-upload.sh`
+- **Project metadata**: `validate-project-metadata.py`, `autofix-project-metadata.py`, `project-autofix-links.sh`
+- **Quality**: `trunk-lint-run.sh`, `run-trunk-subrepos.sh`, `workspace-health.py`
+- **Release/logging**: `workspace-health.sh --publish-artifact`, `record-run-envelope.py`, `record-capability-run.py`
 
-- `sync-trunk-configs.sh`, `trunk-upgrade.sh`, `sync-trunk-defs.mjs`: use `trunk-manage.sh` instead.
-- Redundant branch scripts should route through `wrangle-branches.sh`.
+Notes:
+- Prefer `bin/workspace <cmd>` for day-to-day ops; this README is a quick map for agents and humans.
+- Legacy/rare scripts remain for backwards compatibility; consider migrating to the canonical entrypoints above before deprecating.
