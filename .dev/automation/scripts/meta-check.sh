@@ -189,6 +189,12 @@ else
 	skip_check "frontiers-export" "n00-frontiers catalog export current" "python3 missing or exporter unavailable"
 fi
 
+if [[ -x "$ROOT/n00-frontiers/.dev/validate-templates.sh" ]]; then
+	run_check "frontiers-templates" "n00-frontiers" "n00-frontiers template lint" bash -c ".dev/validate-templates.sh --linters"
+else
+	skip_check "frontiers-templates" "n00-frontiers template lint" "validate-templates.sh missing"
+fi
+
 if [[ -x "$ROOT/n00-frontiers/.dev/sanity-check.sh" ]]; then
 	rm -rf "$ROOT/n00-frontiers/.nox" || true
 	rm -rf "$ROOT/n00-frontiers/build/template-renders" || true
