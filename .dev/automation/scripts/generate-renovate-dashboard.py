@@ -153,7 +153,7 @@ def github_get(url: str, token: Optional[str]) -> Tuple[List[Dict], Dict[str, st
             request.add_header("Authorization", f"Bearer {token}")
         try:
             with urlopen(request) as response:
-                headers = {key: value for key, value in response.getheaders()}
+                headers = dict(response.getheaders())
                 payload = json.loads(response.read().decode("utf-8"))
                 if isinstance(payload, list):
                     collected.extend(payload)

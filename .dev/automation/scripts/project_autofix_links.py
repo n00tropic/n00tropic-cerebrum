@@ -67,7 +67,7 @@ def discover_metadata_paths() -> List[Path]:
             org_root / "n00tropic_HQ" / "98. Internal-Projects", ["*.md"]
         )
     )
-    return sorted(set(path.resolve() for path in paths))
+    return sorted({path.resolve() for path in paths})
 
 
 def canonicalize_link_path(

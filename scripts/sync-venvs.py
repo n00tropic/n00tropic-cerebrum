@@ -103,7 +103,7 @@ def default_venv_path(repo_root: Path, repo_name: str, explicit: str | None) -> 
 def sync_repo(
     uv_bin: Path,
     repo_name: str,
-    repo_root: Path,
+    _repo_root: Path,
     venv_path: Path,
     reqs: List[Path],
     perform_check: bool,

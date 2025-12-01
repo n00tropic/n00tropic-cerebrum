@@ -75,7 +75,7 @@ def main() -> int:
     canonical_tags, alias_map = load_tag_taxonomy(taxonomy_path)
 
     documents = (
-        set(path.resolve() for path in args.paths)
+        {path.resolve() for path in args.paths}
         if args.paths
         else discover_default_documents()
     )

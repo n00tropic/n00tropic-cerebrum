@@ -167,7 +167,7 @@ def render_jobs_section(jobs: List[Dict[str, object]]) -> str:
 
 
 def main() -> int:
-    frontiers_root, workspace_root, org_root = project_metadata.resolve_roots()
+    _, workspace_root, org_root = project_metadata.resolve_roots()
     radar_path = (
         org_root
         / ".dev"

@@ -140,6 +140,7 @@ def main() -> int:
         return 0
 
     planned_changes = 0
+    had_validation_errors = False
     for document_path in documents:
         try:
             document = extract_metadata(document_path)
@@ -147,7 +148,7 @@ def main() -> int:
             print(f"⚠️  Skipping {document_path}: {exc}")
             continue
 
-        errors, warnings, normalised = validate_document(
+        errors, warnings, _ = validate_document(
             document, validator, canonical_tags, alias_map
         )
         if errors:
@@ -156,6 +157,7 @@ def main() -> int:
             )
             for error in errors:
                 print(f"   • {error}")
+            had_validation_errors = True
             continue
 
         original_tags = document.payload.get("tags", [])
@@ -199,7 +201,7 @@ def main() -> int:
         if args.apply and change_log:
             document.payload = updated_payload
             write_metadata(document, updated_payload)
-            print(f"   ✅ updated metadata front matter")
+            print("   ✅ updated metadata front matter")
 
     if planned_changes == 0:
         print("No autofix changes required.")
@@ -208,7 +210,7 @@ def main() -> int:
         if not args.apply:
             print("Run with --apply to persist changes.")
 
-    return 0
+    return 1 if had_validation_errors else 0
 
 
 if __name__ == "__main__":

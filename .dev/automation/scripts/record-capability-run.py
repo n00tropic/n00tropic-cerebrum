@@ -53,7 +53,12 @@ def parse_args() -> argparse.Namespace:
 
 
 def iso_now() -> str:
-    return dt.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+    return (
+        dt.datetime.now(dt.timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
 
 
 def load_store(path: Path) -> List[Dict[str, Any]]:
