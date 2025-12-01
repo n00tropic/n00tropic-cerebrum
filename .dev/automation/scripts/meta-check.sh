@@ -341,6 +341,25 @@ if [[ -x "$SCRIPTS_DIR/workspace-health.sh" ]]; then
 	run_command "workspace-health" "Workspace git hygiene & status" "$SCRIPTS_DIR/workspace-health.sh"
 fi
 
+# AGENTS.md presence validation
+AGENTS_MISSING=()
+if [[ ! -f "$ROOT/AGENTS.md" ]]; then
+	AGENTS_MISSING+=("root")
+fi
+for repo in n00-cortex n00-frontiers n00t n00tropic n00-horizons n00-school n00clear-fusion n00menon n00plicate n00-dashboard n00HQ n00man; do
+	if [[ -d "$ROOT/$repo" && ! -f "$ROOT/$repo/AGENTS.md" ]]; then
+		AGENTS_MISSING+=("$repo")
+	fi
+done
+if [[ ${#AGENTS_MISSING[@]} -eq 0 ]]; then
+	record_result "agents-md" "AGENTS.md presence check" "succeeded" "0" ""
+	log "✅ AGENTS.md presence check"
+else
+	record_result "agents-md" "AGENTS.md presence check" "failed" "0" "missing: ${AGENTS_MISSING[*]}"
+	log "❌ AGENTS.md presence check (missing: ${AGENTS_MISSING[*]})"
+	OVERALL_STATUS=1
+fi
+
 log "Workspace health checks completed"
 
 COMPLETED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")

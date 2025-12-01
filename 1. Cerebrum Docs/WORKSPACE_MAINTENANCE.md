@@ -99,6 +99,70 @@ status. Failing to record these artifacts will block preflight.
 - Telemetry helpers: `telemetry.recordRunEnvelope` and `telemetry.recordCapabilityRun` append JSONL run records under `.dev/automation/artifacts/automation/` for dashboards.
 - Additional context and sample payload LIVE in [`AI_WORKSPACE_PLAYBOOK.md`](AI_WORKSPACE_PLAYBOOK.md).
 
+## AGENTS.md Propagation
+
+Each subproject contains an `AGENTS.md` file optimized for AI agents operating within that repo. These files ensure agents perform optimally whether running in the ecosystem workspace or in standalone subproject checkouts.
+
+### Hierarchy
+
+| Level | File | Purpose |
+|-------|------|----------|
+| Root | `/AGENTS.md` | Ecosystem-wide context, cross-repo flows, workspace commands |
+| Subproject | `/<repo>/AGENTS.md` | Repo-specific build/test, boundaries, local commands |
+
+### Refresh Workflow
+
+```bash
+# Validate all AGENTS.md files exist and are current
+./.dev/automation/scripts/docs-agents-refresh.sh --check
+
+# Regenerate from templates (when conventions change)
+./.dev/automation/scripts/docs-agents-refresh.sh --regenerate
+
+# Or use the MCP capability
+# docs.refresh with mode=check or mode=regenerate
+```
+
+### Structure Convention
+
+Each `AGENTS.md` follows this structure:
+
+1. **Project Overview** – Purpose, critical modules, non-goals
+2. **Build & Run** – Prerequisites, common commands
+3. **Code Style** – Formatting, type requirements
+4. **Security & Boundaries** – Protected areas, credential handling
+5. **Definition of Done** – Checklist for PR readiness
+6. **Ecosystem Context** – Cross-repo integration (root) or parent reference (subprojects)
+7. **Useful Commands** – Quick reference for common operations
+
+### Validation
+
+`meta-check.sh` includes an `agents-md` check that fails if any expected `AGENTS.md` file is missing. Required locations:
+
+- `/AGENTS.md` (root)
+- `/n00-cortex/AGENTS.md`
+- `/n00-frontiers/AGENTS.md`
+- `/n00t/AGENTS.md`
+- `/n00tropic/AGENTS.md`
+- `/n00-horizons/AGENTS.md`
+- `/n00-school/AGENTS.md`
+- `/n00clear-fusion/AGENTS.md`
+- `/n00menon/AGENTS.md`
+- `/n00plicate/AGENTS.md`
+- `/n00-dashboard/AGENTS.md`
+- `/n00HQ/AGENTS.md`
+- `/n00man/AGENTS.md`
+
+### Standalone Operation
+
+When an agent operates in a standalone subproject checkout (not the full workspace), it reads only that repo's `AGENTS.md`. Each subproject file is self-contained with:
+
+- Complete build/test commands
+- Local security boundaries
+- Reference to ecosystem docs URL for broader context
+
+This prevents "detachment confusion" where agents lose ecosystem awareness.
+
 ## Branch merging helpers
 
 - A workspace workflow `Merge to minimal set` is available to help merge PRs that are labeled `automerge`. This workflow runs on manual dispatch and merges PRs that are mergeable and labeled `automerge` to `main`.

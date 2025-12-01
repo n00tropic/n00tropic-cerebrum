@@ -83,3 +83,19 @@ Following the loop above removes the guesswork around submodules, untracked file
 - **Guardrail/routing spans:** `observability.py` and `observability-node.mjs` now emit `guardrail.decision` (with `guardrail.prompt_variant`) and `router.selection` spans. Dashboards aggregate via `artifacts/telemetry/edge-dashboard.json`.
 - **Workspace CLI:** `./bin/workspace` wraps the canonical automation flows (`health`, `meta-check`, `release-dry-run`, `deps-audit`, `ingest-frontiers`, `render-templates`) for quicker operator and agent use; scripts still live under `.dev/automation/scripts/`.
 - **Parallel flags:** `meta-check.sh` and `scripts/sync-venvs.py` accept `--jobs N` (or env `META_CHECK_JOBS`) to parallelize eligible steps (venv sync, template render). Defaults stay serial for reproducibility.
+
+## AGENTS.md Reference
+
+Every subproject contains an `AGENTS.md` optimised for AI agent operation. These files provide:
+
+- **Self-contained context**: Build/test commands, security boundaries, local conventions
+- **Ecosystem awareness**: References to root AGENTS.md for cross-repo context
+- **Standalone operation**: Works when repo is checked out in isolation (prevents detachment confusion)
+
+| Resource | Path |
+|----------|------|
+| Root AGENTS.md | `/AGENTS.md` |
+| Validation script | `.dev/automation/scripts/docs-agents-refresh.sh --check` |
+| MCP capability | `docs.refresh` with `mode=check` |
+
+When entering a new context, agents should read the closest `AGENTS.md` first.
