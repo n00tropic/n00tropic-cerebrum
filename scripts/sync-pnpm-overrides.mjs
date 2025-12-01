@@ -69,7 +69,15 @@ function ensurePackageManager(pkg) {
 function mergeOverrides(pkg) {
   const pnpmSection = pkg.pnpm || {};
   const existing = { ...(pnpmSection.overrides || pkg.overrides || {}) };
-  const merged = { ...existing, ...overrides };
+  const resolved = {};
+  for (const [name, val] of Object.entries(overrides)) {
+    if (val && typeof val === "object" && "version" in val) {
+      resolved[name] = val.version;
+    } else {
+      resolved[name] = val;
+    }
+  }
+  const merged = { ...existing, ...resolved };
   pnpmSection.overrides = merged;
   pkg.pnpm = pnpmSection;
   return JSON.stringify(existing) !== JSON.stringify(merged);
