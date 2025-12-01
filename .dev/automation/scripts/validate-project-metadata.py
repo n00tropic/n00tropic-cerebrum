@@ -3,21 +3,21 @@
 
 from __future__ import annotations
 
-import argparse
-import json
-from pathlib import Path
-from typing import Dict, List, Set
-
 from lib.project_metadata import (
-    MetadataLoadError,
     discover_documents,
     ensure_paths_exist,
     extract_metadata,
     load_schema,
     load_tag_taxonomy,
+    MetadataLoadError,
     resolve_roots,
     validate_document,
 )
+from pathlib import Path
+from typing import Dict, List, Set
+
+import argparse
+import json
 
 
 def parse_args() -> argparse.Namespace:

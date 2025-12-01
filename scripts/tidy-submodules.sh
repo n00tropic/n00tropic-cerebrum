@@ -13,8 +13,8 @@ git -C "$ROOT_DIR" submodule update --init --recursive || true
 
 echo "[tidy] running manifest gate" >&2
 if ! bash "$ROOT_DIR/.dev/automation/scripts/manifest-gate.sh"; then
-  echo "[tidy] manifest gate failed; add missing repos to automation/workspace.manifest.json" >&2
-  exit 1
+	echo "[tidy] manifest gate failed; add missing repos to automation/workspace.manifest.json" >&2
+	exit 1
 fi
 
 echo "[tidy] running skeleton check (apply stubs + hooks)" >&2

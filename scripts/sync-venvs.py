@@ -19,6 +19,7 @@ Examples:
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Iterable, List, Tuple
 
@@ -27,7 +28,6 @@ import json
 import shutil
 import subprocess
 import sys
-from concurrent.futures import ThreadPoolExecutor
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "automation" / "workspace.manifest.json"

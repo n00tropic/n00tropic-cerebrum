@@ -9,6 +9,9 @@ updated in place while new entries are created as needed.
 
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import argparse
 import json
 import os
@@ -16,8 +19,6 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from pathlib import Path
-from typing import Any, Dict, List, Optional
 
 SUMMARY_PATH = Path("/tmp/erpnext_import_resp.json")
 VALID_TASK_PRIORITIES = {"Low", "Medium", "High", "Urgent"}

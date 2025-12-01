@@ -8,15 +8,16 @@ Supports metadata capture, GitHub synchronisation planning, and ERPNext planning
 
 from __future__ import annotations
 
+from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
+from typing import Any, cast, Dict, List, Mapping, Optional, Sequence, Set, Tuple
+from urllib.parse import urlparse
+
 import argparse
 import json
 import re
 import sys
 import textwrap
-from datetime import date, datetime, timedelta, timezone
-from pathlib import Path
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple, cast
-from urllib.parse import urlparse
 
 try:
     import yaml  # type: ignore[import-untyped]  # pylint: disable=import-error
@@ -24,13 +25,13 @@ except ImportError:  # pragma: no cover - surfaced at runtime if missing
     yaml = None  # type: ignore[assignment]
 
 from lib.project_metadata import (
-    MetadataLoadError,
     discover_documents,
     ensure_paths_exist,
     extract_metadata,
     find_duplicate_ids,
     load_schema,
     load_tag_taxonomy,
+    MetadataLoadError,
     resolve_roots,
     validate_document,
     write_metadata,

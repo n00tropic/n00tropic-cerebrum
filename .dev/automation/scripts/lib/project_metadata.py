@@ -3,21 +3,21 @@
 
 from __future__ import annotations
 
-import json
-import os
-import re
 from dataclasses import dataclass
 from datetime import datetime
-from pathlib import Path
-from typing import Dict, Iterable, Iterator, List, Optional, Sequence, Set, Tuple
-
-import yaml
 from jsonschema import (
     Draft202012Validator,  # type: ignore[import-untyped]  # pylint: disable=import-error
 )
 from jsonschema.exceptions import (
     ValidationError,  # type: ignore[import-untyped]  # pylint: disable=import-error
 )
+from pathlib import Path
+from typing import Dict, Iterable, Iterator, List, Optional, Sequence, Set, Tuple
+
+import json
+import os
+import re
+import yaml
 
 FRONT_MATTER_PATTERN = re.compile(r"^---\s*\n(.*?)\n---\s*", re.DOTALL)
 DISPLAY_DATE_FMT = "%d-%m-%Y"

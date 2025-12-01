@@ -20,72 +20,78 @@ SKIP_SET=()
 ONLY_SET=()
 
 while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --clean)
-      echo "[validate] Cleaning $TMP_DIR and old artifacts"
-      rm -rf "$TMP_DIR"
-      mkdir -p "$TMP_DIR"
-      find "$ARTIFACT_DIR" -type f -mtime +7 -delete 2>/dev/null || true
-      ;;
-    --skip)
-      SKIP_SET+=("$2"); shift
-      ;;
-    --only)
-      ONLY_SET+=("$2"); shift
-      ;;
-    --list)
-      echo "preflight graph docs fusion"
-      exit 0
-      ;;
-    *)
-      echo "Usage: $0 [--clean] [--list] [--skip name] [--only name]" >&2
-      exit 1
-      ;;
-  esac
-  shift
+	case "$1" in
+	--clean)
+		echo "[validate] Cleaning $TMP_DIR and old artifacts"
+		rm -rf "$TMP_DIR"
+		mkdir -p "$TMP_DIR"
+		find "$ARTIFACT_DIR" -type f -mtime +7 -delete 2>/dev/null || true
+		;;
+	--skip)
+		SKIP_SET+=("$2")
+		shift
+		;;
+	--only)
+		ONLY_SET+=("$2")
+		shift
+		;;
+	--list)
+		echo "preflight graph docs fusion"
+		exit 0
+		;;
+	*)
+		echo "Usage: $0 [--clean] [--list] [--skip name] [--only name]" >&2
+		exit 1
+		;;
+	esac
+	shift
 done
 
 should_run() {
-  local name="$1"
-  if [[ ${#ONLY_SET[@]} -gt 0 ]]; then
-    for o in "${ONLY_SET[@]}"; do [[ $o == "$name" ]] && return 0; done
-    return 1
-  fi
-  for s in "${SKIP_SET[@]}"; do [[ $s == "$name" ]] && return 1; done
-  return 0
+	local name="$1"
+	if [[ ${#ONLY_SET[@]} -gt 0 ]]; then
+		for o in "${ONLY_SET[@]}"; do [[ $o == "$name" ]] && return 0; done
+		return 1
+	fi
+	for s in "${SKIP_SET[@]}"; do [[ $s == "$name" ]] && return 1; done
+	return 0
 }
 
 stamp() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
 
 log_step() {
-  local name="$1"; shift
-  local log_file="$ARTIFACT_DIR/${name}-$(date -u +%Y%m%dT%H%M%SZ).log"
-  echo "[validate] >>> $name"
-  local start_ns end_ns duration_ms status="ok"
-  start_ns=$(python3 - <<'PY'
+	local name="$1"
+	shift
+	local log_file="$ARTIFACT_DIR/${name}-$(date -u +%Y%m%dT%H%M%SZ).log"
+	echo "[validate] >>> $name"
+	local start_ns end_ns duration_ms status="ok"
+	start_ns=$(
+		python3 - <<'PY'
 import time; print(int(time.time()*1_000_000_000))
 PY
-)
-  if ! ( "$@" ) &> "$log_file"; then
-    status="fail"
-  fi
-  end_ns=$(python3 - <<'PY'
+	)
+	if ! ("$@") &>"$log_file"; then
+		status="fail"
+	fi
+	end_ns=$(
+		python3 - <<'PY'
 import time; print(int(time.time()*1_000_000_000))
 PY
-)
-  duration_ms=$(python3 - "$start_ns" "$end_ns" <<'PY'
+	)
+	duration_ms=$(
+		python3 - "$start_ns" "$end_ns" <<'PY'
 import sys
 start_ns = int(sys.argv[1]); end_ns = int(sys.argv[2])
 print(int((end_ns - start_ns) / 1_000_000))
 PY
-)
-  echo "[validate] <<< $name ($status, ${duration_ms}ms) log=$log_file"
-  echo "$name|$status|$duration_ms|$log_file" >> "$ARTIFACT_DIR/latest.results"
+	)
+	echo "[validate] <<< $name ($status, ${duration_ms}ms) log=$log_file"
+	echo "$name|$status|$duration_ms|$log_file" >>"$ARTIFACT_DIR/latest.results"
 }
 
 write_summary() {
-  if [[ ! -f "$ARTIFACT_DIR/latest.results" ]]; then return; fi
-python3 - "$ARTIFACT_DIR/latest.results" "$ARTIFACT_DIR/latest.json" <<'PY'
+	if [[ ! -f "$ARTIFACT_DIR/latest.results" ]]; then return; fi
+	python3 - "$ARTIFACT_DIR/latest.results" "$ARTIFACT_DIR/latest.json" <<'PY'
 import json, sys, pathlib, datetime
 rows = []
 input_path, out_path = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
@@ -98,13 +104,13 @@ out = {
 }
 out_path.write_text(json.dumps(out, indent=2))
 PY
-  rm -f "$ARTIFACT_DIR/latest.results"
+	rm -f "$ARTIFACT_DIR/latest.results"
 }
 
 prepare_docs_fixture() {
-  local doc_root="$TMP_DIR/docs/modules/ROOT/pages"
-  mkdir -p "$doc_root"
-  cat > "$doc_root/pipeline-fixture.adoc" <<'EOF'
+	local doc_root="$TMP_DIR/docs/modules/ROOT/pages"
+	mkdir -p "$doc_root"
+	cat >"$doc_root/pipeline-fixture.adoc" <<'EOF'
 = Pipeline Fixture
 
 This page exists to keep Antora builds evergreen during local validation.
@@ -115,8 +121,8 @@ EOF
 }
 
 prepare_pdf_fixture() {
-  local pdf="$TMP_DIR/fixture.txt"
-  python3 - <<'PY'
+	local pdf="$TMP_DIR/fixture.txt"
+	python3 - <<'PY'
 import os
 from pathlib import Path
 pdf = Path(os.environ["TMP_DIR"]) / "fixture.pdf"
@@ -132,8 +138,8 @@ pushd "$ROOT_DIR" >/dev/null
 
 # ensure node pinned
 if [[ -f "$ROOT_DIR/scripts/ensure-nvm-node.sh" ]]; then
-  # shellcheck source=/dev/null
-  source "$ROOT_DIR/scripts/ensure-nvm-node.sh"
+	# shellcheck source=/dev/null
+	source "$ROOT_DIR/scripts/ensure-nvm-node.sh"
 fi
 
 # keep tmp tidy (7d)
@@ -144,17 +150,17 @@ PDF_FIXTURE=$(prepare_pdf_fixture)
 
 # pipeline: preflight
 if should_run preflight; then
-  log_step preflight bash -lc "SKIP_DIRTY=${SKIP_DIRTY:-1} pnpm run local:preflight"
+	log_step preflight bash -lc "SKIP_DIRTY=${SKIP_DIRTY:-1} pnpm run local:preflight"
 fi
 
 # pipeline: graph export
 if should_run graph; then
-  log_step graph bash -lc "scripts/workspace-graph-export.sh"
+	log_step graph bash -lc "scripts/workspace-graph-export.sh"
 fi
 
 # pipeline: docs build (uses fixture page automatically discovered by Antora)
 if should_run docs; then
-  log_step docs bash -lc '
+	log_step docs bash -lc '
     if [[ -n "${GH_SUBMODULE_TOKEN:-}" ]]; then
       export GIT_ASKPASS="$TMP_DIR/git-askpass.sh"
       cat > "$GIT_ASKPASS" <<EOF
@@ -174,27 +180,29 @@ fi
 
 # pipeline: fusion (skip softly if venv missing)
 if should_run fusion; then
-  PY_CANDIDATES=(${FUSION_PYTHON:-} python3.12 python3.11 python3.10 python3.9 python3)
-  FUSION_PY=""
-  for c in "${PY_CANDIDATES[@]}"; do
-    [[ -z "$c" ]] && continue
-    if command -v "$c" >/dev/null 2>&1; then
-      ver=$("$c" - <<'PY'
+	PY_CANDIDATES=(${FUSION_PYTHON-} python3.12 python3.11 python3.10 python3.9 python3)
+	FUSION_PY=""
+	for c in "${PY_CANDIDATES[@]}"; do
+		[[ -z $c ]] && continue
+		if command -v "$c" >/dev/null 2>&1; then
+			ver=$(
+				"$c" - <<'PY'
 import sys
 print(".".join(map(str, sys.version_info[:2])))
 PY
-)
-      major=${ver%%.*}; minor=${ver##*.}
-      if (( major == 3 && minor <= 12 )); then
-        FUSION_PY="$c"
-        break
-      fi
-    fi
-  done
-  if [[ -z "$FUSION_PY" ]]; then
-    echo "[validate] fusion skipped (need Python <=3.12); found none" | tee "$ARTIFACT_DIR/fusion-skip.log"
-  elif [[ -d "${ROOT_DIR}/n00clear-fusion/.venv" ]]; then
-    log_step fusion bash -lc "
+			)
+			major=${ver%%.*}
+			minor=${ver##*.}
+			if ((major == 3 && minor <= 12)); then
+				FUSION_PY="$c"
+				break
+			fi
+		fi
+	done
+	if [[ -z $FUSION_PY ]]; then
+		echo "[validate] fusion skipped (need Python <=3.12); found none" | tee "$ARTIFACT_DIR/fusion-skip.log"
+	elif [[ -d "${ROOT_DIR}/n00clear-fusion/.venv" ]]; then
+		log_step fusion bash -lc "
       source n00clear-fusion/.venv/bin/activate
       VENV_PY=\"${ROOT_DIR}/n00clear-fusion/.venv/bin/python\"
       if [[ ! -x \$VENV_PY ]]; then
@@ -204,9 +212,9 @@ PY
       \"\$VENV_PY\" -m pip install --quiet -r n00clear-fusion/requirements.txt
       FUSION_EMBED_BACKEND=${FUSION_EMBED_BACKEND:-hashed} bash .dev/automation/scripts/fusion-pipeline.sh '${PDF_FIXTURE}' validation-fixture
     "
-  else
-    echo "[validate] fusion skipped (missing n00clear-fusion/.venv)" | tee "$ARTIFACT_DIR/fusion-skip.log"
-  fi
+	else
+		echo "[validate] fusion skipped (missing n00clear-fusion/.venv)" | tee "$ARTIFACT_DIR/fusion-skip.log"
+	fi
 fi
 
 write_summary

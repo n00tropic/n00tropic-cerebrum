@@ -20,12 +20,13 @@ Notes:
 """
 from __future__ import annotations
 
+from typing import Dict, List, Optional, Tuple
+
 import argparse
 import json
 import logging
 import subprocess
 import time
-from typing import Dict, List, Optional, Tuple
 
 
 def run_command(

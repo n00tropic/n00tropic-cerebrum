@@ -24,8 +24,15 @@ while [[ $# -gt 0 ]]; do
 	--full) SCOPE_FULL=true ;;
 	--minimal) SCOPE_MIN=true ;;
 	--check) CHECK=true ;;
-	-h|--help) usage; exit 0 ;;
-	*) echo "Unknown flag: $1" >&2; usage; exit 1 ;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		echo "Unknown flag: $1" >&2
+		usage
+		exit 1
+		;;
 	esac
 	shift
 done

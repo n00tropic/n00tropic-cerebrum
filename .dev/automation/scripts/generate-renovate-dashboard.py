@@ -3,6 +3,12 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Dict, List, Optional, Sequence, Tuple
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+
 import argparse
 import datetime as dt
 import json
@@ -10,11 +16,6 @@ import os
 import re
 import subprocess
 import sys
-from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Tuple
-from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
-from urllib.request import Request, urlopen
 
 SCRIPT_PATH = Path(__file__).resolve()
 ROOT = SCRIPT_PATH.parents[3]

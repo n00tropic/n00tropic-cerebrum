@@ -11,12 +11,12 @@ status="ok"
 message=""
 
 run() {
-  cmd="$1"
-  echo "[sync] $cmd"
-  if ! eval "$cmd"; then
-    status="failed"
-    message="command failed: $cmd"
-  fi
+	cmd="$1"
+	echo "[sync] $cmd"
+	if ! eval "$cmd"; then
+		status="failed"
+		message="command failed: $cmd"
+	fi
 }
 
 run "cd '$ROOT/n00-frontiers' && python3 tools/export_cortex_assets.py"
@@ -28,12 +28,12 @@ run "pnpm -C '$ROOT/n00-cortex' run graph:build"
 run "pnpm -C '$ROOT/n00-cortex' test"
 
 if [ "$status" != "ok" ]; then
-  message="failed step in sync; see logs above"
+	message="failed step in sync; see logs above"
 fi
 
 end_ts=$(date -u +%s)
 duration=$((end_ts - start_ts))
-cat > "$LOG" <<JSON
+cat >"$LOG" <<JSON
 {
   "started_at": "$TS",
   "status": "$status",
@@ -45,5 +45,5 @@ JSON
 echo "[sync] telemetry written to $LOG"
 
 if [ "$status" != "ok" ]; then
-  exit 1
+	exit 1
 fi

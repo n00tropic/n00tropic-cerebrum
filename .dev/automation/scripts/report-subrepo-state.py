@@ -5,9 +5,10 @@ Output: CSV with fields repo,has_renovate_json,extends_contains_central,has_pack
 """
 from __future__ import annotations
 
+from pathlib import Path
+
 import csv
 import json
-from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 CENTRAL_EXTEND_GITHUB = (

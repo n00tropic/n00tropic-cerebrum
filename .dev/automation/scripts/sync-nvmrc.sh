@@ -73,7 +73,7 @@ for repo in "${REPOS[@]}"; do
 	fi
 
 	# If .nvmrc is tracked as a file, write the pinned version to avoid type changes.
-	if [[ -e "${target}" && ! -L "${target}" ]]; then
+	if [[ -e ${target} && ! -L ${target} ]]; then
 		echo "${expectedNode}" >"${target}"
 		echo "wrote ${target} (${expectedNode})"
 	else

@@ -29,12 +29,18 @@ function read(file) {
 const checks = [
   {
     file: "n00menon/tsconfig.json",
-    test: (s) => s.includes(`\"extends\": \"@tsconfig/node${EXPECTED_NODE_MAJOR}/tsconfig.json\"`),
+    test: (s) =>
+      s.includes(
+        `\"extends\": \"@tsconfig/node${EXPECTED_NODE_MAJOR}/tsconfig.json\"`,
+      ),
     message: `n00menon/tsconfig.json should extend @tsconfig/node${EXPECTED_NODE_MAJOR}/tsconfig.json`,
   },
   {
     file: "n00-frontiers/applications/scaffolder/templates/node-service/{{cookiecutter.project_slug}}/tsconfig.json",
-    test: (s) => /@tsconfig\/node\{\{\s*cookiecutter\.node_version\.split\('\.'\)\[0\]\s*\}\}\/tsconfig\.json/.test(s),
+    test: (s) =>
+      /@tsconfig\/node\{\{\s*cookiecutter\.node_version\.split\('\.'\)\[0\]\s*\}\}\/tsconfig\.json/.test(
+        s,
+      ),
     message:
       "node-service template tsconfig should reference @tsconfig/node<major>/tsconfig.json using cookiecutter.node_version.split()[0]",
   },
@@ -48,20 +54,24 @@ const checks = [
     test: (s) => {
       const data = JSON.parse(s);
       return (
-        data.templates?.["node-service"]?.sample_contexts?.default?.node_version ===
-        EXPECTED_NODE_VERSION
+        data.templates?.["node-service"]?.sample_contexts?.default
+          ?.node_version === EXPECTED_NODE_VERSION
       );
     },
     message: `manifest.json node-service sample_contexts.default.node_version should be ${EXPECTED_NODE_VERSION}`,
   },
   {
     file: "n00-frontiers/applications/scaffolder/templates/manifest.yaml",
-    test: (s) => new RegExp(`node_version:\\s*\"?${EXPECTED_NODE_VERSION}\"?`).test(s),
+    test: (s) =>
+      new RegExp(`node_version:\\s*\"?${EXPECTED_NODE_VERSION}\"?`).test(s),
     message: `manifest.yaml node_version should be ${EXPECTED_NODE_VERSION}`,
   },
   {
     file: "n00-frontiers/applications/scaffolder/templates/node-service/README.md",
-    test: (s) => s.includes(`| \`node_version\`          | 24                           | ${EXPECTED_NODE_VERSION}`),
+    test: (s) =>
+      s.includes(
+        `| \`node_version\`          | 24                           | ${EXPECTED_NODE_VERSION}`,
+      ),
     message: `node-service README table should list node_version ${EXPECTED_NODE_VERSION} as default`,
   },
 ];

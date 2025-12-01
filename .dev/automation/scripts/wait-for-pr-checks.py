@@ -9,12 +9,13 @@ are exhausted.
 """
 from __future__ import annotations
 
+from typing import Optional
+
 import argparse
 import json
 import subprocess
 import sys
 import time
-from typing import Optional
 
 
 def run(cmd: list[str]) -> subprocess.CompletedProcess:

@@ -58,32 +58,32 @@ git submodule update --init --recursive
 
 ## Subproject Commands
 
-| Repo            | Build                                                       | Test                   |
-| --------------- | ----------------------------------------------------------- | ---------------------- |
-| n00-cortex      | `pnpm install && pnpm run validate:schemas`                 | `pnpm test`            |
-| n00-frontiers   | `pip install -r requirements.txt && nox -s validate_templates_all` | `pytest`               |
-| n00t            | `pnpm install && pnpm build`                                | `pnpm test`            |
-| n00tropic       | `pip install -r requirements.txt`                           | `pytest`               |
-| n00-school      | `pip install -r requirements.txt`                           | `pytest`               |
-| n00clear-fusion | `pip install -r requirements.txt`                           | `pytest`               |
-| n00-dashboard   | `swift build --build-tests`                                 | `swift test`           |
-| n00plicate      | `pnpm install && pnpm tokens:orchestrate`                   | `pnpm test`            |
+| Repo            | Build                                                              | Test         |
+| --------------- | ------------------------------------------------------------------ | ------------ |
+| n00-cortex      | `pnpm install && pnpm run validate:schemas`                        | `pnpm test`  |
+| n00-frontiers   | `pip install -r requirements.txt && nox -s validate_templates_all` | `pytest`     |
+| n00t            | `pnpm install && pnpm build`                                       | `pnpm test`  |
+| n00tropic       | `pip install -r requirements.txt`                                  | `pytest`     |
+| n00-school      | `pip install -r requirements.txt`                                  | `pytest`     |
+| n00clear-fusion | `pip install -r requirements.txt`                                  | `pytest`     |
+| n00-dashboard   | `swift build --build-tests`                                        | `swift test` |
+| n00plicate      | `pnpm install && pnpm tokens:orchestrate`                          | `pnpm test`  |
 
 ## Automation Surface (MCP)
 
 Discover capabilities via `n00t/capabilities/manifest.json`. Key capabilities:
 
-| Capability ID             | Description                                    |
-| ------------------------- | ---------------------------------------------- |
-| `workspace.plan`          | Generate DRY/YAGNI-scored plans                |
-| `workspace.gitDoctor`     | Workspace health + git hygiene                 |
-| `workspace.metaCheck`     | Schema, Renovate, CVE checks                   |
-| `workspace.checkSubmodules` | Submodule cleanliness gate                   |
-| `frontiers.evergreen`     | Template validation after manifest changes     |
-| `project.preflight`       | Capture + sync GitHub/ERPNext metadata         |
-| `project.lifecycleRadar`  | JSON radar of overdue reviews                  |
-| `project.controlPanel`    | Consolidated Markdown control panel            |
-| `docs.refresh`            | Validate and refresh AGENTS.md across repos    |
+| Capability ID               | Description                                 |
+| --------------------------- | ------------------------------------------- |
+| `workspace.plan`            | Generate DRY/YAGNI-scored plans             |
+| `workspace.gitDoctor`       | Workspace health + git hygiene              |
+| `workspace.metaCheck`       | Schema, Renovate, CVE checks                |
+| `workspace.checkSubmodules` | Submodule cleanliness gate                  |
+| `frontiers.evergreen`       | Template validation after manifest changes  |
+| `project.preflight`         | Capture + sync GitHub/ERPNext metadata      |
+| `project.lifecycleRadar`    | JSON radar of overdue reviews               |
+| `project.controlPanel`      | Consolidated Markdown control panel         |
+| `docs.refresh`              | Validate and refresh AGENTS.md across repos |
 
 Scripts live under `.dev/automation/scripts/`. Logs emit to `.dev/automation/artifacts/`.
 
@@ -123,20 +123,20 @@ Scripts live under `.dev/automation/scripts/`. Logs emit to `.dev/automation/art
 
 Each subproject contains its own `AGENTS.md` with package-specific commands. Agents read the closest `AGENTS.md` first, falling back to this root file for ecosystem context.
 
-| Subproject      | AGENTS.md Path                |
-| --------------- | ----------------------------- |
-| n00-cortex      | `n00-cortex/AGENTS.md`        |
-| n00-frontiers   | `n00-frontiers/AGENTS.md`     |
-| n00t            | `n00t/AGENTS.md`              |
-| n00tropic       | `n00tropic/AGENTS.md`         |
-| n00-school      | `n00-school/AGENTS.md`        |
-| n00clear-fusion | `n00clear-fusion/AGENTS.md`   |
-| n00-horizons    | `n00-horizons/AGENTS.md`      |
-| n00menon        | `n00menon/AGENTS.md`          |
-| n00plicate      | `n00plicate/AGENTS.md`        |
-| n00-dashboard   | `n00-dashboard/AGENTS.md`     |
-| n00HQ           | `n00HQ/AGENTS.md`             |
-| n00man          | `n00man/AGENTS.md`            |
+| Subproject      | AGENTS.md Path              |
+| --------------- | --------------------------- |
+| n00-cortex      | `n00-cortex/AGENTS.md`      |
+| n00-frontiers   | `n00-frontiers/AGENTS.md`   |
+| n00t            | `n00t/AGENTS.md`            |
+| n00tropic       | `n00tropic/AGENTS.md`       |
+| n00-school      | `n00-school/AGENTS.md`      |
+| n00clear-fusion | `n00clear-fusion/AGENTS.md` |
+| n00-horizons    | `n00-horizons/AGENTS.md`    |
+| n00menon        | `n00menon/AGENTS.md`        |
+| n00plicate      | `n00plicate/AGENTS.md`      |
+| n00-dashboard   | `n00-dashboard/AGENTS.md`   |
+| n00HQ           | `n00HQ/AGENTS.md`           |
+| n00man          | `n00man/AGENTS.md`          |
 
 ## Useful Commands
 
@@ -172,4 +172,4 @@ pnpm -C n00plicate tokens:orchestrate && pnpm -C n00plicate tokens:validate
 
 ---
 
-*Last updated: 2025-12-01*
+_Last updated: 2025-12-01_

@@ -85,20 +85,20 @@ Tests/
 
 ## Dashboard Views
 
-| View           | Data Source                                |
-| -------------- | ------------------------------------------ |
-| Lifecycle Donut | `lifecycle-radar.json`                    |
-| Warnings Panel | Metadata/consolidation warnings            |
-| Job Table      | `control-panel.md` from n00-horizons       |
+| View            | Data Source                          |
+| --------------- | ------------------------------------ |
+| Lifecycle Donut | `lifecycle-radar.json`               |
+| Warnings Panel  | Metadata/consolidation warnings      |
+| Job Table       | `control-panel.md` from n00-horizons |
 
 ## Key Files
 
-| Path                                | Purpose                          |
-| ----------------------------------- | -------------------------------- |
-| `Package.swift`                     | SwiftPM manifest                 |
-| `Sources/ControlTower/`             | Main app source                  |
-| `Tests/ControlTowerTests/`          | Unit tests                       |
-| `docs/control-tower-app.md`         | Architecture plan                |
+| Path                        | Purpose           |
+| --------------------------- | ----------------- |
+| `Package.swift`             | SwiftPM manifest  |
+| `Sources/ControlTower/`     | Main app source   |
+| `Tests/ControlTowerTests/`  | Unit tests        |
+| `docs/control-tower-app.md` | Architecture plan |
 
 ## Milestones
 
@@ -116,8 +116,8 @@ When in the superrepo context:
 
 ---
 
-*For ecosystem context, see the root `AGENTS.md` in n00tropic-cerebrum.*
+_For ecosystem context, see the root `AGENTS.md` in n00tropic-cerebrum._
 
 ---
 
-*Last updated: 2025-12-01*
+_Last updated: 2025-12-01_

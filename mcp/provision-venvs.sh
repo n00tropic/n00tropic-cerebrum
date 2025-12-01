@@ -3,7 +3,7 @@
 set -euo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-UV_BIN="${UV_BIN:-}"
+UV_BIN="${UV_BIN-}"
 
 if [[ -z ${UV_BIN} ]]; then
 	if command -v uv >/dev/null 2>&1; then

@@ -37,7 +37,13 @@ FRONTIERS_EXPORT_METADATA = FRONTIERS_EXPORT_ROOT / "metadata.json"
 INDEX_FILE_NAME = "index.json"
 FRONTIERS_EXPORT_ASSETS = FRONTIERS_EXPORT_ROOT / "assets" / INDEX_FILE_NAME
 CANONICAL_TRUNK = (
-    ROOT / "n00-cortex" / "data" / "trunk" / "base" / TRUNK_DIR_NAME / TRUNK_CONFIG_FILENAME
+    ROOT
+    / "n00-cortex"
+    / "data"
+    / "trunk"
+    / "base"
+    / TRUNK_DIR_NAME
+    / TRUNK_CONFIG_FILENAME
 )
 OVERRIDE_DIR = ROOT / "n00-cortex" / "data" / "dependency-overrides"
 PROJECT_KITS = ROOT / "n00-cortex" / "data" / "catalog" / "project-kits.json"
@@ -254,9 +260,7 @@ def _required_nvmrc_projects(manifest_repos: object) -> set[str]:
 def _missing_nvmrc_message(project: str, expected: str | None) -> str:
     if expected:
         return f"{project} missing {NVMRC_FILENAME} pin for node {expected}."
-    return (
-        f"{project} missing {NVMRC_FILENAME} to declare node toolchain version."
-    )
+    return f"{project} missing {NVMRC_FILENAME} to declare node toolchain version."
 
 
 def _read_nvmrc_payload(

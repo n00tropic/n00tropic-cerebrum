@@ -105,10 +105,10 @@ Each subproject contains an `AGENTS.md` file optimized for AI agents operating w
 
 ### Hierarchy
 
-| Level | File | Purpose |
-|-------|------|----------|
-| Root | `/AGENTS.md` | Ecosystem-wide context, cross-repo flows, workspace commands |
-| Subproject | `/<repo>/AGENTS.md` | Repo-specific build/test, boundaries, local commands |
+| Level      | File                | Purpose                                                      |
+| ---------- | ------------------- | ------------------------------------------------------------ |
+| Root       | `/AGENTS.md`        | Ecosystem-wide context, cross-repo flows, workspace commands |
+| Subproject | `/<repo>/AGENTS.md` | Repo-specific build/test, boundaries, local commands         |
 
 ### Refresh Workflow
 

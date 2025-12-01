@@ -14,25 +14,27 @@ source "$ROOT/scripts/ensure-nvm-node.sh" 2>/dev/null || true
 
 mkdir -p "$ARTIFACT_DIR"
 
-generated_at=$(python3 - <<'PY'
+generated_at=$(
+	python3 - <<'PY'
 import datetime
 print(datetime.datetime.now().isoformat())
 PY
 )
 
-if [[ ! -d "$EXPORT_ROOT" ]]; then
+if [[ ! -d $EXPORT_ROOT ]]; then
 	echo "[fusion-rag-pack] No exports directory at $EXPORT_ROOT" >&2
 	exit 1
 fi
 
 latest_file=$(find "$EXPORT_ROOT" -type f -maxdepth 2 -print0 | xargs -0 ls -t | head -n1 || true)
 
-if [[ -z "$latest_file" ]]; then
+if [[ -z $latest_file ]]; then
 	echo "[fusion-rag-pack] No export files found under $EXPORT_ROOT" >&2
 	exit 1
 fi
 
-mtime=$(env FILE="$latest_file" python3 - <<'PY'
+mtime=$(
+	env FILE="$latest_file" python3 - <<'PY'
 import os, datetime
 fname = os.environ["FILE"]
 st = os.stat(fname)

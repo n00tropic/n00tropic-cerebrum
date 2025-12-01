@@ -28,7 +28,9 @@ function daysAgo(date) {
 
 const latest = findLatest();
 if (!latest) {
-  console.error("Typesense freshness check: no log found under docs/search/logs/");
+  console.error(
+    "Typesense freshness check: no log found under docs/search/logs/",
+  );
   process.exit(1);
 }
 

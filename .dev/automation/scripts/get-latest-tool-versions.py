@@ -3,14 +3,15 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from datetime import date
+from typing import Callable, Dict, Optional, Sequence, Tuple
+
 import argparse
 import json
 import sys
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
-from datetime import date
-from typing import Callable, Dict, Optional, Sequence, Tuple
 
 HEADERS = {"User-Agent": "n00tropic-cerebrum-version-check/1.0"}
 

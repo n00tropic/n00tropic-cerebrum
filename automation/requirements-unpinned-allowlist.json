@@ -56,8 +56,6 @@
       "jupyter-book>=0.15.0",
       "ghp-import>=2.1.0"
     ],
-    "mcp/docs_server/requirements.txt": [
-      "mcp>=1.10.0"
-    ]
+    "mcp/docs_server/requirements.txt": ["mcp>=1.10.0"]
   }
 }

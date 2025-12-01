@@ -3,12 +3,12 @@
 
 from __future__ import annotations
 
-import argparse
-import json
+from lib import project_metadata
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Set
 
-from lib import project_metadata
+import argparse
+import json
 
 
 def default_documents() -> List[Path]:

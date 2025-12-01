@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Any, Final, Iterable, Mapping
+
 import os
-from typing import Final, Any, Iterable, Mapping
 
 try:
     from opentelemetry import trace

@@ -12,10 +12,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "planning",
-        "automation"
-      ],
+      "tags": ["planning", "automation"],
       "owner": "workspace-core"
     },
     {
@@ -27,11 +24,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "dependencies",
-        "sbom",
-        "syft"
-      ],
+      "tags": ["dependencies", "sbom", "syft"],
       "owner": "platform-deps"
     },
     {
@@ -43,11 +36,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "dependencies",
-        "sbom",
-        "dependency-track"
-      ],
+      "tags": ["dependencies", "sbom", "dependency-track"],
       "owner": "platform-deps"
     },
     {
@@ -59,10 +48,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "dependencies",
-        "renovate"
-      ],
+      "tags": ["dependencies", "renovate"],
       "owner": "platform-deps"
     },
     {
@@ -74,11 +60,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "dependencies",
-        "drift",
-        "deprecated"
-      ],
+      "tags": ["dependencies", "drift", "deprecated"],
       "owner": "platform-deps"
     },
     {
@@ -90,11 +72,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "lint",
-        "trunk",
-        "ci"
-      ],
+      "tags": ["lint", "trunk", "ci"],
       "owner": "platform-ci"
     },
     {
@@ -104,15 +82,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/docs-build.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "docs",
-        "antora",
-        "ci"
-      ],
+      "tags": ["docs", "antora", "ci"],
       "owner": "docs-team"
     },
     {
@@ -122,15 +94,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/docs-lint.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "docs",
-        "lint",
-        "quality"
-      ],
+      "tags": ["docs", "lint", "quality"],
       "owner": "docs-team"
     },
     {
@@ -140,15 +106,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/docs-verify.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "docs",
-        "validation",
-        "n00menon"
-      ],
+      "tags": ["docs", "validation", "n00menon"],
       "owner": "docs-team"
     },
     {
@@ -158,15 +118,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/setup-docs-runner.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "docs",
-        "runner",
-        "provisioning"
-      ],
+      "tags": ["docs", "runner", "provisioning"],
       "owner": "docs-team"
     },
     {
@@ -178,11 +132,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "docs",
-        "sync",
-        "automation"
-      ],
+      "tags": ["docs", "sync", "automation"],
       "owner": "docs-team"
     },
     {
@@ -194,10 +144,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "runner",
-        "diagnostics"
-      ],
+      "tags": ["runner", "diagnostics"],
       "owner": "platform-ci"
     },
     {
@@ -207,14 +154,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/runner-prune-backups.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "runner",
-        "maintenance"
-      ],
+      "tags": ["runner", "maintenance"],
       "owner": "platform-ci"
     },
     {
@@ -224,14 +166,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/runner-upgrade.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "runner",
-        "upgrade"
-      ],
+      "tags": ["runner", "upgrade"],
       "owner": "platform-ci"
     },
     {
@@ -243,10 +180,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "meta-check"
-      ],
+      "tags": ["workspace", "meta-check"],
       "owner": "platform-ops"
     },
     {
@@ -256,16 +190,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/fusion-pipeline.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "fusion",
-        "pipeline",
-        "graph",
-        "ui:fusion"
-      ],
+      "tags": ["fusion", "pipeline", "graph", "ui:fusion"],
       "owner": "fusion-team"
     },
     {
@@ -275,15 +202,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-horizons/cli.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "horizons",
-        "preflight",
-        "ui:horizons"
-      ]
+      "tags": ["horizons", "preflight", "ui:horizons"]
     },
     {
       "id": "horizons.radar",
@@ -292,15 +213,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-horizons/cli.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "horizons",
-        "radar",
-        "ui:horizons"
-      ]
+      "tags": ["horizons", "radar", "ui:horizons"]
     },
     {
       "id": "horizons.orchestrate",
@@ -309,15 +224,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-horizons/cli.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "horizons",
-        "orchestration",
-        "jobs"
-      ]
+      "tags": ["horizons", "orchestration", "jobs"]
     },
     {
       "id": "horizons.agentFoundry",
@@ -326,16 +235,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-horizons/jobs/job-n00man-agent-foundry/foundry.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "horizons",
-        "agents",
-        "foundry",
-        "scaffolding"
-      ]
+      "tags": ["horizons", "agents", "foundry", "scaffolding"]
     },
     {
       "id": "fusion.ingest",
@@ -344,15 +246,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00clear-fusion/pipelines/pdf_ingest.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "fusion",
-        "ingest",
-        "pdf"
-      ]
+      "tags": ["fusion", "ingest", "pdf"]
     },
     {
       "id": "fusion.embed",
@@ -361,15 +257,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00clear-fusion/pipelines/embed_chunks.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "fusion",
-        "embedding",
-        "rag"
-      ]
+      "tags": ["fusion", "embedding", "rag"]
     },
     {
       "id": "fusion.generate",
@@ -378,15 +268,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00clear-fusion/cli.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "fusion",
-        "generator",
-        "briefs"
-      ]
+      "tags": ["fusion", "generator", "briefs"]
     },
     {
       "id": "workspace.refresh",
@@ -397,10 +281,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "refresh"
-      ],
+      "tags": ["workspace", "refresh"],
       "owner": "platform-ops"
     },
     {
@@ -434,11 +315,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "git",
-        "automation"
-      ],
+      "tags": ["workspace", "git", "automation"],
       "owner": "platform-ops"
     },
     {
@@ -450,11 +327,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "submodules",
-        "git"
-      ],
+      "tags": ["workspace", "submodules", "git"],
       "owner": "platform-ops"
     },
     {
@@ -466,11 +339,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "skeleton",
-        "automation"
-      ],
+      "tags": ["workspace", "skeleton", "automation"],
       "owner": "platform-ops"
     },
     {
@@ -480,15 +349,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/normalize-workspace-pnpm.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "workspace",
-        "pnpm",
-        "automation"
-      ],
+      "tags": ["workspace", "pnpm", "automation"],
       "owner": "platform-ops"
     },
     {
@@ -500,11 +363,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "python",
-        "venv"
-      ],
+      "tags": ["workspace", "python", "venv"],
       "owner": "platform-ops"
     },
     {
@@ -516,11 +375,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "trunk",
-        "ci"
-      ],
+      "tags": ["workspace", "trunk", "ci"],
       "owner": "platform-ci"
     },
     {
@@ -532,11 +387,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "git",
-        "status"
-      ],
+      "tags": ["workspace", "git", "status"],
       "owner": "platform-ops"
     },
     {
@@ -548,11 +399,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "trunk",
-        "sync",
-        "ci"
-      ],
+      "tags": ["trunk", "sync", "ci"],
       "owner": "platform-ci"
     },
     {
@@ -564,11 +411,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "trunk",
-        "sync",
-        "config"
-      ],
+      "tags": ["trunk", "sync", "config"],
       "owner": "platform-ci"
     },
     {
@@ -580,11 +423,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "trunk",
-        "lint",
-        "ci"
-      ],
+      "tags": ["trunk", "lint", "ci"],
       "owner": "platform-ci"
     },
     {
@@ -596,10 +435,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "trunk",
-        "setup"
-      ],
+      "tags": ["trunk", "setup"],
       "owner": "platform-ci"
     },
     {
@@ -611,11 +447,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "node",
-        "nvmrc"
-      ],
+      "tags": ["workspace", "node", "nvmrc"],
       "owner": "platform-ops"
     },
     {
@@ -627,11 +459,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "doctor",
-        "pnpm"
-      ],
+      "tags": ["workspace", "doctor", "pnpm"],
       "owner": "platform-ops"
     },
     {
@@ -641,15 +469,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/merge-to-minimal-set.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "branches",
-        "merge",
-        "github"
-      ],
+      "tags": ["branches", "merge", "github"],
       "owner": "platform-ops"
     },
     {
@@ -659,15 +481,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/wrangle-branches.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "branches",
-        "cleanup",
-        "github"
-      ],
+      "tags": ["branches", "cleanup", "github"],
       "owner": "platform-ops"
     },
     {
@@ -679,11 +495,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "branches",
-        "reporting",
-        "github"
-      ],
+      "tags": ["branches", "reporting", "github"],
       "owner": "platform-ops"
     },
     {
@@ -693,15 +505,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/wait-for-checks.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "checks",
-        "github",
-        "polling"
-      ],
+      "tags": ["checks", "github", "polling"],
       "owner": "platform-ci"
     },
     {
@@ -711,15 +517,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/wait-for-pr-checks.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "checks",
-        "github",
-        "polling"
-      ],
+      "tags": ["checks", "github", "polling"],
       "owner": "platform-ci"
     },
     {
@@ -731,10 +531,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "telemetry",
-        "automation"
-      ],
+      "tags": ["telemetry", "automation"],
       "owner": "platform-ops"
     },
     {
@@ -746,10 +543,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "telemetry",
-        "automation"
-      ],
+      "tags": ["telemetry", "automation"],
       "owner": "platform-ops"
     },
     {
@@ -759,14 +553,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/autofix-project-metadata.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "metadata",
-        "autofix"
-      ],
+      "tags": ["metadata", "autofix"],
       "owner": "horizons-metadata"
     },
     {
@@ -778,10 +567,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "metadata",
-        "validation"
-      ],
+      "tags": ["metadata", "validation"],
       "owner": "horizons-metadata"
     },
     {
@@ -791,14 +577,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/lint-workspace-manifest.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "metadata",
-        "lint"
-      ],
+      "tags": ["metadata", "lint"],
       "owner": "platform-ops"
     },
     {
@@ -810,10 +591,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "renovate",
-        "dependencies"
-      ],
+      "tags": ["renovate", "dependencies"],
       "owner": "platform-deps"
     },
     {
@@ -825,9 +603,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "planning"
-      ],
+      "tags": ["planning"],
       "owner": "platform-ops"
     },
     {
@@ -839,10 +615,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "briefs",
-        "metadata"
-      ],
+      "tags": ["briefs", "metadata"],
       "owner": "platform-ops"
     },
     {
@@ -854,10 +627,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "projects",
-        "briefs"
-      ],
+      "tags": ["projects", "briefs"],
       "owner": "platform-ops"
     },
     {
@@ -869,10 +639,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "projects",
-        "radar"
-      ],
+      "tags": ["projects", "radar"],
       "owner": "platform-ops"
     },
     {
@@ -884,10 +651,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "projects",
-        "reporting"
-      ],
+      "tags": ["projects", "reporting"],
       "owner": "platform-ops"
     },
     {
@@ -899,10 +663,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "projects",
-        "orchestration"
-      ],
+      "tags": ["projects", "orchestration"],
       "owner": "platform-ops"
     },
     {
@@ -912,14 +673,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/project_autofix_links.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "projects",
-        "links"
-      ],
+      "tags": ["projects", "links"],
       "owner": "platform-ops"
     },
     {
@@ -929,14 +685,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/report-subrepo-state.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "reporting",
-        "repos"
-      ],
+      "tags": ["reporting", "repos"],
       "owner": "platform-ops"
     },
     {
@@ -948,11 +699,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "git",
-        "submodules"
-      ],
+      "tags": ["workspace", "git", "submodules"],
       "owner": "platform-ops"
     },
     {
@@ -964,10 +711,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "dependencies",
-        "dependency-track"
-      ],
+      "tags": ["dependencies", "dependency-track"],
       "owner": "platform-deps"
     },
     {
@@ -979,10 +723,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "tooling",
-        "versions"
-      ],
+      "tags": ["tooling", "versions"],
       "owner": "platform-deps"
     },
     {
@@ -992,14 +733,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/github_project_apply_blueprint.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "github",
-        "projects"
-      ],
+      "tags": ["github", "projects"],
       "owner": "platform-ops"
     },
     {
@@ -1011,10 +747,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "github",
-        "projects"
-      ],
+      "tags": ["github", "projects"],
       "owner": "platform-ops"
     },
     {
@@ -1026,10 +759,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "erpnext",
-        "bootstrap"
-      ],
+      "tags": ["erpnext", "bootstrap"],
       "owner": "erpnext-team"
     },
     {
@@ -1041,10 +771,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "erpnext",
-        "blueprint"
-      ],
+      "tags": ["erpnext", "blueprint"],
       "owner": "erpnext-team"
     },
     {
@@ -1056,10 +783,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "erpnext",
-        "blueprint"
-      ],
+      "tags": ["erpnext", "blueprint"],
       "owner": "erpnext-team"
     },
     {
@@ -1071,10 +795,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "erpnext",
-        "stack"
-      ],
+      "tags": ["erpnext", "stack"],
       "owner": "erpnext-team"
     },
     {
@@ -1086,9 +807,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "erpnext"
-      ],
+      "tags": ["erpnext"],
       "owner": "erpnext-team"
     },
     {
@@ -1100,10 +819,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "n00menon",
-        "docs"
-      ],
+      "tags": ["n00menon", "docs"],
       "owner": "n00menon"
     },
     {
@@ -1113,14 +829,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/complete-n00menon.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "n00menon",
-        "docs"
-      ],
+      "tags": ["n00menon", "docs"],
       "owner": "n00menon"
     },
     {
@@ -1130,14 +841,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/sync-trunk-autopush.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "trunk",
-        "ci"
-      ],
+      "tags": ["trunk", "ci"],
       "owner": "platform-ci"
     },
     {
@@ -1149,10 +855,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "trunk",
-        "sync"
-      ],
+      "tags": ["trunk", "sync"],
       "owner": "platform-ci"
     },
     {
@@ -1164,10 +867,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "python"
-      ],
+      "tags": ["workspace", "python"],
       "owner": "platform-ops"
     },
     {
@@ -1179,10 +879,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "bootstrap"
-      ],
+      "tags": ["workspace", "bootstrap"],
       "owner": "platform-ops"
     },
     {
@@ -1192,14 +889,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/scripts/centralize-pnpm-store.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "pnpm",
-        "cache"
-      ],
+      "tags": ["pnpm", "cache"],
       "owner": "platform-ops"
     },
     {
@@ -1211,9 +903,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace"
-      ],
+      "tags": ["workspace"],
       "owner": "platform-ops"
     },
     {
@@ -1225,10 +915,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "superrepo"
-      ],
+      "tags": ["workspace", "superrepo"],
       "owner": "platform-ops"
     },
     {
@@ -1238,14 +925,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/scripts/create-default-ui-bundle.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "ui",
-        "bundle"
-      ],
+      "tags": ["ui", "bundle"],
       "owner": "ui-team"
     },
     {
@@ -1257,10 +939,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "docs",
-        "vale"
-      ],
+      "tags": ["docs", "vale"],
       "owner": "docs-team"
     },
     {
@@ -1272,10 +951,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "sbom",
-        "syft"
-      ],
+      "tags": ["sbom", "syft"],
       "owner": "platform-deps"
     },
     {
@@ -1287,9 +963,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "nx"
-      ],
+      "tags": ["nx"],
       "owner": "platform-ops"
     },
     {
@@ -1299,13 +973,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/scripts/install-hooks.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "hooks"
-      ],
+      "tags": ["hooks"],
       "owner": "platform-ops"
     },
     {
@@ -1317,10 +987,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "python",
-        "cache"
-      ],
+      "tags": ["python", "cache"],
       "owner": "platform-ci"
     },
     {
@@ -1332,10 +999,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "python",
-        "dependencies"
-      ],
+      "tags": ["python", "dependencies"],
       "owner": "platform-ops"
     },
     {
@@ -1347,10 +1011,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "nx",
-        "cache"
-      ],
+      "tags": ["nx", "cache"],
       "owner": "platform-ops"
     },
     {
@@ -1360,14 +1021,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/scripts/run-vale-terms-candidates-test.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "vale",
-        "docs"
-      ],
+      "tags": ["vale", "docs"],
       "owner": "docs-team"
     },
     {
@@ -1379,10 +1035,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "pnpm",
-        "setup"
-      ],
+      "tags": ["pnpm", "setup"],
       "owner": "platform-ops"
     },
     {
@@ -1394,10 +1047,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "docs",
-        "contributing"
-      ],
+      "tags": ["docs", "contributing"],
       "owner": "docs-team"
     },
     {
@@ -1409,9 +1059,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "ecosystem"
-      ],
+      "tags": ["ecosystem"],
       "owner": "platform-ops"
     },
     {
@@ -1423,10 +1071,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "env",
-        "templates"
-      ],
+      "tags": ["env", "templates"],
       "owner": "platform-ops"
     },
     {
@@ -1438,10 +1083,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "node",
-        "versions"
-      ],
+      "tags": ["node", "versions"],
       "owner": "platform-ops"
     },
     {
@@ -1453,10 +1095,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "python",
-        "versions"
-      ],
+      "tags": ["python", "versions"],
       "owner": "platform-ops"
     },
     {
@@ -1468,10 +1107,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "python",
-        "venv"
-      ],
+      "tags": ["python", "venv"],
       "owner": "platform-ops"
     },
     {
@@ -1481,14 +1117,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/scripts/tag-propagate.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "git",
-        "tags"
-      ],
+      "tags": ["git", "tags"],
       "owner": "platform-ops"
     },
     {
@@ -1500,10 +1131,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "git",
-        "submodules"
-      ],
+      "tags": ["git", "submodules"],
       "owner": "platform-ops"
     },
     {
@@ -1515,10 +1143,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "qa"
-      ],
+      "tags": ["workspace", "qa"],
       "owner": "platform-ops"
     },
     {
@@ -1528,13 +1153,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/scripts/example.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "example"
-      ],
+      "tags": ["example"],
       "owner": "platform-ops"
     },
     {
@@ -1544,14 +1165,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/scripts/antora-local-clone.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "docs",
-        "antora"
-      ],
+      "tags": ["docs", "antora"],
       "owner": "docs-team"
     },
     {
@@ -1561,14 +1177,9 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/.dev/automation/scripts/ai-workflows/workflow-utils.sh",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
-      "tags": [
-        "ai",
-        "workflow"
-      ],
+      "tags": ["ai", "workflow"],
       "owner": "ai-workflows"
     },
     {
@@ -1622,9 +1233,7 @@
       "entrypoint_full_path": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-school/school_curriculum.py",
       "exists": true,
       "executable": false,
-      "issues": [
-        "entrypoint_not_executable"
-      ],
+      "issues": ["entrypoint_not_executable"],
       "status": "warning",
       "tags": []
     },
@@ -1725,11 +1334,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "project.sync.github",
@@ -1740,11 +1345,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "github"
-      ]
+      "tags": ["project-management", "automation", "github"]
     },
     {
       "id": "project.sync.erpnext",
@@ -1755,11 +1356,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "erpnext"
-      ]
+      "tags": ["project-management", "automation", "erpnext"]
     },
     {
       "id": "project.preflight",
@@ -1770,11 +1367,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "project.batchPreflight",
@@ -1785,11 +1378,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "project.recordIdea",
@@ -1800,11 +1389,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "project.recordJob",
@@ -1815,11 +1400,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "delivery"
-      ]
+      "tags": ["project-management", "automation", "delivery"]
     },
     {
       "id": "project.ingestMarkdown",
@@ -1830,11 +1411,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "project.lifecycleRadar",
@@ -1845,11 +1422,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "project.controlPanel",
@@ -1860,11 +1433,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project",
-        "control-panel",
-        "readiness"
-      ],
+      "tags": ["project", "control-panel", "readiness"],
       "owner": "program-ops"
     },
     {
@@ -1876,11 +1445,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project",
-        "control-tower",
-        "health"
-      ],
+      "tags": ["project", "control-tower", "health"],
       "owner": "program-ops"
     },
     {
@@ -1892,11 +1457,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "workspace.repair",
@@ -1907,11 +1468,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "workspace",
-        "health",
-        "repair"
-      ]
+      "tags": ["workspace", "health", "repair"]
     },
     {
       "id": "workspace.graph",
@@ -1922,11 +1479,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "graph",
-        "capabilities",
-        "observability"
-      ],
+      "tags": ["graph", "capabilities", "observability"],
       "owner": "workspace-core"
     },
     {
@@ -1938,11 +1491,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "docs",
-        "schemas",
-        "templates"
-      ],
+      "tags": ["docs", "schemas", "templates"],
       "owner": "workspace-core"
     },
     {
@@ -1954,11 +1503,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "design-tokens",
-        "drift",
-        "quality"
-      ],
+      "tags": ["design-tokens", "drift", "quality"],
       "owner": "design-system"
     },
     {
@@ -1970,12 +1515,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "toolchain",
-        "drift",
-        "node",
-        "pnpm"
-      ],
+      "tags": ["toolchain", "drift", "node", "pnpm"],
       "owner": "workspace-core"
     },
     {
@@ -1987,11 +1527,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "typesense",
-        "freshness",
-        "docs"
-      ],
+      "tags": ["typesense", "freshness", "docs"],
       "owner": "search"
     },
     {
@@ -2003,11 +1539,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "rag",
-        "fusion",
-        "corpus"
-      ],
+      "tags": ["rag", "fusion", "corpus"],
       "owner": "fusion"
     },
     {
@@ -2019,11 +1551,7 @@
       "executable": true,
       "issues": [],
       "status": "ok",
-      "tags": [
-        "planning",
-        "evaluation",
-        "school"
-      ],
+      "tags": ["planning", "evaluation", "school"],
       "owner": "horizons"
     }
   ]

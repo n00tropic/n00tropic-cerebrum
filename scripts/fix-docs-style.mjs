@@ -86,7 +86,7 @@ for (const f of files) {
       })
       .join("\n");
   }
-if (s !== original) {
+  if (s !== original) {
     if (dryRun) {
       console.log("Would patch", f);
     } else {

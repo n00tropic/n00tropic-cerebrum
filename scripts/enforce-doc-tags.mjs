@@ -35,7 +35,9 @@ for (const file of files) {
 
   const inserts = [];
   if (!hasTags) {
-    inserts.push(`:page-tags: diataxis:reference, domain:platform, audience:contrib, stability:beta`);
+    inserts.push(
+      `:page-tags: diataxis:reference, domain:platform, audience:contrib, stability:beta`,
+    );
   }
   if (!hasReviewed) {
     inserts.push(`:reviewed: ${today}`);
@@ -50,12 +52,16 @@ for (const file of files) {
   ];
 
   if (dryRun) {
-    console.log(`[dry-run] Would patch ${file} -> add ${inserts.length} fields`);
+    console.log(
+      `[dry-run] Would patch ${file} -> add ${inserts.length} fields`,
+    );
   } else {
     fs.writeFileSync(file, nextLines.join("\n"), "utf8");
-  console.log(`[patched] ${file} (+${inserts.length} fields)`);
+    console.log(`[patched] ${file} (+${inserts.length} fields)`);
     changed++;
   }
 }
 
-console.log(`enforce-doc-tags: changed ${changed} file(s)${dryRun ? " (dry)" : ""}`);
+console.log(
+  `enforce-doc-tags: changed ${changed} file(s)${dryRun ? " (dry)" : ""}`,
+);

@@ -7,4 +7,4 @@ export default defineConfig({
     port: 4173,
     reuseExistingServer: true,
   },
-});
+})

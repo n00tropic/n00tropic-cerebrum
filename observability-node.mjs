@@ -137,23 +137,33 @@ export async function initializeNodeTracing(serviceName, options = {}) {
     tracer,
     isEnabled: true,
     withSpan: createSpanRunner(api, tracer),
-    emitGuardrailDecision(decision, { violations = 0, promptVariant, workflowId } = {}) {
+    emitGuardrailDecision(
+      decision,
+      { violations = 0, promptVariant, workflowId } = {},
+    ) {
       const fn = async (span) => {
         if (!span) return;
         span.setAttribute("guardrail.decision", decision);
         span.setAttribute("guardrail.violations", violations);
-        if (promptVariant) span.setAttribute("guardrail.prompt_variant", promptVariant);
+        if (promptVariant)
+          span.setAttribute("guardrail.prompt_variant", promptVariant);
         if (workflowId) span.setAttribute("workflow.id", workflowId);
       };
       return createSpanRunner(api, tracer)("guardrail.decision", fn);
     },
-    emitRoutingOutcome(modelId, { confidence, hardwareTargets, telemetryScore } = {}) {
+    emitRoutingOutcome(
+      modelId,
+      { confidence, hardwareTargets, telemetryScore } = {},
+    ) {
       const fn = async (span) => {
         if (!span) return;
         span.setAttribute("router.model_id", modelId);
-        if (confidence !== undefined) span.setAttribute("router.confidence", confidence);
-        if (telemetryScore !== undefined) span.setAttribute("router.telemetry_score", telemetryScore);
-        if (hardwareTargets) span.setAttribute("router.hardware_targets", hardwareTargets);
+        if (confidence !== undefined)
+          span.setAttribute("router.confidence", confidence);
+        if (telemetryScore !== undefined)
+          span.setAttribute("router.telemetry_score", telemetryScore);
+        if (hardwareTargets)
+          span.setAttribute("router.hardware_targets", hardwareTargets);
       };
       return createSpanRunner(api, tracer)("router.selection", fn);
     },

@@ -5,12 +5,13 @@ n00 Docs MCP Server
 Provides read-only access to n00 Cerebrum documentation via MCP tools.
 """
 
-import logging
-import re
-import sys
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable
+
+import logging
+import re
+import sys
 
 try:
     from mcp.server.fastmcp import FastMCP

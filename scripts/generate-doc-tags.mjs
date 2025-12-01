@@ -16,8 +16,18 @@ const today = new Date().toISOString().slice(0, 10);
 
 const inferDomain = (p) => {
   const lower = p.toLowerCase();
-  if (lower.includes("brand") || lower.includes("creative") || lower.includes("design")) return "domain:brand";
-  if (lower.includes("platform") || lower.includes("infra") || lower.includes("ops")) return "domain:platform";
+  if (
+    lower.includes("brand") ||
+    lower.includes("creative") ||
+    lower.includes("design")
+  )
+    return "domain:brand";
+  if (
+    lower.includes("platform") ||
+    lower.includes("infra") ||
+    lower.includes("ops")
+  )
+    return "domain:platform";
   if (lower.includes("ai") || lower.includes("agent")) return "domain:ai";
   return "domain:platform";
 };
@@ -34,7 +44,12 @@ const inferDiataxis = (p) => {
   const name = path.basename(p).toLowerCase();
   if (name.includes("howto") || name.includes("guide")) return "diataxis:howto";
   if (name.includes("tutorial")) return "diataxis:tutorial";
-  if (name.includes("explain") || name.includes("overview") || name.includes("adr")) return "diataxis:explanation";
+  if (
+    name.includes("explain") ||
+    name.includes("overview") ||
+    name.includes("adr")
+  )
+    return "diataxis:explanation";
   return "diataxis:reference";
 };
 
@@ -43,7 +58,12 @@ for (const f of files) {
   const lines = content.split("\n");
   const tagsLineIdx = lines.findIndex((l) => l.startsWith(":page-tags:"));
   if (tagsLineIdx >= 0) continue;
-  const inferred = [inferDiataxis(f), inferDomain(f), inferAudience(f), "stability:beta"];
+  const inferred = [
+    inferDiataxis(f),
+    inferDomain(f),
+    inferAudience(f),
+    "stability:beta",
+  ];
   if (apply) {
     const insertAt = lines.findIndex((l) => l.trim().startsWith("="));
     const reviewedIdx = lines.findIndex((l) => l.startsWith(":reviewed:"));
@@ -55,7 +75,11 @@ for (const f of files) {
       newLines.unshift(tagsLine);
     }
     if (reviewedIdx === -1) {
-      newLines.splice(insertAt >= 0 ? insertAt + 1 : 1, 0, `:reviewed: ${today}`);
+      newLines.splice(
+        insertAt >= 0 ? insertAt + 1 : 1,
+        0,
+        `:reviewed: ${today}`,
+      );
     }
     fs.writeFileSync(f, newLines.join("\n"), "utf8");
     console.log(`[applied] ${f} -> ${tagsLine}`);

@@ -7,6 +7,10 @@ and control panel consumers.
 """
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import argparse
 import hashlib
 import json
@@ -15,14 +19,13 @@ import shutil
 import subprocess
 import sys
 import time
-from datetime import datetime, timedelta, timezone
-from pathlib import Path
-from typing import Any, Dict, List, Optional
 
 ROOT = Path(__file__).resolve().parents[3]
 FRONTIERS_ROOT = ROOT / "n00-frontiers"
 TOOLCHAIN_MANIFEST = ROOT / "n00-cortex" / "data" / "toolchain-manifest.json"
-FRONTIERS_OVERRIDE = ROOT / "n00-cortex" / "data" / "dependency-overrides" / "n00-frontiers.json"
+FRONTIERS_OVERRIDE = (
+    ROOT / "n00-cortex" / "data" / "dependency-overrides" / "n00-frontiers.json"
+)
 CATALOG_JSON = FRONTIERS_ROOT / "catalog.json"
 ARTIFACT_DIR = ROOT / ".dev" / "automation" / "artifacts" / "automation"
 STATE_PATH = ARTIFACT_DIR / "frontiers-evergreen-state.json"
@@ -152,7 +155,9 @@ def determine_hashes() -> Dict[str, Optional[str]]:
     return hashes
 
 
-def changed_targets(hashes: Dict[str, Optional[str]], state: Dict[str, Any]) -> List[str]:
+def changed_targets(
+    hashes: Dict[str, Optional[str]], state: Dict[str, Any]
+) -> List[str]:
     previous = state.get("hashes") or {}
     changed: List[str] = []
     for key, digest in hashes.items():
@@ -185,7 +190,9 @@ def _probe_python_requirements(python_version: str) -> Dict[str, Any]:
 
     steps: List[Dict[str, Any]] = []
 
-    def _log_step(desc: str, cmd: List[str], result: subprocess.CompletedProcess[Any]) -> None:
+    def _log_step(
+        desc: str, cmd: List[str], result: subprocess.CompletedProcess[Any]
+    ) -> None:
         steps.append({"step": desc, "code": result.returncode})
         joined = " ".join(cmd)
         with log_path.open("a", encoding="utf-8") as handle:
@@ -229,7 +236,9 @@ def _probe_python_requirements(python_version: str) -> Dict[str, Any]:
             "steps": steps,
         }
 
-    if not _run("create-venv", ["uv", "venv", "--python", python_version, str(probe_dir)]):
+    if not _run(
+        "create-venv", ["uv", "venv", "--python", python_version, str(probe_dir)]
+    ):
         return {
             "status": "failed",
             "message": "failed to create probe virtualenv",
@@ -237,7 +246,11 @@ def _probe_python_requirements(python_version: str) -> Dict[str, Any]:
             "steps": steps,
         }
 
-    python_bin = probe_dir / ("Scripts" if sys.platform == "win32" else "bin") / ("python.exe" if sys.platform == "win32" else "python")
+    python_bin = (
+        probe_dir
+        / ("Scripts" if sys.platform == "win32" else "bin")
+        / ("python.exe" if sys.platform == "win32" else "python")
+    )
     requirements = FRONTIERS_ROOT / "requirements.txt"
     if not requirements.exists():
         shutil.rmtree(probe_dir, ignore_errors=True)
@@ -248,7 +261,9 @@ def _probe_python_requirements(python_version: str) -> Dict[str, Any]:
             "steps": steps,
         }
 
-    if not _run("pip-upgrade", [str(python_bin), "-m", "pip", "install", "--upgrade", "pip"]):
+    if not _run(
+        "pip-upgrade", [str(python_bin), "-m", "pip", "install", "--upgrade", "pip"]
+    ):
         shutil.rmtree(probe_dir, ignore_errors=True)
         return {
             "status": "failed",
@@ -262,7 +277,11 @@ def _probe_python_requirements(python_version: str) -> Dict[str, Any]:
     shutil.rmtree(probe_dir, ignore_errors=True)
     return {
         "status": "success" if success else "failed",
-        "message": "Installed requirements with canonical python" if success else "pip install failed",
+        "message": (
+            "Installed requirements with canonical python"
+            if success
+            else "pip install failed"
+        ),
         "logPath": str(log_path.relative_to(ROOT)),
         "steps": steps,
     }
@@ -274,7 +293,9 @@ def _resolve_python_versions() -> tuple[Optional[str], Optional[str], bool]:
     python_entry = toolchains.get("python", {}) if isinstance(toolchains, dict) else {}
     canonical = python_entry.get("version") if isinstance(python_entry, dict) else None
     override_data = _load_json(FRONTIERS_OVERRIDE)
-    overrides = override_data.get("overrides", {}) if isinstance(override_data, dict) else {}
+    overrides = (
+        override_data.get("overrides", {}) if isinstance(override_data, dict) else {}
+    )
     python_override = overrides.get("python", {}) if isinstance(overrides, dict) else {}
     if not isinstance(python_override, dict):
         return canonical, None, False
@@ -284,7 +305,9 @@ def _resolve_python_versions() -> tuple[Optional[str], Optional[str], bool]:
     return canonical, override_version, allow_lower
 
 
-def _should_probe_python(canonical: Optional[str], override_version: Optional[str], allow_lower: bool) -> bool:
+def _should_probe_python(
+    canonical: Optional[str], override_version: Optional[str], allow_lower: bool
+) -> bool:
     if not canonical or not override_version or not allow_lower:
         return False
     return _version_tuple(canonical) > _version_tuple(override_version)
@@ -309,7 +332,9 @@ def _cached_python_probe(
         last_run = datetime.fromisoformat(normalized)
     except ValueError:
         return None
-    if datetime.now(timezone.utc) - last_run < timedelta(hours=PYTHON_PROBE_RETENTION_HOURS):
+    if datetime.now(timezone.utc) - last_run < timedelta(
+        hours=PYTHON_PROBE_RETENTION_HOURS
+    ):
         return existing
     return None
 
@@ -352,7 +377,9 @@ def maybe_probe_python_alignment(state: Dict[str, Any]) -> Optional[Dict[str, An
     return _execute_python_probe(state, canonical, override_version, allow_lower)
 
 
-def run_validation(args: argparse.Namespace, hashes: Dict[str, Optional[str]], state: Dict[str, Any]) -> int:
+def run_validation(
+    args: argparse.Namespace, hashes: Dict[str, Optional[str]], state: Dict[str, Any]
+) -> int:
     cmd = format_command(args)
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_id = f"{DEFAULT_RUN_ID}-{timestamp}"

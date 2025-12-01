@@ -94,8 +94,8 @@ main() {
 	fi
 
 	for target in "${upload_targets[@]}"; do
-		DEPENDENCY_TRACK_BASE_URL="${DEPENDENCY_TRACK_BASE_URL:-}" \
-			DEPENDENCY_TRACK_API_KEY="${DEPENDENCY_TRACK_API_KEY:-}" \
+		DEPENDENCY_TRACK_BASE_URL="${DEPENDENCY_TRACK_BASE_URL-}" \
+			DEPENDENCY_TRACK_API_KEY="${DEPENDENCY_TRACK_API_KEY-}" \
 			SBOM_REF="${ref_label}" \
 			"${SCRIPT_DIR}/deps-dependency-track-upload.sh" --target "${target}"
 	done

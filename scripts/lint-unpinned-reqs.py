@@ -6,11 +6,12 @@ Floating = any specifier without an explicit == pin.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import json
 import os
 import re
 import sys
-from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ALLOWLIST_PATH = ROOT / "automation" / "requirements-unpinned-allowlist.json"
@@ -56,7 +57,9 @@ def target_req_files() -> list[Path]:
         for dirpath, dirnames, filenames in os.walk(base):
             dirnames[:] = [d for d in dirnames if d not in ignore_dirs]
             for filename in filenames:
-                if not filename.startswith("requirements") or not filename.endswith(".txt"):
+                if not filename.startswith("requirements") or not filename.endswith(
+                    ".txt"
+                ):
                     continue
                 file = Path(dirpath) / filename
                 req_files.append(file)
@@ -87,7 +90,9 @@ def main() -> int:
         print("[lint-unpinned-reqs] floating requirements not in allowlist:")
         for rel, line in offenders:
             print(f"  {rel}: {line}")
-        print("Add pins or update automation/requirements-unpinned-allowlist.json if truly intentional.")
+        print(
+            "Add pins or update automation/requirements-unpinned-allowlist.json if truly intentional."
+        )
         return 1
     print("[lint-unpinned-reqs] OK (no new floating requirements).")
     return 0

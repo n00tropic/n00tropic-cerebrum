@@ -29,11 +29,11 @@ Use task: `swift: Build All (n00tropic-cerebrum/n00-dashboard)`
 
 ## 5. Key Documents
 
-| Document    | Purpose               |
-| ----------- | --------------------- |
-| `AGENTS.md` | Agent-facing SSoT     |
-| `README.md` | Project overview      |
+| Document    | Purpose           |
+| ----------- | ----------------- |
+| `AGENTS.md` | Agent-facing SSoT |
+| `README.md` | Project overview  |
 
 ---
 
-*Last updated: 2025-12-01*
+_Last updated: 2025-12-01_

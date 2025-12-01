@@ -92,10 +92,10 @@ Every subproject contains an `AGENTS.md` optimised for AI agent operation. These
 - **Ecosystem awareness**: References to root AGENTS.md for cross-repo context
 - **Standalone operation**: Works when repo is checked out in isolation (prevents detachment confusion)
 
-| Resource | Path |
-|----------|------|
-| Root AGENTS.md | `/AGENTS.md` |
+| Resource          | Path                                                     |
+| ----------------- | -------------------------------------------------------- |
+| Root AGENTS.md    | `/AGENTS.md`                                             |
 | Validation script | `.dev/automation/scripts/docs-agents-refresh.sh --check` |
-| MCP capability | `docs.refresh` with `mode=check` |
+| MCP capability    | `docs.refresh` with `mode=check`                         |
 
 When entering a new context, agents should read the closest `AGENTS.md` first.

@@ -26,22 +26,22 @@ EOF
 
 require_env() {
 	# Accept DT_BASE_URL as an alias for DEPENDENCY_TRACK_BASE_URL
-	if [[ -z ${DEPENDENCY_TRACK_BASE_URL:-} && -n ${DT_BASE_URL:-} ]]; then
+	if [[ -z ${DEPENDENCY_TRACK_BASE_URL-} && -n ${DT_BASE_URL-} ]]; then
 		DEPENDENCY_TRACK_BASE_URL="${DT_BASE_URL}"
 	fi
-	if [[ -z ${DEPENDENCY_TRACK_API_KEY:-} ]]; then
-		if [[ -n ${DT_API_KEY:-} ]]; then
+	if [[ -z ${DEPENDENCY_TRACK_API_KEY-} ]]; then
+		if [[ -n ${DT_API_KEY-} ]]; then
 			DEPENDENCY_TRACK_API_KEY="${DT_API_KEY}"
 		fi
 	fi
-	if [[ -z ${DEPENDENCY_TRACK_BASE_URL:-} || -z ${DEPENDENCY_TRACK_API_KEY:-} ]]; then
+	if [[ -z ${DEPENDENCY_TRACK_BASE_URL-} || -z ${DEPENDENCY_TRACK_API_KEY-} ]]; then
 		echo "[deps-dtrack] WARNING: missing DEPENDENCY_TRACK_BASE_URL (or DT_BASE_URL) or DEPENDENCY_TRACK_API_KEY; skipping upload." >&2
 		return 1
 	fi
 }
 
 resolve_project_name() {
-	local target="${TARGET_NAME:-}"
+	local target="${TARGET_NAME-}"
 	python3 - <<'PY'
 import json, os, sys
 from pathlib import Path

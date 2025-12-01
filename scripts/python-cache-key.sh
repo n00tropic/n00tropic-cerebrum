@@ -11,8 +11,8 @@ lock=$LOCK_MIN
 [[ $scope == "full" ]] && lock=$LOCK_FULL
 
 if [[ ! -f $lock ]]; then
-  echo "missing lockfile: $lock" >&2
-  exit 1
+	echo "missing lockfile: $lock" >&2
+	exit 1
 fi
 
 hash=$(sha256sum "$lock" | awk '{print $1}')

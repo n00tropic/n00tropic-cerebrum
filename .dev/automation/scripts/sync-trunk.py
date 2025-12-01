@@ -4,14 +4,15 @@
 
 from __future__ import annotations
 
-import argparse
-import hashlib
-import json
-import sys
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+
+import argparse
+import hashlib
+import json
+import sys
 
 ROOT: Path = Path(__file__).resolve().parents[3]
 CANONICAL_TRUNK = (

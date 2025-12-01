@@ -3,13 +3,13 @@
 
 from __future__ import annotations
 
-import argparse
-import json
 from datetime import date, datetime, timedelta, timezone
+from lib import project_metadata
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from lib import project_metadata
+import argparse
+import json
 
 
 def parse_review_date(value: object) -> Optional[date]:

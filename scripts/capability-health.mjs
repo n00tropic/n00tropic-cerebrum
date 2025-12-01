@@ -11,28 +11,44 @@ const outputPath =
 
 import { fileURLToPath } from "node:url";
 
-const workspaceRoot = path.resolve(path.join(path.dirname(fileURLToPath(import.meta.url)), ".."));
-const manifestPath = path.join(workspaceRoot, "n00t", "capabilities", "manifest.json");
+const workspaceRoot = path.resolve(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), ".."),
+);
+const manifestPath = path.join(
+  workspaceRoot,
+  "n00t",
+  "capabilities",
+  "manifest.json",
+);
 
 function readJsonSafe(filePath) {
   try {
     return JSON.parse(fs.readFileSync(filePath, "utf8"));
   } catch (error) {
-    console.error(`[capability-health] Failed to read ${filePath}: ${error.message}`);
+    console.error(
+      `[capability-health] Failed to read ${filePath}: ${error.message}`,
+    );
     process.exit(1);
   }
 }
 
 function checkEntrypoint(entrypoint) {
-  if (!entrypoint) return { exists: false, executable: false, reason: "entrypoint missing" };
-  const fullPath = path.resolve(path.join(path.dirname(manifestPath), entrypoint));
+  if (!entrypoint)
+    return { exists: false, executable: false, reason: "entrypoint missing" };
+  const fullPath = path.resolve(
+    path.join(path.dirname(manifestPath), entrypoint),
+  );
   const exists = fs.existsSync(fullPath);
-  const executable = exists ? (fs.statSync(fullPath).mode & 0o111) !== 0 : false;
+  const executable = exists
+    ? (fs.statSync(fullPath).mode & 0o111) !== 0
+    : false;
   return { exists, executable, fullPath };
 }
 
 const manifest = readJsonSafe(manifestPath);
-const capabilities = Array.isArray(manifest?.capabilities) ? manifest.capabilities : [];
+const capabilities = Array.isArray(manifest?.capabilities)
+  ? manifest.capabilities
+  : [];
 
 const report = {
   generated_at: new Date().toISOString(),
@@ -47,7 +63,12 @@ for (const cap of capabilities) {
   if (!entrypointInfo.exists) issues.push("entrypoint_missing");
   else if (!entrypointInfo.executable) issues.push("entrypoint_not_executable");
 
-  const status = issues.length === 0 ? "ok" : issues.includes("entrypoint_missing") ? "error" : "warning";
+  const status =
+    issues.length === 0
+      ? "ok"
+      : issues.includes("entrypoint_missing")
+        ? "error"
+        : "warning";
 
   report.capabilities.push({
     id: cap.id,

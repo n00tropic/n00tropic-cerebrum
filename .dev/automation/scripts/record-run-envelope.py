@@ -7,11 +7,12 @@ Usage:
 
 from __future__ import annotations
 
-import argparse
-import json
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
+
+import argparse
+import json
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 ARTIFACTS_ROOT = WORKSPACE_ROOT / ".dev" / "automation" / "artifacts" / "automation"

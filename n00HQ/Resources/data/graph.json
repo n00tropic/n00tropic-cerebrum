@@ -9,198 +9,154 @@
       "kind": "schema",
       "title": "agent-capability schema",
       "source": "n00-cortex/schemas/agent-capability.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.agent-profile",
       "kind": "schema",
       "title": "agent-profile schema",
       "source": "n00-cortex/schemas/agent-profile.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.ai-guardrail",
       "kind": "schema",
       "title": "ai-guardrail schema",
       "source": "n00-cortex/schemas/ai-guardrail.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.boilerplate",
       "kind": "schema",
       "title": "boilerplate schema",
       "source": "n00-cortex/schemas/boilerplate.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.brand",
       "kind": "schema",
       "title": "brand schema",
       "source": "n00-cortex/schemas/brand.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.catalog-graph",
       "kind": "schema",
       "title": "catalog-graph schema",
       "source": "n00-cortex/schemas/catalog-graph.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.component",
       "kind": "schema",
       "title": "component schema",
       "source": "n00-cortex/schemas/component.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.curriculum",
       "kind": "schema",
       "title": "curriculum schema",
       "source": "n00-cortex/schemas/curriculum.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.dataset-manifest",
       "kind": "schema",
       "title": "dataset-manifest schema",
       "source": "n00-cortex/schemas/dataset-manifest.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.dependency-override",
       "kind": "schema",
       "title": "dependency-override schema",
       "source": "n00-cortex/schemas/dependency-override.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.docs-manifest",
       "kind": "schema",
       "title": "docs-manifest schema",
       "source": "n00-cortex/schemas/docs-manifest.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.document-metadata",
       "kind": "schema",
       "title": "document-metadata schema",
       "source": "n00-cortex/schemas/document-metadata.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.domain-corpus",
       "kind": "schema",
       "title": "domain-corpus schema",
       "source": "n00-cortex/schemas/domain-corpus.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.evaluation-result",
       "kind": "schema",
       "title": "evaluation-result schema",
       "source": "n00-cortex/schemas/evaluation-result.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.id",
       "kind": "schema",
       "title": "id schema",
       "source": "n00-cortex/schemas/id.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.manifesto-doc",
       "kind": "schema",
       "title": "manifesto-doc schema",
       "source": "n00-cortex/schemas/manifesto-doc.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.project-kit",
       "kind": "schema",
       "title": "project-kit schema",
       "source": "n00-cortex/schemas/project-kit.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.project-metadata",
       "kind": "schema",
       "title": "project-metadata schema",
       "source": "n00-cortex/schemas/project-metadata.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.run-envelope",
       "kind": "schema",
       "title": "run-envelope schema",
       "source": "n00-cortex/schemas/run-envelope.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.slices",
       "kind": "schema",
       "title": "slices schema",
       "source": "n00-cortex/schemas/slices.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.toolchain-manifest",
       "kind": "schema",
       "title": "toolchain-manifest schema",
       "source": "n00-cortex/schemas/toolchain-manifest.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "schema.training-pipeline",
       "kind": "schema",
       "title": "training-pipeline schema",
       "source": "n00-cortex/schemas/training-pipeline.schema.json",
-      "tags": [
-        "schema"
-      ]
+      "tags": ["schema"]
     },
     {
       "id": "template.docs-only",
@@ -279,259 +235,168 @@
       "kind": "capability",
       "title": "Generate DRY/YAGNI-scored plans via Codex engine.",
       "source": "n00t/capabilities/manifest.json#workspace.plan",
-      "tags": [
-        "planning",
-        "automation"
-      ]
+      "tags": ["planning", "automation"]
     },
     {
       "id": "capability.deps-sbom",
       "kind": "capability",
       "title": "Generate Syft SBOMs for workspace targets (CycloneDX or SPDX).",
       "source": "n00t/capabilities/manifest.json#deps.sbom",
-      "tags": [
-        "dependencies",
-        "sbom",
-        "syft"
-      ]
+      "tags": ["dependencies", "sbom", "syft"]
     },
     {
       "id": "capability.deps-audit",
       "kind": "capability",
       "title": "Generate SBOMs and upload them to Dependency-Track.",
       "source": "n00t/capabilities/manifest.json#deps.audit",
-      "tags": [
-        "dependencies",
-        "sbom",
-        "dependency-track"
-      ]
+      "tags": ["dependencies", "sbom", "dependency-track"]
     },
     {
       "id": "capability.deps-renovatedryrun",
       "kind": "capability",
       "title": "Run Renovate locally in dry-run mode to preview updates without PRs.",
       "source": "n00t/capabilities/manifest.json#deps.renovateDryRun",
-      "tags": [
-        "dependencies",
-        "renovate"
-      ]
+      "tags": ["dependencies", "renovate"]
     },
     {
       "id": "capability.deps-drift",
       "kind": "capability",
       "title": "Detect dependency version drift and deprecated packages across the workspace.",
       "source": "n00t/capabilities/manifest.json#deps.drift",
-      "tags": [
-        "dependencies",
-        "drift",
-        "deprecated"
-      ]
+      "tags": ["dependencies", "drift", "deprecated"]
     },
     {
       "id": "capability.deps-trunklint",
       "kind": "capability",
       "title": "Run trunk check (lint) and return latest log path.",
       "source": "n00t/capabilities/manifest.json#deps.trunkLint",
-      "tags": [
-        "lint",
-        "trunk",
-        "ci"
-      ]
+      "tags": ["lint", "trunk", "ci"]
     },
     {
       "id": "capability.docs-build",
       "kind": "capability",
       "title": "Run the Antora CI playbook for workspace docs.",
       "source": "n00t/capabilities/manifest.json#docs.build",
-      "tags": [
-        "docs",
-        "antora",
-        "ci"
-      ]
+      "tags": ["docs", "antora", "ci"]
     },
     {
       "id": "capability.docs-lint",
       "kind": "capability",
       "title": "Run Vale, cspell, and Lychee across workspace docs surfaces.",
       "source": "n00t/capabilities/manifest.json#docs.lint",
-      "tags": [
-        "docs",
-        "lint",
-        "quality"
-      ]
+      "tags": ["docs", "lint", "quality"]
     },
     {
       "id": "capability.docs-verify",
       "kind": "capability",
       "title": "Verify n00menon doc surfaces (docs:verify).",
       "source": "n00t/capabilities/manifest.json#docs.verify",
-      "tags": [
-        "docs",
-        "validation",
-        "n00menon"
-      ]
+      "tags": ["docs", "validation", "n00menon"]
     },
     {
       "id": "capability.docs-setuprunner",
       "kind": "capability",
       "title": "Provision dependencies for Antora/Vale/Lychee docs runners on a host.",
       "source": "n00t/capabilities/manifest.json#docs.setupRunner",
-      "tags": [
-        "docs",
-        "runner",
-        "provisioning"
-      ]
+      "tags": ["docs", "runner", "provisioning"]
     },
     {
       "id": "capability.docs-syncsuper",
       "kind": "capability",
       "title": "Sync docs surfaces across the superrepo and push changes upstream.",
       "source": "n00t/capabilities/manifest.json#docs.syncSuper",
-      "tags": [
-        "docs",
-        "sync",
-        "automation"
-      ]
+      "tags": ["docs", "sync", "automation"]
     },
     {
       "id": "capability.runner-info",
       "kind": "capability",
       "title": "Show actions-runner health snapshot for this host.",
       "source": "n00t/capabilities/manifest.json#runner.info",
-      "tags": [
-        "runner",
-        "diagnostics"
-      ]
+      "tags": ["runner", "diagnostics"]
     },
     {
       "id": "capability.runner-cleanup",
       "kind": "capability",
       "title": "Prune old actions-runner backups while keeping the two newest copies.",
       "source": "n00t/capabilities/manifest.json#runner.cleanup",
-      "tags": [
-        "runner",
-        "maintenance"
-      ]
+      "tags": ["runner", "maintenance"]
     },
     {
       "id": "capability.runner-upgrade",
       "kind": "capability",
       "title": "Upgrade the GitHub Actions self-hosted runner with a safe backup/rollback.",
       "source": "n00t/capabilities/manifest.json#runner.upgrade",
-      "tags": [
-        "runner",
-        "upgrade"
-      ]
+      "tags": ["runner", "upgrade"]
     },
     {
       "id": "capability.workspace-metacheck",
       "kind": "capability",
       "title": "Run the full meta-check orchestration (frontiers sanity, schema validation, pip-audit, consistency checks).",
       "source": "n00t/capabilities/manifest.json#workspace.metaCheck",
-      "tags": [
-        "workspace",
-        "meta-check"
-      ]
+      "tags": ["workspace", "meta-check"]
     },
     {
       "id": "capability.fusion-pipeline",
       "kind": "capability",
       "title": "Run ingest → embed → generate → graph rebuild for a PDF corpus.",
       "source": "n00t/capabilities/manifest.json#fusion.pipeline",
-      "tags": [
-        "fusion",
-        "pipeline",
-        "graph",
-        "ui:fusion"
-      ]
+      "tags": ["fusion", "pipeline", "graph", "ui:fusion"]
     },
     {
       "id": "capability.horizons-preflight",
       "kind": "capability",
       "title": "Run horizons preflight for a metadata document.",
       "source": "n00t/capabilities/manifest.json#horizons.preflight",
-      "tags": [
-        "horizons",
-        "preflight",
-        "ui:horizons"
-      ]
+      "tags": ["horizons", "preflight", "ui:horizons"]
     },
     {
       "id": "capability.horizons-radar",
       "kind": "capability",
       "title": "Regenerate horizons lifecycle radar.",
       "source": "n00t/capabilities/manifest.json#horizons.radar",
-      "tags": [
-        "horizons",
-        "radar",
-        "ui:horizons"
-      ]
+      "tags": ["horizons", "radar", "ui:horizons"]
     },
     {
       "id": "capability.horizons-orchestrate",
       "kind": "capability",
       "title": "Orchestrate job execution across n00-horizons.",
       "source": "n00t/capabilities/manifest.json#horizons.orchestrate",
-      "tags": [
-        "horizons",
-        "orchestration",
-        "jobs"
-      ]
+      "tags": ["horizons", "orchestration", "jobs"]
     },
     {
       "id": "capability.horizons-agentfoundry",
       "kind": "capability",
       "title": "Scaffold and register n00man agents with profiles and capabilities.",
       "source": "n00t/capabilities/manifest.json#horizons.agentFoundry",
-      "tags": [
-        "horizons",
-        "agents",
-        "foundry",
-        "scaffolding"
-      ]
+      "tags": ["horizons", "agents", "foundry", "scaffolding"]
     },
     {
       "id": "capability.fusion-ingest",
       "kind": "capability",
       "title": "Ingest a PDF corpus via n00clear-fusion pipelines.",
       "source": "n00t/capabilities/manifest.json#fusion.ingest",
-      "tags": [
-        "fusion",
-        "ingest",
-        "pdf"
-      ]
+      "tags": ["fusion", "ingest", "pdf"]
     },
     {
       "id": "capability.fusion-embed",
       "kind": "capability",
       "title": "Generate hashed embeddings for ingested corpus chunks.",
       "source": "n00t/capabilities/manifest.json#fusion.embed",
-      "tags": [
-        "fusion",
-        "embedding",
-        "rag"
-      ]
+      "tags": ["fusion", "embedding", "rag"]
     },
     {
       "id": "capability.fusion-generate",
       "kind": "capability",
       "title": "Generate briefs, plans, and checklists from a corpus dataset.",
       "source": "n00t/capabilities/manifest.json#fusion.generate",
-      "tags": [
-        "fusion",
-        "generator",
-        "briefs"
-      ]
+      "tags": ["fusion", "generator", "briefs"]
     },
     {
       "id": "capability.workspace-refresh",
       "kind": "capability",
       "title": "Fast-forward all workspace repositories and update submodules.",
       "source": "n00t/capabilities/manifest.json#workspace.refresh",
-      "tags": [
-        "workspace",
-        "refresh"
-      ]
+      "tags": ["workspace", "refresh"]
     },
     {
       "id": "capability.workspace-trunkupgrade",
@@ -552,741 +417,511 @@
       "kind": "capability",
       "title": "Summarise git health across the workspace and optionally clean untracked or sync submodules.",
       "source": "n00t/capabilities/manifest.json#workspace.gitDoctor",
-      "tags": [
-        "workspace",
-        "git",
-        "automation"
-      ]
+      "tags": ["workspace", "git", "automation"]
     },
     {
       "id": "capability.workspace-checksubmodules",
       "kind": "capability",
       "title": "Verify submodule cleanliness, branch alignment, and upstream parity.",
       "source": "n00t/capabilities/manifest.json#workspace.checkSubmodules",
-      "tags": [
-        "workspace",
-        "submodules",
-        "git"
-      ]
+      "tags": ["workspace", "submodules", "git"]
     },
     {
       "id": "capability.workspace-checkskeleton",
       "kind": "capability",
       "title": "Validate workspace repos against the skeleton manifest and optionally scaffold missing bits.",
       "source": "n00t/capabilities/manifest.json#workspace.checkSkeleton",
-      "tags": [
-        "workspace",
-        "skeleton",
-        "automation"
-      ]
+      "tags": ["workspace", "skeleton", "automation"]
     },
     {
       "id": "capability.workspace-normalizepnpm",
       "kind": "capability",
       "title": "Reinstall PNPM dependencies across templates and subrepos using the canonical toolchain version.",
       "source": "n00t/capabilities/manifest.json#workspace.normalizePnpm",
-      "tags": [
-        "workspace",
-        "pnpm",
-        "automation"
-      ]
+      "tags": ["workspace", "pnpm", "automation"]
     },
     {
       "id": "capability.workspace-venvhealth",
       "kind": "capability",
       "title": "Inspect, prune, or refresh python virtual environments across the workspace.",
       "source": "n00t/capabilities/manifest.json#workspace.venvHealth",
-      "tags": [
-        "workspace",
-        "python",
-        "venv"
-      ]
+      "tags": ["workspace", "python", "venv"]
     },
     {
       "id": "capability.workspace-trunkupgradeworkspace",
       "kind": "capability",
       "title": "Upgrade Trunk, sync canonical configs, and optionally run checks across subrepos.",
       "source": "n00t/capabilities/manifest.json#workspace.trunkUpgradeWorkspace",
-      "tags": [
-        "workspace",
-        "trunk",
-        "ci"
-      ]
+      "tags": ["workspace", "trunk", "ci"]
     },
     {
       "id": "capability.workspace-status",
       "kind": "capability",
       "title": "Print a concise workspace git + submodule + Trunk snapshot for quick handoffs.",
       "source": "n00t/capabilities/manifest.json#workspace.status",
-      "tags": [
-        "workspace",
-        "git",
-        "status"
-      ]
+      "tags": ["workspace", "git", "status"]
     },
     {
       "id": "capability.trunk-manage",
       "kind": "capability",
       "title": "Single entrypoint for Trunk sync, push/pull, upgrade, and fmt across subrepos.",
       "source": "n00t/capabilities/manifest.json#trunk.manage",
-      "tags": [
-        "trunk",
-        "sync",
-        "ci"
-      ]
+      "tags": ["trunk", "sync", "ci"]
     },
     {
       "id": "capability.trunk-sync",
       "kind": "capability",
       "title": "Synchronise canonical Trunk config across workspace repos (check/pull/push).",
       "source": "n00t/capabilities/manifest.json#trunk.sync",
-      "tags": [
-        "trunk",
-        "sync",
-        "config"
-      ]
+      "tags": ["trunk", "sync", "config"]
     },
     {
       "id": "capability.trunk-runsubrepos",
       "kind": "capability",
       "title": "Run trunk check (and optional fmt) across subrepos after syncing canonical defs.",
       "source": "n00t/capabilities/manifest.json#trunk.runSubrepos",
-      "tags": [
-        "trunk",
-        "lint",
-        "ci"
-      ]
+      "tags": ["trunk", "lint", "ci"]
     },
     {
       "id": "capability.trunk-lintsetup",
       "kind": "capability",
       "title": "Install or initialise Trunk CLI for the workspace without running checks.",
       "source": "n00t/capabilities/manifest.json#trunk.lintSetup",
-      "tags": [
-        "trunk",
-        "setup"
-      ]
+      "tags": ["trunk", "setup"]
     },
     {
       "id": "capability.workspace-syncnvmrc",
       "kind": "capability",
       "title": "Link subrepo .nvmrc files back to the workspace pin (optionally forcing overrides).",
       "source": "n00t/capabilities/manifest.json#workspace.syncNvmrc",
-      "tags": [
-        "workspace",
-        "node",
-        "nvmrc"
-      ]
+      "tags": ["workspace", "node", "nvmrc"]
     },
     {
       "id": "capability.workspace-doctor",
       "kind": "capability",
       "title": "Workspace doctor sweep (tokens, Trunk sync, pnpm dependencies) with optional fixes.",
       "source": "n00t/capabilities/manifest.json#workspace.doctor",
-      "tags": [
-        "workspace",
-        "doctor",
-        "pnpm"
-      ]
+      "tags": ["workspace", "doctor", "pnpm"]
     },
     {
       "id": "capability.merge-minimalset",
       "kind": "capability",
       "title": "Merge all automerge-labeled PRs that are currently mergeable into main.",
       "source": "n00t/capabilities/manifest.json#merge.minimalSet",
-      "tags": [
-        "branches",
-        "merge",
-        "github"
-      ]
+      "tags": ["branches", "merge", "github"]
     },
     {
       "id": "capability.branches-wrangle",
       "kind": "capability",
       "title": "Identify stale branches, merge automerge PRs, and file a cleanup issue (optional deletion).",
       "source": "n00t/capabilities/manifest.json#branches.wrangle",
-      "tags": [
-        "branches",
-        "cleanup",
-        "github"
-      ]
+      "tags": ["branches", "cleanup", "github"]
     },
     {
       "id": "capability.branches-audittemp",
       "kind": "capability",
       "title": "Generate a branch-wrangler markdown report across the workspace and subrepos.",
       "source": "n00t/capabilities/manifest.json#branches.auditTemp",
-      "tags": [
-        "branches",
-        "reporting",
-        "github"
-      ]
+      "tags": ["branches", "reporting", "github"]
     },
     {
       "id": "capability.checks-waitforchecks",
       "kind": "capability",
       "title": "Poll GitHub check-runs for a PR until completion with fail-fast options.",
       "source": "n00t/capabilities/manifest.json#checks.waitForChecks",
-      "tags": [
-        "checks",
-        "github",
-        "polling"
-      ]
+      "tags": ["checks", "github", "polling"]
     },
     {
       "id": "capability.checks-waitforprchecks",
       "kind": "capability",
       "title": "Watch a PR's statusCheckRollup until it succeeds, fails, or times out.",
       "source": "n00t/capabilities/manifest.json#checks.waitForPrChecks",
-      "tags": [
-        "checks",
-        "github",
-        "polling"
-      ]
+      "tags": ["checks", "github", "polling"]
     },
     {
       "id": "capability.telemetry-recordrunenvelope",
       "kind": "capability",
       "title": "Append a run envelope entry for automation telemetry (JSONL under .dev/automation/artifacts).",
       "source": "n00t/capabilities/manifest.json#telemetry.recordRunEnvelope",
-      "tags": [
-        "telemetry",
-        "automation"
-      ]
+      "tags": ["telemetry", "automation"]
     },
     {
       "id": "capability.telemetry-recordcapabilityrun",
       "kind": "capability",
       "title": "Persist a structured capability run record for dashboards/agents.",
       "source": "n00t/capabilities/manifest.json#telemetry.recordCapabilityRun",
-      "tags": [
-        "telemetry",
-        "automation"
-      ]
+      "tags": ["telemetry", "automation"]
     },
     {
       "id": "capability.metadata-autofix",
       "kind": "capability",
       "title": "Autofix project metadata documents (tags, defaults, review dates).",
       "source": "n00t/capabilities/manifest.json#metadata.autofix",
-      "tags": [
-        "metadata",
-        "autofix"
-      ]
+      "tags": ["metadata", "autofix"]
     },
     {
       "id": "capability.metadata-validate",
       "kind": "capability",
       "title": "Validate metadata-bearing documents against the schema and taxonomy.",
       "source": "n00t/capabilities/manifest.json#metadata.validate",
-      "tags": [
-        "metadata",
-        "validation"
-      ]
+      "tags": ["metadata", "validation"]
     },
     {
       "id": "capability.metadata-lintworkspacemanifest",
       "kind": "capability",
       "title": "Lint automation/workspace.manifest.json for required fields and uniqueness.",
       "source": "n00t/capabilities/manifest.json#metadata.lintWorkspaceManifest",
-      "tags": [
-        "metadata",
-        "lint"
-      ]
+      "tags": ["metadata", "lint"]
     },
     {
       "id": "capability.metadata-updaterenovateextends",
       "kind": "capability",
       "title": "Update Renovate preset extends entries across the workspace.",
       "source": "n00t/capabilities/manifest.json#metadata.updateRenovateExtends",
-      "tags": [
-        "renovate",
-        "dependencies"
-      ]
+      "tags": ["renovate", "dependencies"]
     },
     {
       "id": "capability.plan-resolveconflicts",
       "kind": "capability",
       "title": "Resolve plan conflicts for automation runs.",
       "source": "n00t/capabilities/manifest.json#plan.resolveConflicts",
-      "tags": [
-        "planning"
-      ]
+      "tags": ["planning"]
     },
     {
       "id": "capability.metadata-newuploadedbrief",
       "kind": "capability",
       "title": "Ingest a newly uploaded brief into the workspace registry.",
       "source": "n00t/capabilities/manifest.json#metadata.newUploadedBrief",
-      "tags": [
-        "briefs",
-        "metadata"
-      ]
+      "tags": ["briefs", "metadata"]
     },
     {
       "id": "capability.project-frombrief",
       "kind": "capability",
       "title": "Create a job from a brief document.",
       "source": "n00t/capabilities/manifest.json#project.fromBrief",
-      "tags": [
-        "projects",
-        "briefs"
-      ]
+      "tags": ["projects", "briefs"]
     },
     {
       "id": "capability.project-lifecycleradarpy",
       "kind": "capability",
       "title": "Generate lifecycle radar (Python implementation).",
       "source": "n00t/capabilities/manifest.json#project.lifecycleRadarPy",
-      "tags": [
-        "projects",
-        "radar"
-      ]
+      "tags": ["projects", "radar"]
     },
     {
       "id": "capability.project-slicereport",
       "kind": "capability",
       "title": "Generate a project slice report across metadata sources.",
       "source": "n00t/capabilities/manifest.json#project.sliceReport",
-      "tags": [
-        "projects",
-        "reporting"
-      ]
+      "tags": ["projects", "reporting"]
     },
     {
       "id": "capability.project-orchestrate",
       "kind": "capability",
       "title": "Orchestrate project capture/sync/ERPNext planning tasks (Python helper).",
       "source": "n00t/capabilities/manifest.json#project.orchestrate",
-      "tags": [
-        "projects",
-        "orchestration"
-      ]
+      "tags": ["projects", "orchestration"]
     },
     {
       "id": "capability.project-autofixlinkspy",
       "kind": "capability",
       "title": "Autofix project links (Python variant).",
       "source": "n00t/capabilities/manifest.json#project.autofixLinksPy",
-      "tags": [
-        "projects",
-        "links"
-      ]
+      "tags": ["projects", "links"]
     },
     {
       "id": "capability.report-subrepostate",
       "kind": "capability",
       "title": "Generate Renovate/skeleton state report across top-level repos.",
       "source": "n00t/capabilities/manifest.json#report.subrepoState",
-      "tags": [
-        "reporting",
-        "repos"
-      ]
+      "tags": ["reporting", "repos"]
     },
     {
       "id": "capability.workspace-commitsubmodules",
       "kind": "capability",
       "title": "Stage and commit updated submodule SHAs in the superrepo.",
       "source": "n00t/capabilities/manifest.json#workspace.commitSubmodules",
-      "tags": [
-        "workspace",
-        "git",
-        "submodules"
-      ]
+      "tags": ["workspace", "git", "submodules"]
     },
     {
       "id": "capability.deps-dependencytrackupload",
       "kind": "capability",
       "title": "Upload SBOMs to Dependency-Track from generated artifacts.",
       "source": "n00t/capabilities/manifest.json#deps.dependencyTrackUpload",
-      "tags": [
-        "dependencies",
-        "dependency-track"
-      ]
+      "tags": ["dependencies", "dependency-track"]
     },
     {
       "id": "capability.deps-latesttoolversions",
       "kind": "capability",
       "title": "Fetch latest published versions for runtimes and Trunk-managed linters.",
       "source": "n00t/capabilities/manifest.json#deps.latestToolVersions",
-      "tags": [
-        "tooling",
-        "versions"
-      ]
+      "tags": ["tooling", "versions"]
     },
     {
       "id": "capability.github-applyprojectblueprint",
       "kind": "capability",
       "title": "Apply a GitHub Project configuration blueprint via gh + GraphQL.",
       "source": "n00t/capabilities/manifest.json#github.applyProjectBlueprint",
-      "tags": [
-        "github",
-        "projects"
-      ]
+      "tags": ["github", "projects"]
     },
     {
       "id": "capability.github-applyprojectblueprintsh",
       "kind": "capability",
       "title": "Shell wrapper to apply GitHub Project blueprint.",
       "source": "n00t/capabilities/manifest.json#github.applyProjectBlueprintSh",
-      "tags": [
-        "github",
-        "projects"
-      ]
+      "tags": ["github", "projects"]
     },
     {
       "id": "capability.erpnext-bootstrap",
       "kind": "capability",
       "title": "Bootstrap an ERPNext environment for workspace automation.",
       "source": "n00t/capabilities/manifest.json#erpnext.bootstrap",
-      "tags": [
-        "erpnext",
-        "bootstrap"
-      ]
+      "tags": ["erpnext", "bootstrap"]
     },
     {
       "id": "capability.erpnext-importblueprint",
       "kind": "capability",
       "title": "Import an ERPNext project blueprint via REST (Python).",
       "source": "n00t/capabilities/manifest.json#erpnext.importBlueprint",
-      "tags": [
-        "erpnext",
-        "blueprint"
-      ]
+      "tags": ["erpnext", "blueprint"]
     },
     {
       "id": "capability.erpnext-importblueprintsh",
       "kind": "capability",
       "title": "Shell wrapper to import ERPNext project blueprint.",
       "source": "n00t/capabilities/manifest.json#erpnext.importBlueprintSh",
-      "tags": [
-        "erpnext",
-        "blueprint"
-      ]
+      "tags": ["erpnext", "blueprint"]
     },
     {
       "id": "capability.erpnext-stack",
       "kind": "capability",
       "title": "Manage ERPNext stack lifecycle for local/CI.",
       "source": "n00t/capabilities/manifest.json#erpnext.stack",
-      "tags": [
-        "erpnext",
-        "stack"
-      ]
+      "tags": ["erpnext", "stack"]
     },
     {
       "id": "capability.erpnext-run",
       "kind": "capability",
       "title": "Run ERPNext helper script (bench stack).",
       "source": "n00t/capabilities/manifest.json#erpnext.run",
-      "tags": [
-        "erpnext"
-      ]
+      "tags": ["erpnext"]
     },
     {
       "id": "capability.n00menon-verify",
       "kind": "capability",
       "title": "Run n00menon verification workflow.",
       "source": "n00t/capabilities/manifest.json#n00menon.verify",
-      "tags": [
-        "n00menon",
-        "docs"
-      ]
+      "tags": ["n00menon", "docs"]
     },
     {
       "id": "capability.n00menon-complete",
       "kind": "capability",
       "title": "Complete n00menon docs build/validation and open PR with changes.",
       "source": "n00t/capabilities/manifest.json#n00menon.complete",
-      "tags": [
-        "n00menon",
-        "docs"
-      ]
+      "tags": ["n00menon", "docs"]
     },
     {
       "id": "capability.workspace-dependencytrackautopush",
       "kind": "capability",
       "title": "Sync Trunk configs automatically and push changes (CI helper).",
       "source": "n00t/capabilities/manifest.json#workspace.dependencyTrackAutopush",
-      "tags": [
-        "trunk",
-        "ci"
-      ]
+      "tags": ["trunk", "ci"]
     },
     {
       "id": "capability.trunk-syncconfigs",
       "kind": "capability",
       "title": "Shell helper to sync Trunk configs (check/pull).",
       "source": "n00t/capabilities/manifest.json#trunk.syncConfigs",
-      "tags": [
-        "trunk",
-        "sync"
-      ]
+      "tags": ["trunk", "sync"]
     },
     {
       "id": "capability.workspace-bootstrappython",
       "kind": "capability",
       "title": "Bootstrap Python toolchain with uv/pip for the workspace.",
       "source": "n00t/capabilities/manifest.json#workspace.bootstrapPython",
-      "tags": [
-        "workspace",
-        "python"
-      ]
+      "tags": ["workspace", "python"]
     },
     {
       "id": "capability.workspace-bootstrapworkspace",
       "kind": "capability",
       "title": "Bootstrap the full workspace toolchain.",
       "source": "n00t/capabilities/manifest.json#workspace.bootstrapWorkspace",
-      "tags": [
-        "workspace",
-        "bootstrap"
-      ]
+      "tags": ["workspace", "bootstrap"]
     },
     {
       "id": "capability.workspace-centralizepnpmstore",
       "kind": "capability",
       "title": "Centralize pnpm store for deterministic caching.",
       "source": "n00t/capabilities/manifest.json#workspace.centralizePnpmStore",
-      "tags": [
-        "pnpm",
-        "cache"
-      ]
+      "tags": ["pnpm", "cache"]
     },
     {
       "id": "capability.workspace-checkforwardedflags",
       "kind": "capability",
       "title": "Validate forwarded flags for scripts.",
       "source": "n00t/capabilities/manifest.json#workspace.checkForwardedFlags",
-      "tags": [
-        "workspace"
-      ]
+      "tags": ["workspace"]
     },
     {
       "id": "capability.workspace-checksuperrepo",
       "kind": "capability",
       "title": "Check superrepo consistency and prerequisites.",
       "source": "n00t/capabilities/manifest.json#workspace.checkSuperrepo",
-      "tags": [
-        "workspace",
-        "superrepo"
-      ]
+      "tags": ["workspace", "superrepo"]
     },
     {
       "id": "capability.workspace-createdefaultuibundle",
       "kind": "capability",
       "title": "Create default UI bundle.",
       "source": "n00t/capabilities/manifest.json#workspace.createDefaultUiBundle",
-      "tags": [
-        "ui",
-        "bundle"
-      ]
+      "tags": ["ui", "bundle"]
     },
     {
       "id": "capability.workspace-createvalestubstyles",
       "kind": "capability",
       "title": "Generate Vale stub styles for docs linting.",
       "source": "n00t/capabilities/manifest.json#workspace.createValeStubStyles",
-      "tags": [
-        "docs",
-        "vale"
-      ]
+      "tags": ["docs", "vale"]
     },
     {
       "id": "capability.workspace-fetchsyft",
       "kind": "capability",
       "title": "Fetch Syft binary for SBOM generation.",
       "source": "n00t/capabilities/manifest.json#workspace.fetchSyft",
-      "tags": [
-        "sbom",
-        "syft"
-      ]
+      "tags": ["sbom", "syft"]
     },
     {
       "id": "capability.workspace-findnxrefs",
       "kind": "capability",
       "title": "Find Nx references in the workspace.",
       "source": "n00t/capabilities/manifest.json#workspace.findNxRefs",
-      "tags": [
-        "nx"
-      ]
+      "tags": ["nx"]
     },
     {
       "id": "capability.workspace-installhooks",
       "kind": "capability",
       "title": "Install workspace git hooks.",
       "source": "n00t/capabilities/manifest.json#workspace.installHooks",
-      "tags": [
-        "hooks"
-      ]
+      "tags": ["hooks"]
     },
     {
       "id": "capability.workspace-pythoncachekey",
       "kind": "capability",
       "title": "Generate Python cache key for workflows.",
       "source": "n00t/capabilities/manifest.json#workspace.pythonCacheKey",
-      "tags": [
-        "python",
-        "cache"
-      ]
+      "tags": ["python", "cache"]
     },
     {
       "id": "capability.workspace-refreshpythonlock",
       "kind": "capability",
       "title": "Refresh Python lockfiles.",
       "source": "n00t/capabilities/manifest.json#workspace.refreshPythonLock",
-      "tags": [
-        "python",
-        "dependencies"
-      ]
+      "tags": ["python", "dependencies"]
     },
     {
       "id": "capability.workspace-removenxcache",
       "kind": "capability",
       "title": "Remove Nx cache directories.",
       "source": "n00t/capabilities/manifest.json#workspace.removeNxCache",
-      "tags": [
-        "nx",
-        "cache"
-      ]
+      "tags": ["nx", "cache"]
     },
     {
       "id": "capability.workspace-runvaletermscandidatestest",
       "kind": "capability",
       "title": "Run Vale terms candidates test script.",
       "source": "n00t/capabilities/manifest.json#workspace.runValeTermsCandidatesTest",
-      "tags": [
-        "vale",
-        "docs"
-      ]
+      "tags": ["vale", "docs"]
     },
     {
       "id": "capability.workspace-setuppnpm",
       "kind": "capability",
       "title": "Install/setup pnpm for the workspace.",
       "source": "n00t/capabilities/manifest.json#workspace.setupPnpm",
-      "tags": [
-        "pnpm",
-        "setup"
-      ]
+      "tags": ["pnpm", "setup"]
     },
     {
       "id": "capability.workspace-synccontributing",
       "kind": "capability",
       "title": "Sync contributing guides across the workspace.",
       "source": "n00t/capabilities/manifest.json#workspace.syncContributing",
-      "tags": [
-        "docs",
-        "contributing"
-      ]
+      "tags": ["docs", "contributing"]
     },
     {
       "id": "capability.workspace-syncecosystem",
       "kind": "capability",
       "title": "Sync ecosystem metadata/templates.",
       "source": "n00t/capabilities/manifest.json#workspace.syncEcosystem",
-      "tags": [
-        "ecosystem"
-      ]
+      "tags": ["ecosystem"]
     },
     {
       "id": "capability.workspace-syncenvtemplates",
       "kind": "capability",
       "title": "Sync environment template files across repos.",
       "source": "n00t/capabilities/manifest.json#workspace.syncEnvTemplates",
-      "tags": [
-        "env",
-        "templates"
-      ]
+      "tags": ["env", "templates"]
     },
     {
       "id": "capability.workspace-syncnodeversion",
       "kind": "capability",
       "title": "Synchronize Node version pins across repos.",
       "source": "n00t/capabilities/manifest.json#workspace.syncNodeVersion",
-      "tags": [
-        "node",
-        "versions"
-      ]
+      "tags": ["node", "versions"]
     },
     {
       "id": "capability.workspace-syncpythonversion",
       "kind": "capability",
       "title": "Synchronize Python version pins across repos.",
       "source": "n00t/capabilities/manifest.json#workspace.syncPythonVersion",
-      "tags": [
-        "python",
-        "versions"
-      ]
+      "tags": ["python", "versions"]
     },
     {
       "id": "capability.workspace-syncvenvs",
       "kind": "capability",
       "title": "Sync or recreate Python virtual environments across repos.",
       "source": "n00t/capabilities/manifest.json#workspace.syncVenvs",
-      "tags": [
-        "python",
-        "venv"
-      ]
+      "tags": ["python", "venv"]
     },
     {
       "id": "capability.workspace-tagpropagate",
       "kind": "capability",
       "title": "Propagate git tags across the workspace.",
       "source": "n00t/capabilities/manifest.json#workspace.tagPropagate",
-      "tags": [
-        "git",
-        "tags"
-      ]
+      "tags": ["git", "tags"]
     },
     {
       "id": "capability.workspace-tidysubmodules",
       "kind": "capability",
       "title": "Tidy submodules (git clean) with safety checks.",
       "source": "n00t/capabilities/manifest.json#workspace.tidySubmodules",
-      "tags": [
-        "git",
-        "submodules"
-      ]
+      "tags": ["git", "submodules"]
     },
     {
       "id": "capability.workspace-qa",
       "kind": "capability",
       "title": "Run workspace QA helper script.",
       "source": "n00t/capabilities/manifest.json#workspace.qa",
-      "tags": [
-        "workspace",
-        "qa"
-      ]
+      "tags": ["workspace", "qa"]
     },
     {
       "id": "capability.workspace-example",
       "kind": "capability",
       "title": "Run the example workspace helper script.",
       "source": "n00t/capabilities/manifest.json#workspace.example",
-      "tags": [
-        "example"
-      ]
+      "tags": ["example"]
     },
     {
       "id": "capability.workspace-fetchantoralocalclone",
       "kind": "capability",
       "title": "Clone Antora content locally for docs development.",
       "source": "n00t/capabilities/manifest.json#workspace.fetchAntoraLocalClone",
-      "tags": [
-        "docs",
-        "antora"
-      ]
+      "tags": ["docs", "antora"]
     },
     {
       "id": "capability.ai-workflow-utils",
       "kind": "capability",
       "title": "Utility functions for AI workflows (logging/progress).",
       "source": "n00t/capabilities/manifest.json#ai.workflow.utils",
-      "tags": [
-        "ai",
-        "workflow"
-      ]
+      "tags": ["ai", "workflow"]
     },
     {
       "id": "capability.dependencies-check",
@@ -1384,221 +1019,140 @@
       "kind": "capability",
       "title": "Validate metadata-bearing artefacts and register them in the unified project catalog.",
       "source": "n00t/capabilities/manifest.json#project.capture",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "capability.project-sync-github",
       "kind": "capability",
       "title": "Plan GitHub project synchronisation using the unified metadata registry.",
       "source": "n00t/capabilities/manifest.json#project.sync.github",
-      "tags": [
-        "project-management",
-        "automation",
-        "github"
-      ]
+      "tags": ["project-management", "automation", "github"]
     },
     {
       "id": "capability.project-sync-erpnext",
       "kind": "capability",
       "title": "Plan ERPNext project synchronisation using the unified metadata registry.",
       "source": "n00t/capabilities/manifest.json#project.sync.erpnext",
-      "tags": [
-        "project-management",
-        "automation",
-        "erpnext"
-      ]
+      "tags": ["project-management", "automation", "erpnext"]
     },
     {
       "id": "capability.project-preflight",
       "kind": "capability",
       "title": "Chain capture plus sync checks and enforce readiness gates before kicking off delivery work.",
       "source": "n00t/capabilities/manifest.json#project.preflight",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "capability.project-batchpreflight",
       "kind": "capability",
       "title": "Run preflight across registry-sourced metadata (or explicit paths) to expose GitHub ↔ ERPNext drift.",
       "source": "n00t/capabilities/manifest.json#project.batchPreflight",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "capability.project-recordidea",
       "kind": "capability",
       "title": "Scaffold a new idea with metadata, register it, and surface automation impacts.",
       "source": "n00t/capabilities/manifest.json#project.recordIdea",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "capability.project-recordjob",
       "kind": "capability",
       "title": "Create a frontier-grade job record with metadata, register it, and surface impacts.",
       "source": "n00t/capabilities/manifest.json#project.recordJob",
-      "tags": [
-        "project-management",
-        "automation",
-        "delivery"
-      ]
+      "tags": ["project-management", "automation", "delivery"]
     },
     {
       "id": "capability.project-ingestmarkdown",
       "kind": "capability",
       "title": "Attach metadata to existing markdown documents and register them in the catalog.",
       "source": "n00t/capabilities/manifest.json#project.ingestMarkdown",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "capability.project-lifecycleradar",
       "kind": "capability",
       "title": "Summarise lifecycle readiness gaps across metadata-bearing artefacts.",
       "source": "n00t/capabilities/manifest.json#project.lifecycleRadar",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "capability.project-controlpanel",
       "kind": "capability",
       "title": "Regenerate the control panel markdown snapshot for lifecycle + readiness dashboards.",
       "source": "n00t/capabilities/manifest.json#project.controlPanel",
-      "tags": [
-        "project",
-        "control-panel",
-        "readiness"
-      ]
+      "tags": ["project", "control-panel", "readiness"]
     },
     {
       "id": "capability.project-controltowerhealth",
       "kind": "capability",
       "title": "Run the five-step control tower health sweep across docs, cortex, and tests.",
       "source": "n00t/capabilities/manifest.json#project.controlTowerHealth",
-      "tags": [
-        "project",
-        "control-tower",
-        "health"
-      ]
+      "tags": ["project", "control-tower", "health"]
     },
     {
       "id": "capability.project-autofixlinks",
       "kind": "capability",
       "title": "Repair metadata link blocks (canonical paths, reciprocal references, artefact logging).",
       "source": "n00t/capabilities/manifest.json#project.autofixLinks",
-      "tags": [
-        "project-management",
-        "automation",
-        "governance"
-      ]
+      "tags": ["project-management", "automation", "governance"]
     },
     {
       "id": "capability.workspace-repair",
       "kind": "capability",
       "title": "Dry-run (or apply) workspace auto-remediation: skeleton apply, submodule sync, safe clean, branch ensure.",
       "source": "n00t/capabilities/manifest.json#workspace.repair",
-      "tags": [
-        "workspace",
-        "health",
-        "repair"
-      ]
+      "tags": ["workspace", "health", "repair"]
     },
     {
       "id": "capability.workspace-graph",
       "kind": "capability",
       "title": "Export live capability+data graph and capability health artifacts for dashboards/agents.",
       "source": "n00t/capabilities/manifest.json#workspace.graph",
-      "tags": [
-        "graph",
-        "capabilities",
-        "observability"
-      ]
+      "tags": ["graph", "capabilities", "observability"]
     },
     {
       "id": "capability.workspace-policysync",
       "kind": "capability",
       "title": "Ingest frontiers → regenerate cortex schemas → sync docs → refresh releases.yaml.",
       "source": "n00t/capabilities/manifest.json#workspace.policySync",
-      "tags": [
-        "docs",
-        "schemas",
-        "templates"
-      ]
+      "tags": ["docs", "schemas", "templates"]
     },
     {
       "id": "capability.workspace-tokensdrift",
       "kind": "capability",
       "title": "Detect design token drift and validate orchestrator contract (n00plicate).",
       "source": "n00t/capabilities/manifest.json#workspace.tokensDrift",
-      "tags": [
-        "design-tokens",
-        "drift",
-        "quality"
-      ]
+      "tags": ["design-tokens", "drift", "quality"]
     },
     {
       "id": "capability.workspace-toolchainpins",
       "kind": "capability",
       "title": "Validate Node/pnpm pins against n00-cortex toolchain manifest across subrepos.",
       "source": "n00t/capabilities/manifest.json#workspace.toolchainPins",
-      "tags": [
-        "toolchain",
-        "drift",
-        "node",
-        "pnpm"
-      ]
+      "tags": ["toolchain", "drift", "node", "pnpm"]
     },
     {
       "id": "capability.search-typesensefreshness",
       "kind": "capability",
       "title": "Fail if Typesense reindex logs are older than the max age (default 7d).",
       "source": "n00t/capabilities/manifest.json#search.typesenseFreshness",
-      "tags": [
-        "typesense",
-        "freshness",
-        "docs"
-      ]
+      "tags": ["typesense", "freshness", "docs"]
     },
     {
       "id": "capability.fusion-ragpack",
       "kind": "capability",
       "title": "Publish latest n00clear-fusion export as a mountable RAG pack for agents.",
       "source": "n00t/capabilities/manifest.json#fusion.ragPack",
-      "tags": [
-        "rag",
-        "fusion",
-        "corpus"
-      ]
+      "tags": ["rag", "fusion", "corpus"]
     },
     {
       "id": "capability.horizons-planevalsync",
       "kind": "capability",
       "title": "Index planner telemetry for n00-school evaluation pipelines.",
       "source": "n00t/capabilities/manifest.json#horizons.planEvalSync",
-      "tags": [
-        "planning",
-        "evaluation",
-        "school"
-      ]
+      "tags": ["planning", "evaluation", "school"]
     },
     {
       "id": "run-workspace-gitdoctor-20251121t040057z",
@@ -1707,9 +1261,7 @@
       "kind": "run",
       "title": "fusion export: demo-template",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-20T23:46:07.585509+00:00",
@@ -1727,9 +1279,7 @@
       "kind": "run",
       "title": "fusion export: demo-template",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-20T23:51:44.856646+00:00",
@@ -1742,9 +1292,7 @@
       "kind": "run",
       "title": "pdf ingest Designing Brand Identity_ A Comprehensive Guide to the World -- Alina Wheeler, Rob Meyerson -- 6, PT, 2024 -- Wiley & Sons, Incorporated, John -- 9781119984818 -- 70ffa76ffb16b044cc3f32317f364e53 -- Anna’s Archive.pdf",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-21T00:20:24.352445+00:00",
@@ -1773,9 +1321,7 @@
       "kind": "run",
       "title": "embeddings generated for designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-21T00:29:08.376918+00:00",
@@ -1793,9 +1339,7 @@
       "kind": "run",
       "title": "generated templates for designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-21T00:35:35.685468+00:00",
@@ -1833,9 +1377,7 @@
       "kind": "run",
       "title": "embeddings generated for designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive (backend=hashed)",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-21T00:47:22.970556+00:00",
@@ -1848,9 +1390,7 @@
       "kind": "run",
       "title": "embeddings generated for designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive (backend=auto)",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-21T01:04:29.837362+00:00",
@@ -1863,9 +1403,7 @@
       "kind": "run",
       "title": "embeddings generated for designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive (backend=hashed)",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-21T01:04:57.981956+00:00",
@@ -1878,9 +1416,7 @@
       "kind": "run",
       "title": "generated templates for designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-21T01:24:03.066927+00:00",
@@ -1898,9 +1434,7 @@
       "kind": "run",
       "title": "embeddings generated for designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive (backend=hashed)",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-21T01:28:40.977855+00:00",
@@ -1913,9 +1447,7 @@
       "kind": "run",
       "title": "embeddings generated for designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive (backend=hashed)",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-21T01:53:55.375375+00:00",
@@ -1928,9 +1460,7 @@
       "kind": "run",
       "title": "ingest branding",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-25T21:46:38.862601+00:00",
@@ -1959,9 +1489,7 @@
       "kind": "run",
       "title": "embeddings generated for branding (backend=hashed)",
       "source": ".dev/automation/artifacts/automation/run-envelopes.jsonl",
-      "tags": [
-        "n00clear-fusion"
-      ],
+      "tags": ["n00clear-fusion"],
       "metadata": {
         "status": "success",
         "started_at": "2025-11-25T21:46:39.108221+00:00",
@@ -1980,10 +1508,7 @@
       "title": "data/README.md",
       "version": "1.0.0",
       "source": "n00-cortex/data/README.md",
-      "tags": [
-        "data-governance",
-        "canonical"
-      ]
+      "tags": ["data-governance", "canonical"]
     },
     {
       "id": "doc.data-brand-json",
@@ -1991,10 +1516,7 @@
       "title": "data/brand.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/brand.json",
-      "tags": [
-        "brand",
-        "canonical"
-      ]
+      "tags": ["brand", "canonical"]
     },
     {
       "id": "doc.data-brand-yaml",
@@ -2002,10 +1524,7 @@
       "title": "data/brand.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/brand.yaml",
-      "tags": [
-        "brand",
-        "canonical"
-      ]
+      "tags": ["brand", "canonical"]
     },
     {
       "id": "doc.data-catalog-boilerplates-json",
@@ -2013,10 +1532,7 @@
       "title": "data/catalog/boilerplates.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/boilerplates.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-docs-manifest-json",
@@ -2024,10 +1540,7 @@
       "title": "data/catalog/docs-manifest.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/docs-manifest.json",
-      "tags": [
-        "metadata",
-        "canonical"
-      ]
+      "tags": ["metadata", "canonical"]
     },
     {
       "id": "doc.data-catalog-frontiers-assets-json",
@@ -2035,10 +1548,7 @@
       "title": "data/catalog/frontiers-assets.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/frontiers-assets.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-frontiers-assets-yaml",
@@ -2046,10 +1556,7 @@
       "title": "data/catalog/frontiers-assets.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/frontiers-assets.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-frontiers-metadata-json",
@@ -2057,10 +1564,7 @@
       "title": "data/catalog/frontiers-metadata.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/frontiers-metadata.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-frontiers-metadata-yaml",
@@ -2068,10 +1572,7 @@
       "title": "data/catalog/frontiers-metadata.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/frontiers-metadata.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-frontiers-templates-json",
@@ -2079,10 +1580,7 @@
       "title": "data/catalog/frontiers-templates.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/frontiers-templates.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-frontiers-templates-lock-json",
@@ -2090,10 +1588,7 @@
       "title": "data/catalog/frontiers-templates.lock.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/frontiers-templates.lock.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-frontiers-templates-yaml",
@@ -2101,10 +1596,7 @@
       "title": "data/catalog/frontiers-templates.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/frontiers-templates.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-fusion-datasets-json",
@@ -2112,10 +1604,7 @@
       "title": "data/catalog/fusion-datasets.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/fusion-datasets.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-fusion-datasets-lock-json",
@@ -2123,10 +1612,7 @@
       "title": "data/catalog/fusion-datasets.lock.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/fusion-datasets.lock.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-fusion-datasets-yaml",
@@ -2134,10 +1620,7 @@
       "title": "data/catalog/fusion-datasets.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/fusion-datasets.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-graph-example-json",
@@ -2145,10 +1628,7 @@
       "title": "data/catalog/graph.example.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/graph.example.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-graph-json",
@@ -2156,10 +1636,7 @@
       "title": "data/catalog/graph.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/graph.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-project-kits-json",
@@ -2167,10 +1644,7 @@
       "title": "data/catalog/project-kits.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/project-kits.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-project-tags-yaml",
@@ -2178,10 +1652,7 @@
       "title": "data/catalog/project-tags.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/project-tags.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-projects-json",
@@ -2189,10 +1660,7 @@
       "title": "data/catalog/projects.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/projects.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-catalog-template-schema-map-json",
@@ -2200,10 +1668,7 @@
       "title": "data/catalog/template-schema-map.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/catalog/template-schema-map.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-components-button-json",
@@ -2211,10 +1676,7 @@
       "title": "data/components/button.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/components/button.json",
-      "tags": [
-        "component-library",
-        "canonical"
-      ]
+      "tags": ["component-library", "canonical"]
     },
     {
       "id": "doc.data-dependency-overrides-n00-frontiers-json",
@@ -2222,10 +1684,7 @@
       "title": "data/dependency-overrides/n00-frontiers.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/dependency-overrides/n00-frontiers.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-ai-guardrail-json",
@@ -2233,10 +1692,7 @@
       "title": "data/examples/ai-guardrail.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/ai-guardrail.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-ai-guardrail-yaml",
@@ -2244,10 +1700,7 @@
       "title": "data/examples/ai-guardrail.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/ai-guardrail.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-boilerplate-json",
@@ -2255,10 +1708,7 @@
       "title": "data/examples/boilerplate.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/boilerplate.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-boilerplate-yaml",
@@ -2266,10 +1716,7 @@
       "title": "data/examples/boilerplate.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/boilerplate.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-id-examples-json",
@@ -2277,10 +1724,7 @@
       "title": "data/examples/id-examples.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/id-examples.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-manifesto-doc-json",
@@ -2288,10 +1732,7 @@
       "title": "data/examples/manifesto-doc.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/manifesto-doc.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-manifesto-doc-yaml",
@@ -2299,10 +1740,7 @@
       "title": "data/examples/manifesto-doc.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/manifesto-doc.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-project-kit-json",
@@ -2310,10 +1748,7 @@
       "title": "data/examples/project-kit.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/project-kit.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-project-kit-yaml",
@@ -2321,10 +1756,7 @@
       "title": "data/examples/project-kit.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/project-kit.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-examples-run-envelope-json",
@@ -2332,10 +1764,7 @@
       "title": "data/examples/run-envelope.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/examples/run-envelope.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-boilerplates-node-api-json",
@@ -2343,10 +1772,7 @@
       "title": "data/exports/boilerplates/node-api.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/boilerplates/node-api.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-boilerplates-node-api-yaml",
@@ -2354,10 +1780,7 @@
       "title": "data/exports/boilerplates/node-api.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/boilerplates/node-api.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-boilerplates-react-spa-json",
@@ -2365,10 +1788,7 @@
       "title": "data/exports/boilerplates/react-spa.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/boilerplates/react-spa.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-boilerplates-react-spa-yaml",
@@ -2376,10 +1796,7 @@
       "title": "data/exports/boilerplates/react-spa.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/boilerplates/react-spa.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-canonical-brand-brand-trust-and-security-json",
@@ -2387,10 +1804,7 @@
       "title": "data/exports/canonical/brand/brand-trust-and-security.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/canonical/brand/brand-trust-and-security.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-canonical-brand-brand-trust-and-security-yaml",
@@ -2398,10 +1812,7 @@
       "title": "data/exports/canonical/brand/brand-trust-and-security.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/canonical/brand/brand-trust-and-security.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-canonical-charter-architecture-overview-json",
@@ -2409,10 +1820,7 @@
       "title": "data/exports/canonical/charter/architecture-overview.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/canonical/charter/architecture-overview.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-canonical-charter-architecture-overview-yaml",
@@ -2420,10 +1828,7 @@
       "title": "data/exports/canonical/charter/architecture-overview.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/canonical/charter/architecture-overview.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-canonical-playbooks-coding-standards-json",
@@ -2431,10 +1836,7 @@
       "title": "data/exports/canonical/playbooks/coding-standards.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/canonical/playbooks/coding-standards.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-canonical-playbooks-coding-standards-yaml",
@@ -2442,10 +1844,7 @@
       "title": "data/exports/canonical/playbooks/coding-standards.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/canonical/playbooks/coding-standards.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-canonical-playbooks-test-strategy-json",
@@ -2453,10 +1852,7 @@
       "title": "data/exports/canonical/playbooks/test-strategy.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/canonical/playbooks/test-strategy.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-canonical-playbooks-test-strategy-yaml",
@@ -2464,10 +1860,7 @@
       "title": "data/exports/canonical/playbooks/test-strategy.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/canonical/playbooks/test-strategy.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-docs-only-json",
@@ -2475,10 +1868,7 @@
       "title": "data/exports/frontiers/templates/docs-only.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/docs-only.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-docs-only-yaml",
@@ -2486,10 +1876,7 @@
       "title": "data/exports/frontiers/templates/docs-only.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/docs-only.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-go-service-json",
@@ -2497,10 +1884,7 @@
       "title": "data/exports/frontiers/templates/go-service.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/go-service.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-go-service-yaml",
@@ -2508,10 +1892,7 @@
       "title": "data/exports/frontiers/templates/go-service.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/go-service.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-index-json",
@@ -2519,10 +1900,7 @@
       "title": "data/exports/frontiers/templates/index.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/index.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-index-yaml",
@@ -2530,10 +1908,7 @@
       "title": "data/exports/frontiers/templates/index.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/index.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-node-service-json",
@@ -2541,10 +1916,7 @@
       "title": "data/exports/frontiers/templates/node-service.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/node-service.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-node-service-yaml",
@@ -2552,10 +1924,7 @@
       "title": "data/exports/frontiers/templates/node-service.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/node-service.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-project-management-json",
@@ -2563,10 +1932,7 @@
       "title": "data/exports/frontiers/templates/project-management.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/project-management.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-project-management-yaml",
@@ -2574,10 +1940,7 @@
       "title": "data/exports/frontiers/templates/project-management.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/project-management.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-python-service-json",
@@ -2585,10 +1948,7 @@
       "title": "data/exports/frontiers/templates/python-service.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/python-service.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-python-service-yaml",
@@ -2596,10 +1956,7 @@
       "title": "data/exports/frontiers/templates/python-service.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/python-service.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-react-webapp-json",
@@ -2607,10 +1964,7 @@
       "title": "data/exports/frontiers/templates/react-webapp.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/react-webapp.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-frontiers-templates-react-webapp-yaml",
@@ -2618,10 +1972,7 @@
       "title": "data/exports/frontiers/templates/react-webapp.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/frontiers/templates/react-webapp.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-project-kits-branding-json",
@@ -2629,10 +1980,7 @@
       "title": "data/exports/project-kits/branding.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/project-kits/branding.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-project-kits-branding-yaml",
@@ -2640,10 +1988,7 @@
       "title": "data/exports/project-kits/branding.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/project-kits/branding.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-project-kits-web-app-json",
@@ -2651,10 +1996,7 @@
       "title": "data/exports/project-kits/web-app.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/project-kits/web-app.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-exports-project-kits-web-app-yaml",
@@ -2662,10 +2004,7 @@
       "title": "data/exports/project-kits/web-app.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/exports/project-kits/web-app.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-fusion-gitkeep",
@@ -2673,10 +2012,7 @@
       "title": "data/fusion/.gitkeep",
       "version": "1.0.0",
       "source": "n00-cortex/data/fusion/.gitkeep",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-fusion-branding-ingest-report-json",
@@ -2684,10 +2020,7 @@
       "title": "data/fusion/branding/ingest-report.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/fusion/branding/ingest-report.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-fusion-branding-summary-json",
@@ -2695,10 +2028,7 @@
       "title": "data/fusion/branding/summary.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/fusion/branding/summary.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-fusion-branding-tag-counts-json",
@@ -2706,10 +2036,7 @@
       "title": "data/fusion/branding/tag_counts.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/fusion/branding/tag_counts.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-llms-yaml",
@@ -2717,10 +2044,7 @@
       "title": "data/llms.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/llms.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-toolchain-manifest-json",
@@ -2728,10 +2052,7 @@
       "title": "data/toolchain-manifest.json",
       "version": "1.0.0",
       "source": "n00-cortex/data/toolchain-manifest.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-trunk-readme-md",
@@ -2739,10 +2060,7 @@
       "title": "data/trunk/README.md",
       "version": "1.0.0",
       "source": "n00-cortex/data/trunk/README.md",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-trunk-base-trunk-gitignore",
@@ -2750,10 +2068,7 @@
       "title": "data/trunk/base/.trunk/.gitignore",
       "version": "1.0.0",
       "source": "n00-cortex/data/trunk/base/.trunk/.gitignore",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.data-trunk-base-trunk-trunk-yaml",
@@ -2761,10 +2076,7 @@
       "title": "data/trunk/base/.trunk/trunk.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/data/trunk/base/.trunk/trunk.yaml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-gitignore",
@@ -2772,10 +2084,7 @@
       "title": "docs/.gitignore",
       "version": "1.0.0",
       "source": "n00-cortex/docs/.gitignore",
-      "tags": [
-        "docs-tooling",
-        "boilerplate"
-      ]
+      "tags": ["docs-tooling", "boilerplate"]
     },
     {
       "id": "doc.docs-docusaurus-migration-adoc",
@@ -2783,10 +2092,7 @@
       "title": "docs/DOCUSAURUS_MIGRATION.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/DOCUSAURUS_MIGRATION.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-readme-md",
@@ -2794,10 +2100,7 @@
       "title": "docs/README.md",
       "version": "1.0.0",
       "source": "n00-cortex/docs/README.md",
-      "tags": [
-        "docs-tooling",
-        "boilerplate"
-      ]
+      "tags": ["docs-tooling", "boilerplate"]
     },
     {
       "id": "doc.docs-tags-md",
@@ -2805,10 +2108,7 @@
       "title": "docs/TAGS.md",
       "version": "1.0.0",
       "source": "n00-cortex/docs/TAGS.md",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-revamp-plan-md",
@@ -2816,10 +2116,7 @@
       "title": "docs/_revamp-plan.md",
       "version": "1.0.0",
       "source": "n00-cortex/docs/_revamp-plan.md",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-adr-adr-010-typescript7-alignment-md",
@@ -2827,10 +2124,7 @@
       "title": "docs/adr/ADR-010-typescript7-alignment.md",
       "version": "1.0.0",
       "source": "n00-cortex/docs/adr/ADR-010-typescript7-alignment.md",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-antora-yml",
@@ -2838,10 +2132,7 @@
       "title": "docs/antora.yml",
       "version": "1.0.0",
       "source": "n00-cortex/docs/antora.yml",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-automation-ll-14-01-25-frontier-ops-control-plane-enablement-md",
@@ -2849,10 +2140,7 @@
       "title": "docs/automation/LL-14-01-25-frontier-ops-control-plane-enablement.md",
       "version": "1.0.0",
       "source": "n00-cortex/docs/automation/LL-14-01-25-frontier-ops-control-plane-enablement.md",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-manifesto-md",
@@ -2860,10 +2148,7 @@
       "title": "docs/manifesto.md",
       "version": "1.0.0",
       "source": "n00-cortex/docs/manifesto.md",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-nav-adoc",
@@ -2871,10 +2156,7 @@
       "title": "docs/modules/ROOT/nav.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/nav.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-ai-usage-and-guardrails-adoc",
@@ -2882,10 +2164,7 @@
       "title": "docs/modules/ROOT/pages/ai-usage-and-guardrails.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/ai-usage-and-guardrails.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-automation-overview-adoc",
@@ -2893,10 +2172,7 @@
       "title": "docs/modules/ROOT/pages/automation-overview.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/automation-overview.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-dependency-governance-adoc",
@@ -2904,10 +2180,7 @@
       "title": "docs/modules/ROOT/pages/dependency-governance.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/dependency-governance.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-development-playbook-adoc",
@@ -2915,10 +2188,7 @@
       "title": "docs/modules/ROOT/pages/development-playbook.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/development-playbook.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-frontiers-templates-adoc",
@@ -2926,10 +2196,7 @@
       "title": "docs/modules/ROOT/pages/frontiers-templates.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/frontiers-templates.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-fusion-linkage-adoc",
@@ -2937,10 +2204,7 @@
       "title": "docs/modules/ROOT/pages/fusion-linkage.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/fusion-linkage.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-index-adoc",
@@ -2948,10 +2212,7 @@
       "title": "docs/modules/ROOT/pages/index.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/index.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-intro-adoc",
@@ -2959,10 +2220,7 @@
       "title": "docs/modules/ROOT/pages/intro.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/intro.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-manifesto-adoc",
@@ -2970,10 +2228,7 @@
       "title": "docs/modules/ROOT/pages/manifesto.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/manifesto.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-mission-vision-adoc",
@@ -2981,10 +2236,7 @@
       "title": "docs/modules/ROOT/pages/mission-vision.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/mission-vision.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-quality-gates-adoc",
@@ -2992,10 +2244,7 @@
       "title": "docs/modules/ROOT/pages/quality-gates.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/quality-gates.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-reference-tag-governance-adoc",
@@ -3003,10 +2252,7 @@
       "title": "docs/modules/ROOT/pages/reference/tag-governance.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/reference/tag-governance.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-reference-version-sync-adoc",
@@ -3014,10 +2260,7 @@
       "title": "docs/modules/ROOT/pages/reference/version-sync.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/reference/version-sync.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-modules-root-pages-repo-contract-adoc",
@@ -3025,10 +2268,7 @@
       "title": "docs/modules/ROOT/pages/repo-contract.adoc",
       "version": "1.0.0",
       "source": "n00-cortex/docs/modules/ROOT/pages/repo-contract.adoc",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-tag-governance-md",
@@ -3036,10 +2276,7 @@
       "title": "docs/tag-governance.md",
       "version": "1.0.0",
       "source": "n00-cortex/docs/tag-governance.md",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.docs-version-sync-md",
@@ -3047,10 +2284,7 @@
       "title": "docs/version-sync.md",
       "version": "1.0.0",
       "source": "n00-cortex/docs/version-sync.md",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.schemas-readme-md",
@@ -3058,10 +2292,7 @@
       "title": "schemas/README.md",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/README.md",
-      "tags": [
-        "data-contracts",
-        "canonical"
-      ]
+      "tags": ["data-contracts", "canonical"]
     },
     {
       "id": "doc.schemas-agent-capability-schema-json",
@@ -3069,10 +2300,7 @@
       "title": "schemas/agent-capability.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/agent-capability.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-agent-profile-schema-json",
@@ -3080,10 +2308,7 @@
       "title": "schemas/agent-profile.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/agent-profile.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-ai-guardrail-schema-json",
@@ -3091,10 +2316,7 @@
       "title": "schemas/ai-guardrail.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/ai-guardrail.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-boilerplate-schema-json",
@@ -3102,10 +2324,7 @@
       "title": "schemas/boilerplate.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/boilerplate.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-brand-schema-json",
@@ -3113,10 +2332,7 @@
       "title": "schemas/brand.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/brand.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-catalog-graph-schema-json",
@@ -3124,10 +2340,7 @@
       "title": "schemas/catalog-graph.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/catalog-graph.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-component-schema-json",
@@ -3135,10 +2348,7 @@
       "title": "schemas/component.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/component.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-curriculum-schema-json",
@@ -3146,10 +2356,7 @@
       "title": "schemas/curriculum.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/curriculum.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-dataset-manifest-schema-json",
@@ -3157,10 +2364,7 @@
       "title": "schemas/dataset-manifest.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/dataset-manifest.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-dependency-override-schema-json",
@@ -3168,10 +2372,7 @@
       "title": "schemas/dependency-override.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/dependency-override.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-design-readme-md",
@@ -3179,10 +2380,7 @@
       "title": "schemas/design/README.md",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/design/README.md",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.schemas-design-design-asset-schema-json",
@@ -3190,10 +2388,7 @@
       "title": "schemas/design/design-asset.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/design/design-asset.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-design-design-brief-schema-json",
@@ -3201,10 +2396,7 @@
       "title": "schemas/design/design-brief.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/design/design-brief.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-design-design-run-schema-json",
@@ -3212,10 +2404,7 @@
       "title": "schemas/design/design-run.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/design/design-run.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-docs-manifest-schema-json",
@@ -3223,10 +2412,7 @@
       "title": "schemas/docs-manifest.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/docs-manifest.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-document-metadata-schema-json",
@@ -3234,10 +2420,7 @@
       "title": "schemas/document-metadata.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/document-metadata.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-domain-corpus-schema-json",
@@ -3245,10 +2428,7 @@
       "title": "schemas/domain-corpus.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/domain-corpus.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-evaluation-result-schema-json",
@@ -3256,10 +2436,7 @@
       "title": "schemas/evaluation-result.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/evaluation-result.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-id-schema-json",
@@ -3267,10 +2444,7 @@
       "title": "schemas/id.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/id.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-manifesto-doc-schema-json",
@@ -3278,10 +2452,7 @@
       "title": "schemas/manifesto-doc.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/manifesto-doc.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-project-kit-schema-json",
@@ -3289,10 +2460,7 @@
       "title": "schemas/project-kit.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/project-kit.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-project-metadata-schema-json",
@@ -3300,10 +2468,7 @@
       "title": "schemas/project-metadata.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/project-metadata.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-run-envelope-schema-json",
@@ -3311,10 +2476,7 @@
       "title": "schemas/run-envelope.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/run-envelope.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-slices-schema-json",
@@ -3322,10 +2484,7 @@
       "title": "schemas/slices.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/slices.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-toolchain-manifest-schema-json",
@@ -3333,10 +2492,7 @@
       "title": "schemas/toolchain-manifest.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/toolchain-manifest.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.schemas-training-pipeline-schema-json",
@@ -3344,10 +2500,7 @@
       "title": "schemas/training-pipeline.schema.json",
       "version": "1.0.0",
       "source": "n00-cortex/schemas/training-pipeline.schema.json",
-      "tags": [
-        "data-contracts",
-        "ai-guardrail"
-      ]
+      "tags": ["data-contracts", "ai-guardrail"]
     },
     {
       "id": "doc.templates-readme-md",
@@ -3355,10 +2508,7 @@
       "title": "templates/README.md",
       "version": "1.0.0",
       "source": "n00-cortex/templates/README.md",
-      "tags": [
-        "templates-overview",
-        "canonical"
-      ]
+      "tags": ["templates-overview", "canonical"]
     },
     {
       "id": "doc.templates-boilerplates-node-api-codeowners",
@@ -3366,10 +2516,7 @@
       "title": "templates/boilerplates/node-api/CODEOWNERS",
       "version": "1.0.0",
       "source": "n00-cortex/templates/boilerplates/node-api/CODEOWNERS",
-      "tags": [
-        "starter-repos",
-        "boilerplate"
-      ]
+      "tags": ["starter-repos", "boilerplate"]
     },
     {
       "id": "doc.templates-boilerplates-node-api-contributing-md",
@@ -3377,10 +2524,7 @@
       "title": "templates/boilerplates/node-api/CONTRIBUTING.md",
       "version": "1.0.0",
       "source": "n00-cortex/templates/boilerplates/node-api/CONTRIBUTING.md",
-      "tags": [
-        "starter-repos",
-        "boilerplate"
-      ]
+      "tags": ["starter-repos", "boilerplate"]
     },
     {
       "id": "doc.templates-boilerplates-node-api-readme-md",
@@ -3388,10 +2532,7 @@
       "title": "templates/boilerplates/node-api/README.md",
       "version": "1.0.0",
       "source": "n00-cortex/templates/boilerplates/node-api/README.md",
-      "tags": [
-        "starter-repos",
-        "boilerplate"
-      ]
+      "tags": ["starter-repos", "boilerplate"]
     },
     {
       "id": "doc.templates-boilerplates-node-api-catalog-info-yaml",
@@ -3399,10 +2540,7 @@
       "title": "templates/boilerplates/node-api/catalog-info.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/templates/boilerplates/node-api/catalog-info.yaml",
-      "tags": [
-        "starter-repos",
-        "boilerplate"
-      ]
+      "tags": ["starter-repos", "boilerplate"]
     },
     {
       "id": "doc.templates-boilerplates-react-spa-codeowners",
@@ -3410,10 +2548,7 @@
       "title": "templates/boilerplates/react-spa/CODEOWNERS",
       "version": "1.0.0",
       "source": "n00-cortex/templates/boilerplates/react-spa/CODEOWNERS",
-      "tags": [
-        "starter-repos",
-        "boilerplate"
-      ]
+      "tags": ["starter-repos", "boilerplate"]
     },
     {
       "id": "doc.templates-boilerplates-react-spa-contributing-md",
@@ -3421,10 +2556,7 @@
       "title": "templates/boilerplates/react-spa/CONTRIBUTING.md",
       "version": "1.0.0",
       "source": "n00-cortex/templates/boilerplates/react-spa/CONTRIBUTING.md",
-      "tags": [
-        "starter-repos",
-        "boilerplate"
-      ]
+      "tags": ["starter-repos", "boilerplate"]
     },
     {
       "id": "doc.templates-boilerplates-react-spa-readme-md",
@@ -3432,10 +2564,7 @@
       "title": "templates/boilerplates/react-spa/README.md",
       "version": "1.0.0",
       "source": "n00-cortex/templates/boilerplates/react-spa/README.md",
-      "tags": [
-        "starter-repos",
-        "boilerplate"
-      ]
+      "tags": ["starter-repos", "boilerplate"]
     },
     {
       "id": "doc.templates-boilerplates-react-spa-catalog-info-yaml",
@@ -3443,10 +2572,7 @@
       "title": "templates/boilerplates/react-spa/catalog-info.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/templates/boilerplates/react-spa/catalog-info.yaml",
-      "tags": [
-        "starter-repos",
-        "boilerplate"
-      ]
+      "tags": ["starter-repos", "boilerplate"]
     },
     {
       "id": "doc.templates-canonical-brand-brand-trust-and-security-md",
@@ -3454,10 +2580,7 @@
       "title": "templates/canonical/brand/brand-trust-and-security.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/canonical/brand/brand-trust-and-security.md",
-      "tags": [
-        "brand",
-        "canonical"
-      ]
+      "tags": ["brand", "canonical"]
     },
     {
       "id": "doc.templates-canonical-charter-architecture-overview-md",
@@ -3465,10 +2588,7 @@
       "title": "templates/canonical/charter/architecture-overview.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/canonical/charter/architecture-overview.md",
-      "tags": [
-        "org-charter",
-        "canonical"
-      ]
+      "tags": ["org-charter", "canonical"]
     },
     {
       "id": "doc.templates-canonical-playbooks-coding-standards-md",
@@ -3476,10 +2596,7 @@
       "title": "templates/canonical/playbooks/coding-standards.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/canonical/playbooks/coding-standards.md",
-      "tags": [
-        "delivery-playbooks",
-        "canonical"
-      ]
+      "tags": ["delivery-playbooks", "canonical"]
     },
     {
       "id": "doc.templates-canonical-playbooks-test-strategy-md",
@@ -3487,10 +2604,7 @@
       "title": "templates/canonical/playbooks/test-strategy.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/canonical/playbooks/test-strategy.md",
-      "tags": [
-        "delivery-playbooks",
-        "canonical"
-      ]
+      "tags": ["delivery-playbooks", "canonical"]
     },
     {
       "id": "doc.templates-project-kits-branding-asset-management-md",
@@ -3498,10 +2612,7 @@
       "title": "templates/project-kits/branding/ASSET_MANAGEMENT.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/project-kits/branding/ASSET_MANAGEMENT.md",
-      "tags": [
-        "branding",
-        "project-kit"
-      ]
+      "tags": ["branding", "project-kit"]
     },
     {
       "id": "doc.templates-project-kits-branding-brand-guidelines-md",
@@ -3509,10 +2620,7 @@
       "title": "templates/project-kits/branding/BRAND_GUIDELINES.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/project-kits/branding/BRAND_GUIDELINES.md",
-      "tags": [
-        "branding",
-        "project-kit"
-      ]
+      "tags": ["branding", "project-kit"]
     },
     {
       "id": "doc.templates-project-kits-branding-naming-messaging-md",
@@ -3520,10 +2628,7 @@
       "title": "templates/project-kits/branding/NAMING_MESSAGING.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/project-kits/branding/NAMING_MESSAGING.md",
-      "tags": [
-        "branding",
-        "project-kit"
-      ]
+      "tags": ["branding", "project-kit"]
     },
     {
       "id": "doc.templates-project-kits-branding-catalog-info-yaml",
@@ -3531,10 +2636,7 @@
       "title": "templates/project-kits/branding/catalog-info.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/templates/project-kits/branding/catalog-info.yaml",
-      "tags": [
-        "branding",
-        "project-kit"
-      ]
+      "tags": ["branding", "project-kit"]
     },
     {
       "id": "doc.templates-project-kits-fusion-gitkeep",
@@ -3542,10 +2644,7 @@
       "title": "templates/project-kits/fusion/.gitkeep",
       "version": "1.0.0",
       "source": "n00-cortex/templates/project-kits/fusion/.gitkeep",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.templates-project-kits-fusion-index-json",
@@ -3553,10 +2652,7 @@
       "title": "templates/project-kits/fusion/index.json",
       "version": "1.0.0",
       "source": "n00-cortex/templates/project-kits/fusion/index.json",
-      "tags": [
-        "general",
-        "canonical"
-      ]
+      "tags": ["general", "canonical"]
     },
     {
       "id": "doc.templates-project-kits-web-app-development-setup-md",
@@ -3564,10 +2660,7 @@
       "title": "templates/project-kits/web-app/DEVELOPMENT_SETUP.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/project-kits/web-app/DEVELOPMENT_SETUP.md",
-      "tags": [
-        "web-app",
-        "project-kit"
-      ]
+      "tags": ["web-app", "project-kit"]
     },
     {
       "id": "doc.templates-project-kits-web-app-project-charter-md",
@@ -3575,10 +2668,7 @@
       "title": "templates/project-kits/web-app/PROJECT_CHARTER.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/project-kits/web-app/PROJECT_CHARTER.md",
-      "tags": [
-        "web-app",
-        "project-kit"
-      ]
+      "tags": ["web-app", "project-kit"]
     },
     {
       "id": "doc.templates-project-kits-web-app-technical-specs-md",
@@ -3586,10 +2676,7 @@
       "title": "templates/project-kits/web-app/TECHNICAL_SPECS.md",
       "version": "1.1.0",
       "source": "n00-cortex/templates/project-kits/web-app/TECHNICAL_SPECS.md",
-      "tags": [
-        "web-app",
-        "project-kit"
-      ]
+      "tags": ["web-app", "project-kit"]
     },
     {
       "id": "doc.templates-project-kits-web-app-catalog-info-yaml",
@@ -3597,30 +2684,21 @@
       "title": "templates/project-kits/web-app/catalog-info.yaml",
       "version": "1.0.0",
       "source": "n00-cortex/templates/project-kits/web-app/catalog-info.yaml",
-      "tags": [
-        "web-app",
-        "project-kit"
-      ]
+      "tags": ["web-app", "project-kit"]
     },
     {
       "id": "asset.branding-chunks",
       "kind": "asset",
       "title": "branding chunks",
       "source": "n00clear-fusion/exports/branding/chunks.jsonl",
-      "tags": [
-        "fusion",
-        "chunks"
-      ]
+      "tags": ["fusion", "chunks"]
     },
     {
       "id": "asset.designing-brand-identity-a-comprehensive-guide-to-the-world-alina-wheeler-rob-meyerson-6-pt-2024-wiley-sons-incorporated-john-9781119984818-70ffa76ffb16b044cc3f32317f364e53-anna-s-archive-chunks",
       "kind": "asset",
       "title": "designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive chunks",
       "source": "n00clear-fusion/exports/designing-brand-identity--a-comprehensive-guide-to-the-world----alina-wheeler--rob-meyerson----6--pt--2024----wiley---sons--incorporated--john----9781119984818----70ffa76ffb16b044cc3f32317f364e53----anna-s-archive/chunks.jsonl",
-      "tags": [
-        "fusion",
-        "chunks"
-      ]
+      "tags": ["fusion", "chunks"]
     }
   ],
   "edges": [

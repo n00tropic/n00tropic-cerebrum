@@ -15,6 +15,7 @@ A concise, agent-facing guide for n00HQ. Keep it short, concrete, and enforceabl
 ⚠️ **Scaffolding only.** Core functionality not yet implemented.
 
 Planned features:
+
 - Workspace graph / capability health visualization
 - Automation control integration
 - Dashboard shell
@@ -60,10 +61,10 @@ When in the superrepo context:
 
 ---
 
-*For ecosystem context, see the root `AGENTS.md` in n00tropic-cerebrum.*
+_For ecosystem context, see the root `AGENTS.md` in n00tropic-cerebrum._
 
-*Status: Scaffolding only — under construction.*
+_Status: Scaffolding only — under construction._
 
 ---
 
-*Last updated: 2025-12-01*
+_Last updated: 2025-12-01_

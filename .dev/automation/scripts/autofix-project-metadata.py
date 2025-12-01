@@ -6,22 +6,22 @@ Currently normalises tag aliases to their canonical names and can insert missing
 
 from __future__ import annotations
 
-import argparse
 from datetime import date, datetime, timedelta
-from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
-
 from lib.project_metadata import (
-    MetadataLoadError,
     discover_documents,
     extract_metadata,
     load_schema,
     load_tag_taxonomy,
+    MetadataLoadError,
     normalise_date_string,
     resolve_roots,
     validate_document,
     write_metadata,
 )
+from pathlib import Path
+from typing import Dict, List, Optional, Set, Tuple
+
+import argparse
 
 
 def parse_args() -> argparse.Namespace:

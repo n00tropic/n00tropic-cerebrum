@@ -7,7 +7,7 @@
 
 set -euo pipefail
 
-repo_root="${1:-}"
+repo_root="${1-}"
 if [[ -z ${repo_root} ]]; then
 	echo "Usage: $0 <repo-path>" >&2
 	exit 1

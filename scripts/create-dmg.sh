@@ -31,8 +31,8 @@ mkdir -p "$MACOS_DIR" "$RESOURCES_DIR" "$OUT_DIR"
 
 echo "[create-dmg] Copying binary and resources…"
 cp "$PRODUCT_PATH" "$MACOS_DIR/$PRODUCT_BIN"
-if [[ -d "$BUNDLE_PATH" ]]; then
-  cp -R "$BUNDLE_PATH" "$RESOURCES_DIR/"
+if [[ -d $BUNDLE_PATH ]]; then
+	cp -R "$BUNDLE_PATH" "$RESOURCES_DIR/"
 fi
 
 echo "[create-dmg] Building icns from appiconset…"

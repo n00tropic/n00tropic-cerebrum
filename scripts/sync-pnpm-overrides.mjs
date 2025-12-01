@@ -37,7 +37,9 @@ function loadTargets() {
     const manifest = readJson(workspaceManifestPath);
     for (const repo of manifest.repos || []) {
       const eligible =
-        repo.pkg === "pnpm" || repo.language === "node" || repo.language === "mixed";
+        repo.pkg === "pnpm" ||
+        repo.language === "node" ||
+        repo.language === "mixed";
       if (eligible && repo.path) targets.add(repo.path);
     }
   }

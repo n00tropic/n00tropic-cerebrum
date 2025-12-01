@@ -21,8 +21,17 @@ const expectedPython = (manifest.toolchains?.python?.version || "").trim();
 const webhook = process.env.DISCORD_WEBHOOK;
 const argv = process.argv.slice(2);
 const asJson = argv.includes("--json");
-const workspaceManifestPath = path.join(root, "automation", "workspace.manifest.json");
-const overrideDir = path.join(root, "n00-cortex", "data", "dependency-overrides");
+const workspaceManifestPath = path.join(
+  root,
+  "automation",
+  "workspace.manifest.json",
+);
+const overrideDir = path.join(
+  root,
+  "n00-cortex",
+  "data",
+  "dependency-overrides",
+);
 
 const normalizeNode = (v) => v?.trim();
 const isLtsAlias = (v) => /^lts\b/i.test(v || "");
@@ -66,8 +75,10 @@ function parsePnpmVersion(pkgMgr) {
 const versionAccepts = (val, expected) => {
   if (!val || !expected) return false;
   if (val === expected) return true;
-  if (val.startsWith(">=") && val.replace(">=", "").trim() === expected) return true;
-  if (val.startsWith("^") && val.replace("^", "").trim() === expected) return true;
+  if (val.startsWith(">=") && val.replace(">=", "").trim() === expected)
+    return true;
+  if (val.startsWith("^") && val.replace("^", "").trim() === expected)
+    return true;
   return false;
 };
 
@@ -136,10 +147,7 @@ for (const p of paths) {
         `${p || "workspace root"} engines.node ${pkg.engines.node} != ${expectedNode}`,
       );
     }
-    if (
-      pkg.engines.pnpm &&
-      !versionAccepts(pkg.engines.pnpm, expectedPnpm)
-    ) {
+    if (pkg.engines.pnpm && !versionAccepts(pkg.engines.pnpm, expectedPnpm)) {
       issues.push(
         `${p || "workspace root"} engines.pnpm ${pkg.engines.pnpm} != ${expectedPnpm}`,
       );

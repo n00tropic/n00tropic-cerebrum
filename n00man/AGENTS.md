@@ -14,6 +14,7 @@ A concise, agent-facing guide for n00man. Keep it short, concrete, and enforceab
 ⚠️ **Scaffolding only.** Core functionality not yet implemented.
 
 Planned features:
+
 - Agent scaffolding templates
 - Governance rules and validation
 - Registration with n00t capability manifest
@@ -61,10 +62,10 @@ When in the superrepo context:
 
 ---
 
-*For ecosystem context, see the root `AGENTS.md` in n00tropic-cerebrum.*
+_For ecosystem context, see the root `AGENTS.md` in n00tropic-cerebrum._
 
-*Status: Scaffolding only — under construction.*
+_Status: Scaffolding only — under construction._
 
 ---
 
-*Last updated: 2025-12-01*
+_Last updated: 2025-12-01_

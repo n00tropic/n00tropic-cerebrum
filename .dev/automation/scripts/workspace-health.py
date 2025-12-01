@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, Iterable, List, Sequence, Tuple
+
 import argparse
 import json
 import logging
@@ -12,9 +16,6 @@ import shutil
 import subprocess  # nosec B404 - toolchain commands are workspace-managed
 import sys
 import time
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Dict, Iterable, List, Sequence, Tuple
 
 ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
@@ -171,7 +172,9 @@ def parse_status(output: str) -> Dict[str, object]:
     }
 
 
-def collect_repo_status(name: str, path: Path, *, role: str | None = None, ssot_for: List[str] | None = None) -> RepoStatus:
+def collect_repo_status(
+    name: str, path: Path, *, role: str | None = None, ssot_for: List[str] | None = None
+) -> RepoStatus:
     status = run_git(["status", "--porcelain=2", "--branch"], path)
     data = parse_status(status.stdout)
     head = run_git(["rev-parse", "--short", "HEAD"], path).stdout.strip()
@@ -325,9 +328,7 @@ def build_report(args: argparse.Namespace) -> Dict[str, object]:
     modules = load_manifest_repos() or parse_gitmodules(ROOT / ".gitmodules")
     manifest_names = {m.get("name") for m in modules if isinstance(m, dict)}
     present_git_roots = {
-        p.name: str(p)
-        for p in ROOT.iterdir()
-        if (p / ".git").exists() and p.is_dir()
+        p.name: str(p) for p in ROOT.iterdir() if (p / ".git").exists() and p.is_dir()
     }
     missing_manifest_entries = sorted(
         name for name in present_git_roots.keys() if name not in manifest_names
@@ -464,7 +465,9 @@ def run_auto_remediate(modules: List[Dict[str, str]], logs: List[str]) -> None:
     """Perform safe, opinionated fixes when requested."""
 
     # 1) Apply skeleton fixes (creates required dirs/stubs, backfills manifest)
-    skeleton_script = ROOT / ".dev" / "automation" / "scripts" / "check-workspace-skeleton.py"
+    skeleton_script = (
+        ROOT / ".dev" / "automation" / "scripts" / "check-workspace-skeleton.py"
+    )
     if skeleton_script.exists():
         logs.append("[auto] skeleton apply")
         _run_command(["python3", str(skeleton_script), "--apply"], ROOT)
@@ -479,7 +482,7 @@ def run_auto_remediate(modules: List[Dict[str, str]], logs: List[str]) -> None:
     # 4) Optionally ensure default branches exist (best-effort)
     for module in modules:
         repo_path = ROOT / module.get("path", module.get("name"))
-        for branch in (module.get("branches") or []):
+        for branch in module.get("branches") or []:
             if not branch:
                 continue
             res = run_git(["show-ref", f"refs/heads/{branch}"], repo_path)

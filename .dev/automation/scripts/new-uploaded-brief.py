@@ -3,13 +3,13 @@
 
 from __future__ import annotations
 
-import argparse
-import subprocess
 from datetime import datetime, timedelta, timezone
+from lib import project_metadata
 from pathlib import Path
 from typing import Dict, List
 
-from lib import project_metadata
+import argparse
+import subprocess
 
 
 def parse_args() -> argparse.Namespace:

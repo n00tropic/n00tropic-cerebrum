@@ -25,7 +25,7 @@ echo "[policy-sync] Linking subrepo .nvmrc files to workspace pin"
 bash "$ROOT/.dev/automation/scripts/sync-nvmrc.sh"
 
 # 1) Ingest latest templates into cortex (derives schemas/manifests).
-if [[ -x "$INGEST_SCRIPT" ]]; then
+if [[ -x $INGEST_SCRIPT ]]; then
 	[[ $MODE == "check" ]] && extra="--check" || extra=""
 	bash "$INGEST_SCRIPT" $extra
 else
@@ -34,7 +34,7 @@ else
 fi
 
 # 2) Validate cortex schemas/data after ingest.
-if [[ -d "$CORTEX_DIR" ]]; then
+if [[ -d $CORTEX_DIR ]]; then
 	pushd "$CORTEX_DIR" >/dev/null
 	if [[ ! -d node_modules ]]; then
 		echo "[policy-sync] Installing cortex deps (npm)"
@@ -49,12 +49,12 @@ if [[ -d "$CORTEX_DIR" ]]; then
 fi
 
 # 3) Sync TechDocs/Antora content from cortex/frontiers into n00menon.
-if [[ -d "$DOCS_DIR" ]]; then
+if [[ -d $DOCS_DIR ]]; then
 	node "$ROOT/scripts/sync-n00menon-docs.mjs" --write
 fi
 
 # 4) Regenerate workspace release snapshot (writes 1. Cerebrum Docs/releases.yaml).
-if [[ -x "$RELEASE_SCRIPT" ]]; then
+if [[ -x $RELEASE_SCRIPT ]]; then
 	bash "$RELEASE_SCRIPT"
 fi
 

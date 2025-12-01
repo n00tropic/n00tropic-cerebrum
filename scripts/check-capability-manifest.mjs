@@ -2,7 +2,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const root = path.resolve(path.join(path.dirname(new URL(import.meta.url).pathname), ".."));
+const root = path.resolve(
+  path.join(path.dirname(new URL(import.meta.url).pathname), ".."),
+);
 const manifestPath = path.join(root, "n00t", "capabilities", "manifest.json");
 
 function fail(msg) {
@@ -19,14 +21,20 @@ for (const cap of manifest.capabilities) {
   if (ids.has(cap.id)) fail(`duplicate id: ${cap.id}`);
   ids.add(cap.id);
   if (!cap.entrypoint) fail(`capability ${cap.id} missing entrypoint`);
-  const epPath = path.resolve(path.join(path.dirname(manifestPath), cap.entrypoint));
-  if (!fs.existsSync(epPath)) fail(`capability ${cap.id} entrypoint not found: ${cap.entrypoint}`);
+  const epPath = path.resolve(
+    path.join(path.dirname(manifestPath), cap.entrypoint),
+  );
+  if (!fs.existsSync(epPath))
+    fail(`capability ${cap.id} entrypoint not found: ${cap.entrypoint}`);
   const mode = fs.statSync(epPath).mode & 0o111;
-  if (!mode) fail(`capability ${cap.id} entrypoint not executable: ${cap.entrypoint}`);
+  if (!mode)
+    fail(`capability ${cap.id} entrypoint not executable: ${cap.entrypoint}`);
 }
 
 if (process.exitCode) {
   process.exit(process.exitCode);
 } else {
-  console.log(`[cap-manifest] OK (${manifest.capabilities.length} capabilities)`);
+  console.log(
+    `[cap-manifest] OK (${manifest.capabilities.length} capabilities)`,
+  );
 }

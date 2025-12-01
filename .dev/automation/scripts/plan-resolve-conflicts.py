@@ -3,9 +3,10 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import argparse
 import json
-from pathlib import Path
 
 
 def load_conflicts(args: argparse.Namespace) -> list[dict]:

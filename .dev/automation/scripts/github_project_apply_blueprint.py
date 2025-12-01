@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional, Tuple
+
 import argparse
 import json
 import os
@@ -10,9 +14,6 @@ import re
 import subprocess
 import sys
 import tempfile
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 REQUIRED_SCOPES = {"project", "read:project"}

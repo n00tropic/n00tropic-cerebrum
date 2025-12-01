@@ -16,7 +16,9 @@ import yaml
 ROOT = Path(__file__).resolve().parents[3]
 AGENT_CORE_SRC = ROOT / "n00t" / "packages" / "agent-core" / "src"
 N00T_SRC = ROOT / "n00t"
-DEFAULT_AGENTS_CONFIG = ROOT / "n00t" / "packages" / "agent-core" / "config" / "agents.yaml"
+DEFAULT_AGENTS_CONFIG = (
+    ROOT / "n00t" / "packages" / "agent-core" / "config" / "agents.yaml"
+)
 for candidate in (AGENT_CORE_SRC, N00T_SRC):
     if candidate.exists():
         sys.path.insert(0, str(candidate))
@@ -162,7 +164,9 @@ async def main() -> int:
     agents_config: dict[str, Any] | None = None
     if agents_config_path.exists():
         try:
-            agents_config = yaml.safe_load(agents_config_path.read_text(encoding="utf-8"))
+            agents_config = yaml.safe_load(
+                agents_config_path.read_text(encoding="utf-8")
+            )
         except Exception as exc:  # pragma: no cover - surfaced to operator
             print(
                 f"[workspace-plan-workflow] Warning: failed to load agents config {agents_config_path}: {exc}",

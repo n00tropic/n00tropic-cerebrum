@@ -3,14 +3,14 @@
 
 from __future__ import annotations
 
-import argparse
-import json
 from collections import defaultdict
 from dataclasses import dataclass
+from lib import project_metadata
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
-from lib import project_metadata
+import argparse
+import json
 
 
 @dataclass

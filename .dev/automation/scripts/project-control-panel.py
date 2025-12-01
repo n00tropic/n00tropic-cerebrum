@@ -3,13 +3,13 @@
 """Generate the Control Panel Markdown linking radar, runbooks, and preflight artefacts."""
 from __future__ import annotations
 
-import json
 from collections import defaultdict
 from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Dict, List, cast
-
 from lib import project_metadata
+from pathlib import Path
+from typing import Any, cast, Dict, List
+
+import json
 
 
 def relative(path: Path, root: Path) -> str:

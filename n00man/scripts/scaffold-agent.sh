@@ -2,11 +2,11 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-NAME="${1:-}"
-ROLE="${2:-}"
-if [[ -z "$NAME" || -z "$ROLE" ]]; then
-  echo "Usage: $0 <agent-name> <role>" >&2
-  exit 1
+NAME="${1-}"
+ROLE="${2-}"
+if [[ -z $NAME || -z $ROLE ]]; then
+	echo "Usage: $0 <agent-name> <role>" >&2
+	exit 1
 fi
 
 slug="$NAME"

@@ -7,5 +7,6 @@
 - **Subrepo wrappers**: `n00-cortex/.dev/n00-cortex/scripts/{workspace-health-wrapper.sh,skeleton-wrapper.sh}` and `n00t/.dev/n00t/scripts/{...}` forward to the root scripts when working inside those repos.
 
 Usage tips:
+
 - If a push is blocked, run `bash scripts/tidy-submodules.sh` directly to see the manifest/skeleton output.
 - Add new repos via `scripts/bootstrap-repo.sh --name <repo> --role <role>` so manifest + skeleton stay consistent.

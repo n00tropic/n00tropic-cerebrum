@@ -17,7 +17,7 @@ source "$ROOT/scripts/ensure-nvm-node.sh" 2>/dev/null || true
 mkdir -p "$ARTIFACT_DIR"
 
 echo "[token-drift] Computing current hash"
-if [[ ! -f "$TOKENS_PATH" ]]; then
+if [[ ! -f $TOKENS_PATH ]]; then
 	echo "[token-drift] tokens.json missing at $TOKENS_PATH" >&2
 	printf '{"status":"error","reason":"tokens_missing","tokens_path":"%s"}\n' "$TOKENS_PATH"
 	exit 1
@@ -27,9 +27,9 @@ current_hash=$(node "$N00PLICATE_DIR/scripts/hash-tokens.mjs")
 previous_hash=""
 drift="false"
 
-if [[ -f "$STATE_FILE" ]]; then
+if [[ -f $STATE_FILE ]]; then
 	previous_hash=$(cat "$STATE_FILE")
-	if [[ "$previous_hash" != "$current_hash" ]]; then
+	if [[ $previous_hash != "$current_hash" ]]; then
 		drift="true"
 	fi
 else
@@ -61,7 +61,8 @@ else
 	validation_reason="node_version_mismatch"
 fi
 
-generated_at=$(python3 - <<'PY'
+generated_at=$(
+	python3 - <<'PY'
 import datetime
 print(datetime.datetime.now().isoformat())
 PY

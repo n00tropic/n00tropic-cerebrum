@@ -7,15 +7,16 @@ for repos whose `.trunk/trunk.yaml` changed. It is intentionally opt-in via
 """
 from __future__ import annotations
 
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import List, Optional
+
 import argparse
 import logging
 import re
 import shutil
 import subprocess
 import sys
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import List, Optional
 
 ROOT = Path(__file__).resolve().parents[3]
 SYNC_SCRIPT = ROOT / ".dev" / "automation" / "scripts" / "sync-trunk.py"
