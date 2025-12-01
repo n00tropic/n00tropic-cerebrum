@@ -13,6 +13,20 @@ DOCS_DIR="$ROOT/1. Cerebrum Docs"
 MANIFEST="$DOCS_DIR/releases.yaml"
 STARTED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 SUMMARY="Release manifest generated"
+DRY_RUN=0
+RELEASE_VERSION=""
+
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	--dry-run)
+		DRY_RUN=1
+		;;
+	*)
+		RELEASE_VERSION="$1"
+		;;
+	esac
+	shift
+done
 
 log() {
 	printf '[workspace-release] %s\n' "$1"
@@ -66,14 +80,22 @@ write_manifest_entry() {
 }
 
 log "Verifying cleanliness"
-require_clean_tree "n00-frontiers"
-require_clean_tree "n00-cortex"
-require_clean_tree "n00t"
-require_clean_tree "n00tropic"
-require_clean_tree "n00plicate"
+if [[ $DRY_RUN -eq 0 ]]; then
+	require_clean_tree "n00-frontiers"
+	require_clean_tree "n00-cortex"
+	require_clean_tree "n00t"
+	require_clean_tree "n00tropic"
+	require_clean_tree "n00plicate"
+else
+	log "Dry-run: skipping clean-tree enforcement"
+fi
 
 log "Running cross-repo consistency check"
-"$SCRIPTS_DIR/check-cross-repo-consistency.py" --json "$ROOT/.dev/automation/artifacts/dependencies/cross-repo.json"
+if [[ $DRY_RUN -eq 0 ]]; then
+	"$SCRIPTS_DIR/check-cross-repo-consistency.py" --json "$ROOT/.dev/automation/artifacts/dependencies/cross-repo.json"
+else
+	log "Dry-run: skipping cross-repo consistency check"
+fi
 
 log "Collecting release tags"
 frontiers_tag=$(get_latest_tag "n00-frontiers")
@@ -83,6 +105,9 @@ n00tropic_tag=$(get_latest_tag "n00tropic")
 n00plicate_tag=$(get_latest_tag "n00plicate")
 
 release_version=${1:-"$(date +%Y.%m.%d)"}
+if [[ -n $RELEASE_VERSION ]]; then
+	release_version="$RELEASE_VERSION"
+fi
 
 log "Writing release manifest -> $MANIFEST"
 mkdir -p "$DOCS_DIR"
