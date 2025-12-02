@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
-import pytest
+from n00man.core import (
+    AgentGovernanceError,
+    AgentGovernanceValidator,
+    build_agent_profile,
+)
 
-from n00man.core import (AgentGovernanceError, AgentGovernanceValidator,
-                         build_agent_profile)
+import pytest
 
 
 def _base_capabilities() -> list[dict[str, object]]:

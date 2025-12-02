@@ -2,16 +2,14 @@
 
 from __future__ import annotations
 
-import json
+from .profile import AgentProfile
+from jsonschema import Draft202012Validator  # type: ignore[import-not-found]
+from jsonschema.exceptions import ValidationError  # type: ignore[import-not-found]
 from pathlib import Path
 from typing import Any, Iterable
 
+import json
 import yaml  # type: ignore[import-not-found]
-from jsonschema import Draft202012Validator  # type: ignore[import-not-found]
-from jsonschema.exceptions import \
-    ValidationError  # type: ignore[import-not-found]
-
-from .profile import AgentProfile
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = PACKAGE_ROOT.parent
