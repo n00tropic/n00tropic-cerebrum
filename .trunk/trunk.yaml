@@ -17,6 +17,11 @@ runtimes:
     - python@3.10.8
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
+  definitions:
+    - name: isort
+      commands:
+        - name: format
+          run: isort --settings-path pyproject.toml -q --overwrite-in-place ${target}
   disabled:
     - markdownlint
   enabled:
