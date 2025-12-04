@@ -3,22 +3,23 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from mcp.server.fastmcp.utilities.func_metadata import ArgModelBase, FuncMetadata
-from pathlib import Path
-from pydantic import ConfigDict, create_model
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Tuple, Type
-
 import argparse
 import asyncio
 import json
 import logging
-import mcp as mcp_package
 import os
 import re
 import shlex
 import sys
 import time
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional, Pattern, Tuple, Type
+
+from pydantic import ConfigDict, create_model
+
+import mcp as mcp_package
+from mcp.server.fastmcp.utilities.func_metadata import ArgModelBase, FuncMetadata
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MANIFEST_PATH = REPO_ROOT / "n00t" / "capabilities" / "manifest.json"

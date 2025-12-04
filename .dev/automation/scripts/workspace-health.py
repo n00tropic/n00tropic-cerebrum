@@ -3,10 +3,6 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Dict, Iterable, List, Sequence, Tuple
-
 import argparse
 import json
 import logging
@@ -16,6 +12,9 @@ import shutil
 import subprocess  # nosec B404 - toolchain commands are workspace-managed
 import sys
 import time
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, Iterable, List, Sequence, Tuple
 
 ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:

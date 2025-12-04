@@ -7,7 +7,7 @@ TOKEN=${GH_SUBMODULE_TOKEN:-${GITHUB_TOKEN-}}
 
 # Ensure pinned Node version (nvm) for any Node-based steps
 # shellcheck source=/dev/null
-source "$ROOT_DIR/scripts/ensure-nvm-node.sh" 2>/dev/null || true
+source "${ROOT_DIR}/scripts/ensure-nvm-node.sh" 2>/dev/null || true
 
 log() { printf "[bootstrap-workspace] %s\n" "$*"; }
 
@@ -38,6 +38,24 @@ log "Verifying superrepo layout"
 
 log "Ensuring pnpm is available (corepack)"
 bash "$ROOT_DIR/scripts/setup-pnpm.sh"
+
+if [[ ${SKIP_BOOTSTRAP_TRUNK_UPGRADE:-0} == 1 ]]; then
+	log "SKIP_BOOTSTRAP_TRUNK_UPGRADE=1; skipping workspace Trunk upgrade"
+else
+	log "Refreshing Trunk runtimes across the workspace"
+	# Allow bootstrap to self-install the CLI so fresh environments do not hit Trunk drift warnings.
+	BOOTSTRAP_TRUNK_FLAGS="${TRUNK_UPGRADE_FLAGS:-[\"--yes-to-all\",\"--ci\"]}"
+	BOOTSTRAP_TRUNK_SMART="${TRUNK_UPGRADE_SMART:-1}"
+	if TRUNK_INSTALL="${TRUNK_INSTALL:-1}" \
+		TRUNK_INIT_MISSING="${TRUNK_INIT_MISSING:-0}" \
+		TRUNK_UPGRADE_SMART="${BOOTSTRAP_TRUNK_SMART}" \
+		TRUNK_UPGRADE_FLAGS="${BOOTSTRAP_TRUNK_FLAGS}" \
+		python3 "$ROOT_DIR/cli.py" trunk-upgrade; then
+		log "Trunk upgrade completed"
+	else
+		log "Trunk upgrade failed (non-blocking) – rerun 'python3 cli.py trunk-upgrade' once the environment is ready"
+	fi
+fi
 
 if [[ ${ALLOW_ROOT_PNPM_INSTALL:-0} == 1 || ${CI-} == 1 ]]; then
 	log "Installing pnpm workspace dependencies at root (ALLOW_ROOT_PNPM_INSTALL=${ALLOW_ROOT_PNPM_INSTALL:-0})"

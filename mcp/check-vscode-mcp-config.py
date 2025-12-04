@@ -3,14 +3,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any, Dict, Iterable
-
 import argparse
 import json
 import os
 import re
 import sys
+from pathlib import Path
+from typing import Any, Dict, Iterable
 
 DEFAULT_CONFIG = (
     Path.home() / "Library" / "Application Support" / "Code" / "User" / "mcp.json"

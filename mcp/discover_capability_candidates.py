@@ -3,16 +3,16 @@
 
 from __future__ import annotations
 
+import argparse
+import json
+import sys
 from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, cast, Iterable, Sequence
+from typing import Any, Iterable, Sequence, cast
 
-import argparse
-import json
 import mcp as mcp_package
-import sys
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 LOCAL_MCP_PATH = REPO_ROOT / "mcp"

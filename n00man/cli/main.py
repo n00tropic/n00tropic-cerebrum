@@ -9,14 +9,11 @@ import json
 import sys
 from pathlib import Path
 
+from n00man.core import AgentFoundryExecutor, AgentGovernanceError, AgentRegistry
+
 ROOT = Path(__file__).resolve().parents[1]
 DOCS_ROOT = ROOT / "docs"
 REGISTRY_PATH = DOCS_ROOT / "agent-registry.json"
-
-sys.path.insert(0, str(ROOT))
-
-from n00man.core import AgentFoundryExecutor  # noqa: E402
-from n00man.core import AgentGovernanceError, AgentRegistry
 
 
 def _load_capabilities(path: str | None) -> list[dict[str, object]]:
@@ -64,7 +61,7 @@ def scaffold_agent(args: argparse.Namespace) -> None:
     try:
         result = asyncio.run(executor.execute(**payload))
     except AgentGovernanceError as exc:  # pragma: no cover - CLI formatting
-        raise SystemExit(f"[n00man] Governance validation failed:\n{exc}")
+        raise SystemExit(f"[n00man] Governance validation failed:\n{exc}") from exc
 
     print(f"[n00man] Scaffolded agent {result['agent_id']}")
     for generated in result["generated_files"]:

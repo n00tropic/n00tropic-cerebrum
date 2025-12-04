@@ -8,9 +8,9 @@ Returns the server name to target.
 """
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
-import sys
 import yaml
 
 ROOT = Path(__file__).resolve().parent

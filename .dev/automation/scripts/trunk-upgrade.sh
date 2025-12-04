@@ -2,10 +2,15 @@
 set -uo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
+ROOT_NAME=$(basename "$ROOT")
 SCRIPTS_DIR="$ROOT/.dev/automation/scripts"
+STATE_FILE="$ROOT/.dev/automation/artifacts/automation/trunk-upgrade-state.json"
+STATE_DIR=$(dirname "$STATE_FILE")
+mkdir -p "$STATE_DIR"
 DEFAULT_CMD_TIMEOUT="${TRUNK_CMD_TIMEOUT:-300}"
 TRUNK_INSTALL_ALLOWED="${TRUNK_INSTALL:-${CI:-0}}"
 TRUNK_INIT_MISSING="${TRUNK_INIT_MISSING:-1}"
+export TRUNK_CACHE_ROOT="${TRUNK_CACHE_ROOT:-$ROOT/.cache/trunk}"
 
 log() {
 	printf '[trunk-upgrade] %s\n' "$1"
@@ -265,6 +270,32 @@ if [[ ${#ALL_REPOS[@]} -eq 0 ]]; then
 	exit 0
 fi
 
+CURRENT_HASHES=$(
+	python3 - "$ROOT" "$ROOT_NAME" "${ALL_REPOS[@]}" <<'PY'
+import hashlib
+import json
+import os
+import sys
+
+root = sys.argv[1]
+root_name = sys.argv[2]
+repos = sys.argv[3:]
+hashes = {}
+for repo in repos:
+	if repo == root_name:
+		trunk_file = os.path.join(root, ".trunk", "trunk.yaml")
+	else:
+		trunk_file = os.path.join(root, repo, ".trunk", "trunk.yaml")
+	if os.path.isfile(trunk_file):
+		with open(trunk_file, "rb") as handle:
+			hashes[repo] = hashlib.sha256(handle.read()).hexdigest()
+	else:
+		hashes[repo] = "missing"
+print(json.dumps(hashes))
+PY
+)
+export TRUNK_UPGRADE_CURRENT_HASHES="$CURRENT_HASHES"
+
 TARGET_REPOS=()
 if [[ ${#REQUESTED[@]} -eq 0 ]]; then
 	TARGET_REPOS=("${ALL_REPOS[@]}")
@@ -281,6 +312,106 @@ fi
 if [[ ${#TARGET_REPOS[@]} -eq 0 ]]; then
 	log "No matching repositories to process."
 	exit 1
+fi
+
+SMART_MODE="${TRUNK_UPGRADE_SMART:-0}"
+FORCE_ALL="${TRUNK_UPGRADE_FORCE_ALL:-0}"
+if [[ ${#REQUESTED[@]} -eq 0 && ${#TARGET_REPOS[@]} -gt 0 && $SMART_MODE == "1" && $FORCE_ALL != "1" ]]; then
+	mapfile -t SMART_INFO < <(
+		python3 - "$STATE_FILE" <<'PY'
+import json
+import os
+import sys
+
+state_file = sys.argv[1]
+current = json.loads(os.environ.get("TRUNK_UPGRADE_CURRENT_HASHES", "{}"))
+previous = {}
+last_updated = ""
+if os.path.isfile(state_file):
+    try:
+        with open(state_file, "r", encoding="utf-8") as existing:
+            state = json.load(existing)
+            previous = state.get("hashes", {})
+            last_updated = state.get("updated") or ""
+    except Exception:
+        previous = {}
+
+changed = [repo for repo, digest in current.items() if previous.get(repo) != digest]
+print(json.dumps(changed))
+print(last_updated)
+PY
+	)
+	SMART_JSON="${SMART_INFO[0]:-[]}"
+	LAST_UPDATED="${SMART_INFO[1]-}"
+	if [[ -n $SMART_JSON ]]; then
+		mapfile -t SMART_REPOS < <(
+			python3 - "$SMART_JSON" <<'PY'
+import json
+import sys
+
+data = json.loads(sys.argv[1])
+for item in data:
+    print(item)
+PY
+		)
+		if [[ ${#SMART_REPOS[@]} -gt 0 ]]; then
+			log "Smart mode limiting Trunk upgrades to: ${SMART_REPOS[*]}"
+			TARGET_REPOS=("${SMART_REPOS[@]}")
+		else
+			MAX_AGE="${TRUNK_UPGRADE_MAX_AGE:-86400}"
+			AGE_SECONDS=""
+			if [[ -n $LAST_UPDATED ]]; then
+				AGE_SECONDS=$(
+					python3 - "$LAST_UPDATED" <<'PY'
+from datetime import datetime, timezone
+import sys
+
+stamp = sys.argv[1]
+try:
+    dt = datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    age = int((datetime.now(timezone.utc) - dt).total_seconds())
+    print(age)
+except Exception:
+    print("")
+PY
+				)
+			fi
+			if [[ -n $AGE_SECONDS && $AGE_SECONDS -lt $MAX_AGE ]]; then
+				log "Smart mode detected no repo drift in the last ${AGE_SECONDS}s (threshold ${MAX_AGE}s); skipping Trunk upgrade."
+				exit 0
+			else
+				log "Smart mode TTL exceeded or no prior run recorded; running full upgrade"
+			fi
+		fi
+	fi
+fi
+
+if [[ -n ${TRUNK_UPGRADE_ALWAYS_INCLUDE-} ]]; then
+	mapfile -t ALWAYS_INCLUDE < <(
+		python3 - "${TRUNK_UPGRADE_ALWAYS_INCLUDE}" <<'PY'
+import json
+import os
+import sys
+
+raw = sys.argv[1]
+try:
+    parsed = json.loads(raw)
+    if isinstance(parsed, str):
+        parsed = [parsed]
+    elif not isinstance(parsed, (list, tuple)):
+        parsed = str(raw).replace(",", " ").split()
+except json.JSONDecodeError:
+    parsed = str(raw).replace(",", " ").split()
+
+for item in parsed:
+    value = str(item).strip()
+    if value:
+        print(value)
+PY
+	)
+	for extra in "${ALWAYS_INCLUDE[@]}"; do
+		contains_repo "$extra" "${TARGET_REPOS[@]}" || TARGET_REPOS+=("$extra")
+	done
 fi
 
 if ! ensure_trunk; then
@@ -334,15 +465,13 @@ PY
 	)
 fi
 
-SUCCEEDED=()
-FAILED=()
-
-for repo in "${TARGET_REPOS[@]}"; do
-	local_path="$ROOT/$repo"
+upgrade_repo() {
+	local repo="$1"
+	local local_path="$ROOT/$repo"
+	[[ $repo == "$ROOT_NAME" ]] && local_path="$ROOT"
 	if [[ ! -d $local_path ]]; then
 		log "Skipping $repo (directory missing)"
-		FAILED+=("$repo")
-		continue
+		return 2
 	fi
 
 	log "Upgrading Trunk plugins in $repo"
@@ -351,13 +480,93 @@ for repo in "${TARGET_REPOS[@]}"; do
 			run_with_timeout "$DEFAULT_CMD_TIMEOUT" env TRUNK_NO_PROGRESS=1 TRUNK_DISABLE_TELEMETRY=1 \
 				trunk upgrade --no-progress ${EXTRA_FLAGS[@]+"${EXTRA_FLAGS[@]}"}
 	); then
-		SUCCEEDED+=("$repo")
+		return 0
 	else
 		exit_code=$?
 		log "⚠️  trunk upgrade failed in $repo (exit ${exit_code})"
-		FAILED+=("$repo")
+		return "$exit_code"
 	fi
-done
+}
+
+SUCCEEDED=()
+FAILED=()
+
+PARALLEL_JOBS="${TRUNK_UPGRADE_JOBS:-1}"
+if ! [[ $PARALLEL_JOBS =~ ^[0-9]+$ ]]; then
+	PARALLEL_JOBS=1
+fi
+if [[ $PARALLEL_JOBS -lt 1 ]]; then
+	PARALLEL_JOBS=1
+fi
+
+if [[ $PARALLEL_JOBS -le 1 || ${#TARGET_REPOS[@]} -le 1 ]]; then
+	for repo in "${TARGET_REPOS[@]}"; do
+		if upgrade_repo "$repo"; then
+			SUCCEEDED+=("$repo")
+		else
+			FAILED+=("$repo")
+		fi
+	done
+else
+	log "Running Trunk upgrades with up to $PARALLEL_JOBS concurrent jobs"
+	TMP_LOG_DIR=$(mktemp -d -t trunk-upgrade-XXXXXX)
+	cleanup_logs() {
+		if [[ -n ${TMP_LOG_DIR-} && -d $TMP_LOG_DIR ]]; then
+			rm -rf "$TMP_LOG_DIR"
+		fi
+	}
+	trap cleanup_logs EXIT
+	declare -A PID_TO_REPO=()
+	declare -A PID_TO_LOG=()
+	ACTIVE_PIDS=()
+
+	start_job() {
+		local repo="$1"
+		local log_file="$TMP_LOG_DIR/${repo//[^A-Za-z0-9_.-]/_}.log"
+		(
+			upgrade_repo "$repo"
+		) >"$log_file" 2>&1 &
+		local pid=$!
+		PID_TO_REPO[$pid]="$repo"
+		PID_TO_LOG[$pid]="$log_file"
+		ACTIVE_PIDS+=("$pid")
+	}
+
+	wait_for_pid() {
+		local pid="$1"
+		local repo="${PID_TO_REPO[$pid]}"
+		local log_file="${PID_TO_LOG[$pid]}"
+		if wait "$pid"; then
+			SUCCEEDED+=("$repo")
+		else
+			FAILED+=("$repo")
+		fi
+		if [[ -f $log_file ]]; then
+			cat "$log_file"
+			rm -f "$log_file"
+		fi
+		unset PID_TO_REPO[$pid]
+		unset PID_TO_LOG[$pid]
+	}
+
+	for repo in "${TARGET_REPOS[@]}"; do
+		start_job "$repo"
+		while [[ ${#ACTIVE_PIDS[@]} -ge $PARALLEL_JOBS ]]; do
+			pid="${ACTIVE_PIDS[0]}"
+			wait_for_pid "$pid"
+			ACTIVE_PIDS=(${ACTIVE_PIDS[@]:1})
+		done
+	done
+
+	while [[ ${#ACTIVE_PIDS[@]} -gt 0 ]]; do
+		pid="${ACTIVE_PIDS[0]}"
+		wait_for_pid "$pid"
+		ACTIVE_PIDS=(${ACTIVE_PIDS[@]:1})
+	done
+
+	trap - EXIT
+	cleanup_logs
+fi
 
 COMPLETED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
@@ -378,6 +587,84 @@ if [[ -f "$SCRIPTS_DIR/record-capability-run.py" ]]; then
 		--summary "$SUMMARY" \
 		--started "$STARTED_AT" \
 		--completed "$COMPLETED_AT"
+fi
+
+POST_RUN_HASHES=$(
+	python3 - "$ROOT" "$ROOT_NAME" "${ALL_REPOS[@]}" <<'PY'
+import hashlib
+import json
+import os
+import sys
+
+root = sys.argv[1]
+root_name = sys.argv[2]
+repos = sys.argv[3:]
+hashes = {}
+for repo in repos:
+    if repo == root_name:
+        trunk_file = os.path.join(root, ".trunk", "trunk.yaml")
+    else:
+        trunk_file = os.path.join(root, repo, ".trunk", "trunk.yaml")
+    if os.path.isfile(trunk_file):
+        with open(trunk_file, "rb") as handle:
+            hashes[repo] = hashlib.sha256(handle.read()).hexdigest()
+    else:
+        hashes[repo] = "missing"
+print(json.dumps(hashes))
+PY
+)
+export TRUNK_UPGRADE_POST_HASHES="$POST_RUN_HASHES"
+
+if [[ -n ${TRUNK_UPGRADE_CURRENT_HASHES-} ]]; then
+	SUCCEEDED_CSV=$(
+		IFS=,
+		echo "${SUCCEEDED[*]}"
+	)
+	FAILED_CSV=$(
+		IFS=,
+		echo "${FAILED[*]}"
+	)
+	python3 - "$STATE_FILE" "$SUCCEEDED_CSV" "$FAILED_CSV" <<'PY'
+import json
+import os
+import sys
+import time
+
+state_path = sys.argv[1]
+succeeded = {entry for entry in sys.argv[2].split(",") if entry}
+failed = {entry for entry in sys.argv[3].split(",") if entry}
+
+payload = os.environ.get("TRUNK_UPGRADE_POST_HASHES") or os.environ.get("TRUNK_UPGRADE_CURRENT_HASHES", "{}")
+try:
+	current = json.loads(payload)
+except json.JSONDecodeError:
+	current = {}
+
+try:
+    with open(state_path, "r", encoding="utf-8") as existing:
+        state = json.load(existing)
+except Exception:
+    state = {}
+
+hashes = state.get("hashes", {})
+for repo, digest in current.items():
+    if repo in failed:
+        continue
+    hashes[repo] = digest
+
+state["hashes"] = hashes
+state["updated"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+with open(state_path, "w", encoding="utf-8") as handle:
+    json.dump(state, handle, indent=2)
+PY
+fi
+
+if [[ ${TRUNK_POST_SYNC:-1} == "1" ]]; then
+	log "Running post-upgrade trunk config sync (auto-promote enabled)"
+	if ! "$SCRIPTS_DIR/sync-trunk-configs.sh" --check; then
+		log "Post-upgrade trunk sync reported changes or drift"
+	fi
 fi
 
 if [[ ${#FAILED[@]} -ne 0 ]]; then

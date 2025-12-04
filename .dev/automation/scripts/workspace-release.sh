@@ -56,8 +56,12 @@ trap 'finalise_run' EXIT
 
 log "Ensuring canonical Trunk configuration"
 if ! "$SCRIPTS_DIR/sync-trunk-configs.sh" --check; then
-	log "❌ Trunk configuration drift detected. Run '.dev/automation/scripts/sync-trunk-configs.sh --write' and commit the changes before releasing."
-	exit 2
+	if [[ $DRY_RUN -eq 1 ]]; then
+		log "⚠️  Trunk configuration drift detected during dry-run; continuing."
+	else
+		log "❌ Trunk configuration drift detected. Run '.dev/automation/scripts/sync-trunk-configs.sh --write' and commit the changes before releasing."
+		exit 2
+	fi
 fi
 
 require_clean_tree() {

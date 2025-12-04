@@ -7,16 +7,16 @@ for repos whose `.trunk/trunk.yaml` changed. It is intentionally opt-in via
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import List, Optional
-
 import argparse
 import logging
 import re
 import shutil
 import subprocess
 import sys
+from contextlib import suppress
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import List, Optional, Sequence
 
 ROOT = Path(__file__).resolve().parents[3]
 SYNC_SCRIPT = ROOT / ".dev" / "automation" / "scripts" / "sync-trunk.py"
@@ -43,10 +43,13 @@ def _runcmd(cmd: List[str], cwd: Path | None = None) -> subprocess.CompletedProc
     )
 
 
-def _find_changed_repos() -> List[str]:
+def _find_changed_repos(limit: Optional[Sequence[str]] = None) -> List[str]:
+    allowed = set(limit) if limit else None
     changed = []
     for p in sorted(ROOT.iterdir()):
         if not p.is_dir():
+            continue
+        if allowed and p.name not in allowed:
             continue
         trunk = p / ".trunk" / "trunk.yaml"
         if trunk.exists():
@@ -117,23 +120,75 @@ def _apply_changes_for_repo(repo: str) -> None:
     logging.info("Created PR for %s: %s", repo, title)
 
 
+def _cleanup_tmp(path: Path) -> None:
+    with suppress(FileNotFoundError):
+        path.unlink()
+
+
+def _should_pull_after_check(status: Optional[str], json_path: Path) -> bool:
+    if status == "ok":
+        print("No Trunk drift detected; nothing to propagate")
+        _cleanup_tmp(json_path)
+        return False
+    if status == "promoted":
+        print(
+            "Auto-promote detected; canonical trunk.yaml updated from downstream uniform payload"
+        )
+    else:
+        print("Drift detected; pulling canonical trunk.yaml into downstream repos")
+    return True
+
+
 def run_sync(repos: Optional[List[str]] = None, apply_changes: bool = False) -> int:
-    args = [str(sys.executable), str(SYNC_SCRIPT), "--pull"]
+    import json
+    from tempfile import NamedTemporaryFile
+
+    # First: run check with auto-promote enabled to allow downstream uniform payload to become canonical
+    check_args = [str(sys.executable), str(SYNC_SCRIPT), "--check", "--auto-promote"]
+    pull_args = [str(sys.executable), str(SYNC_SCRIPT), "--pull"]
+    tmp = NamedTemporaryFile(prefix="sync-trunk-", suffix=".json", delete=False)
+    tmp.close()
+    json_path = Path(tmp.name)
+    check_args.extend(["--json", str(json_path)])
     if repos:
-        for r in repos:
-            args.extend(["--repo", r])
-    print("Running:", " ".join(args))
-    res = subprocess.run(args, check=False)
+        for repo in repos:
+            check_args.extend(["--repo", repo])
+            pull_args.extend(["--repo", repo])
+
+    print("Running check (with auto-promote):", " ".join(check_args))
+    res = subprocess.run(check_args, check=False)
     if res.returncode != 0:
-        print("sync-trunk reported non-zero exit code; aborting autopush")
-        return res.returncode
+        print(
+            "sync-trunk check reported non-zero exit code; continuing so pull can remediate"
+        )
+
+    data = None
+    if json_path.exists():
+        try:
+            data = json.loads(json_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            print(f"Failed to parse sync-trunk JSON report: {exc}", file=sys.stderr)
+
+    status = data.get("status") if isinstance(data, dict) else None
+    if not _should_pull_after_check(status, json_path):
+        return 0
+
+    print("Running pull:", " ".join(pull_args))
+    pull_result = subprocess.run(pull_args, check=False)
+    if pull_result.returncode != 0:
+        print("sync-trunk pull failed; inspect logs above for details", file=sys.stderr)
+        _cleanup_tmp(json_path)
+        return pull_result.returncode or 1
 
     # Find repos with updated trunk.yaml by checking git status in each repo dir
-    changed_repos = _find_changed_repos()
+    changed_repos = _find_changed_repos(repos)
 
     if not changed_repos:
         print("No changes detected after running sync-trunk; nothing to push")
+        _cleanup_tmp(json_path)
         return 0
+
+    print(f"sync-trunk status report retained at {json_path}")
 
     if not apply_changes:
         print("Dry-run: would create PRs for:", changed_repos)

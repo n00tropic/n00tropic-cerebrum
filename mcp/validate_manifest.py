@@ -3,15 +3,15 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any, Iterable, List, Optional
-
 import argparse
 import json
-import mcp as mcp_package
 import os
 import subprocess  # nosec B404 - trusted workspace commands only
 import time
+from pathlib import Path
+from typing import Any, Iterable, List, Optional
+
+import mcp as mcp_package
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 LOCAL_MCP_PATH = REPO_ROOT / "mcp"

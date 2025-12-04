@@ -6,12 +6,11 @@ write changes.
 """
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Iterable
-
 import argparse
 import json
 import logging
+from pathlib import Path
+from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[3]
 CENTRAL_EXTEND = "github>n00tropic/n00tropic-cerebrum//renovate-presets/workspace.json"

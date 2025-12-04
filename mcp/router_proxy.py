@@ -12,18 +12,18 @@ Usage:
 """
 from __future__ import annotations
 
-from mcp_proxy import MCPProxy
-from mcp_proxy.federation import CapabilityRouter
-from mcp_proxy.transports import HTTPTransport, StdioTransport
-from pathlib import Path
-from typing import Any
-
 import argparse
 import asyncio
 import json
 import os
 import sys
+from pathlib import Path
+from typing import Any
+
 import yaml
+from mcp_proxy import MCPProxy
+from mcp_proxy.federation import CapabilityRouter
+from mcp_proxy.transports import HTTPTransport, StdioTransport
 
 ROOT = Path(__file__).resolve().parent
 SUITE_PATH = ROOT / "mcp-suite.yaml"

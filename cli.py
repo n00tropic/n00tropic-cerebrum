@@ -3,20 +3,20 @@
 
 from __future__ import annotations
 
-from observability import initialize_tracing
-from pathlib import Path
-from shutil import which
-from typing import Iterable, List, Optional, Tuple
-
 import argparse
 import json
 import os
 import subprocess  # nosec B404 - trusted workspace commands only
 import sys
+from pathlib import Path
+from shutil import which
+from typing import Iterable, List, Optional, Tuple
+
+from observability import initialize_tracing
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent
 ORG_ROOT = WORKSPACE_ROOT.parent
-SCRIPTS_ROOT = ORG_ROOT / ".dev" / "automation" / "scripts"
+SCRIPTS_ROOT = WORKSPACE_ROOT / ".dev" / "automation" / "scripts"
 MANIFEST_PATH = WORKSPACE_ROOT / "automation" / "workspace.manifest.json"
 TRUNK_TIMEOUT = int(os.environ.get("TRUNK_UPGRADE_TIMEOUT", "600"))
 GIT_BIN = which("git") or "git"
@@ -244,7 +244,7 @@ def run_script(script_name: str, *args: str) -> None:
     script_path = SCRIPTS_ROOT / script_name
     if not script_path.exists():
         raise SystemExit(f"Script not found: {script_path}")
-    run([str(script_path), *args], cwd=ORG_ROOT)
+    run([str(script_path), *args], cwd=WORKSPACE_ROOT)
 
 
 def run_workspace_script(script_name: str, *args: str) -> None:
@@ -555,6 +555,21 @@ def build_parser() -> argparse.ArgumentParser:
         help="Optional subset of repo names to include when running the trunk subcommand.",
     )
 
+    trunk_sync_parser = subparsers.add_parser(
+        "trunk-sync",
+        help="Run sync-trunk-autopush.py to fan out canonical configs and optionally create PRs.",
+    )
+    trunk_sync_parser.add_argument(
+        "--repos",
+        nargs="*",
+        help="Optional subset of repo names to sync (defaults to all discovered repos).",
+    )
+    trunk_sync_parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="Commit and push branch + PR per repo instead of dry-run output.",
+    )
+
     subparsers.add_parser(
         "health-toolchain", help="Check Node/pnpm pins across workspace and subrepos."
     )
@@ -753,6 +768,15 @@ def handle_trunk_alias(args: argparse.Namespace) -> None:
     run_trunk_upgrade(args.repos)
 
 
+def handle_trunk_sync(args: argparse.Namespace) -> None:
+    script_args: List[str] = []
+    for repo in args.repos or []:
+        script_args.extend(["--repo", repo])
+    if args.apply:
+        script_args.append("--apply")
+    run_script("sync-trunk-autopush.py", *script_args)
+
+
 def handle_health_toolchain(_: argparse.Namespace) -> None:
     run(["pnpm", "run", "tools:check-toolchain"], cwd=WORKSPACE_ROOT)
 
@@ -903,6 +927,7 @@ COMMAND_HANDLERS = {
     "capabilities": handle_capabilities,
     "trunk-upgrade": handle_trunk_upgrade,
     "trunk": handle_trunk_alias,
+    "trunk-sync": handle_trunk_sync,
     "health-toolchain": handle_health_toolchain,
     "health-runners": handle_health_runners,
     "health-python-lock": handle_health_python_lock,

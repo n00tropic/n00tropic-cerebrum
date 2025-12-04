@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
-from pydantic import BaseModel, ConfigDict, Field, model_validator
 from typing import Any, Dict, Iterable, List
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 DEFAULT_ENTRYPOINT_ROOTS: tuple[str, ...] = (
     ".dev/automation/scripts",

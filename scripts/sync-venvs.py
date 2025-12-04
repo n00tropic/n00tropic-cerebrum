@@ -19,31 +19,58 @@ Examples:
 
 from __future__ import annotations
 
+import argparse
+import json
+import shutil
+import subprocess  # trunk-ignore(bandit/B404): CLI orchestration requires subprocess usage.
+import sys
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Iterable, List, Tuple
 
-import argparse
-import json
-import shutil
-import subprocess
-import sys
-
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "automation" / "workspace.manifest.json"
+UV_INSTALL_URL = "https://astral.sh/uv/install.sh"
+
+
+def _run_command(cmd: List[str], **kwargs) -> subprocess.CompletedProcess:
+    """Run a subprocess with strict defaults."""
+    return subprocess.run(cmd, check=True, **kwargs)  # trunk-ignore(bandit/B603)
+
+
+def _run_uv_installer() -> None:
+    """Download the official uv installer script and execute it securely."""
+    if shutil.which("curl"):
+        fetch_cmd = ["curl", "-LsSf", UV_INSTALL_URL]
+    elif shutil.which("wget"):
+        fetch_cmd = ["wget", "-qO-", UV_INSTALL_URL]
+    else:
+        raise SystemExit(
+            "[sync-venvs] uv missing and neither curl nor wget is available to download the installer."
+        )
+    result = _run_command(fetch_cmd, stdout=subprocess.PIPE)
+    with tempfile.NamedTemporaryFile(delete=False) as handle:
+        handle.write(result.stdout)
+        script_path = Path(handle.name)
+    script_path.chmod(0o755)
+    shell_path = shutil.which("sh")
+    if not shell_path:
+        raise SystemExit(
+            "[sync-venvs] Unable to locate POSIX shell for uv installation."
+        )
+    try:
+        _run_command([shell_path, str(script_path)])
+    finally:
+        script_path.unlink(missing_ok=True)
 
 
 def ensure_uv() -> Path:
     uv = shutil.which("uv")
     if uv:
         return Path(uv)
-    install_cmd = (
-        "curl -LsSf https://astral.sh/uv/install.sh | sh"
-        if shutil.which("curl")
-        else "wget -qO- https://astral.sh/uv/install.sh | sh"
-    )
     print("[sync-venvs] uv not found; installing via Astral script…", file=sys.stderr)
-    subprocess.run(install_cmd, shell=True, check=True)
+    _run_uv_installer()
     uv = shutil.which("uv")
     if not uv:
         raise SystemExit("[sync-venvs] uv installation failed; aborting.")
@@ -111,7 +138,7 @@ def sync_repo(
     locks: List[Path],
 ) -> Tuple[str, bool]:
     venv_path.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run([uv_bin, "venv", str(venv_path)], check=True)
+    _run_command([str(uv_bin), "venv", str(venv_path)])
     if not reqs:
         print(f"[sync-venvs] {repo_name}: no requirements files; skipped installs")
         return (repo_name, True)
@@ -119,7 +146,7 @@ def sync_repo(
     if mode == "auto":
         chosen_mode = "sync" if locks else "install"
     cmd = [
-        uv_bin,
+        str(uv_bin),
         "pip",
         "install" if chosen_mode == "install" else "sync",
         "--python",
@@ -135,16 +162,16 @@ def sync_repo(
     print(
         f"[sync-venvs] {repo_name}: mode={chosen_mode} sources={[p.name for p in (locks if chosen_mode=='sync' else reqs)]}",
     )
-    subprocess.run(cmd, check=True)
+    _run_command(cmd)
     if perform_check:
         check_cmd = [
-            uv_bin,
+            str(uv_bin),
             "pip",
             "check",
             "--python",
             str(venv_path / "bin" / "python"),
         ]
-        result = subprocess.run(check_cmd, capture_output=True, text=True)
+        result = _run_command(check_cmd, capture_output=True, text=True)
         ok = result.returncode == 0
         status = "ok" if ok else "issues"
         print(f"[sync-venvs] {repo_name}: dependency check -> {status}")

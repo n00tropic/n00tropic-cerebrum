@@ -4,15 +4,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Dict, Iterable, List, Literal, Tuple, Union
-
 import argparse
 import datetime as dt
 import json
 import re
 import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, Iterable, List, Literal, Tuple, Union
 
 ROOT: Path = Path(__file__).resolve().parents[3]
 TRUNK_DIR_NAME = ".trunk"

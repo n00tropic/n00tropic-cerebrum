@@ -15,6 +15,12 @@ SKIP_TOKENS=${SKIP_TOKENS:-0}
 SKIP_POLICY=${SKIP_POLICY:-0}
 SKIP_TYPESENSE=${SKIP_TYPESENSE:-0}
 
+cleanup_validation_artifacts() {
+	if [[ -x "$ROOT_DIR/scripts/cleanup-validation-artifacts.sh" ]]; then
+		bash "$ROOT_DIR/scripts/cleanup-validation-artifacts.sh" || true
+	fi
+}
+
 # Ensure Node pin
 source "$ROOT_DIR/scripts/ensure-nvm-node.sh" 2>/dev/null || true
 
@@ -56,5 +62,7 @@ if [[ $SKIP_TYPESENSE -eq 0 ]]; then
 else
 	echo "[local-preflight] Skipping Typesense freshness (SKIP_TYPESENSE=1)"
 fi
+
+cleanup_validation_artifacts
 
 echo "[local-preflight] Done"

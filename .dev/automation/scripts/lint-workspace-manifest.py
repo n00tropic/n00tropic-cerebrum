@@ -3,10 +3,9 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Dict, List, Set
-
-import json
 
 ROOT = Path(__file__).resolve().parents[3]
 MANIFEST_PATH = ROOT / "automation" / "workspace.manifest.json"

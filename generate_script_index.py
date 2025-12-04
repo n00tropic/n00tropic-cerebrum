@@ -3,15 +3,14 @@
 
 from __future__ import annotations
 
-from collections import defaultdict
-from dataclasses import dataclass
-from typing import Dict, Iterable, List
-
 import argparse
 import datetime
 import os
 import pathlib
 import re
+from collections import defaultdict
+from dataclasses import dataclass
+from typing import Dict, Iterable, List
 
 SCRIPT_EXTENSIONS = {
     ".sh",

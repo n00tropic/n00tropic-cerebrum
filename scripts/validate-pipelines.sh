@@ -102,6 +102,12 @@ out = {
     "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     "runs": rows,
 }
+
+cleanup_validation_artifacts() {
+	if [[ -x "$ROOT_DIR/scripts/cleanup-validation-artifacts.sh" ]]; then
+		bash "$ROOT_DIR/scripts/cleanup-validation-artifacts.sh" || true
+	fi
+}
 out_path.write_text(json.dumps(out, indent=2))
 PY
 	rm -f "$ARTIFACT_DIR/latest.results"
@@ -147,6 +153,9 @@ find "$TMP_DIR" -type f -mtime +7 -delete 2>/dev/null || true
 
 prepare_docs_fixture
 PDF_FIXTURE=$(prepare_pdf_fixture)
+
+# Start with a clean slate so validation runs do not leak artefacts
+cleanup_validation_artifacts
 
 # pipeline: preflight
 if should_run preflight; then
@@ -218,5 +227,8 @@ PY
 fi
 
 write_summary
+
+# Ensure artefacts go back to their committed state once validations finish
+cleanup_validation_artifacts
 popd >/dev/null
 echo "[validate] summary -> $ARTIFACT_DIR/latest.json"

@@ -17,15 +17,14 @@ No third-party dependencies. Python 3.9+.
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Iterator, List, Optional, Sequence, Tuple
-
 import argparse
 import dataclasses
 import difflib
 import os
 import re
 import sys
+from pathlib import Path
+from typing import Iterator, List, Optional, Sequence, Tuple
 
 # ---------- Utilities ----------
 

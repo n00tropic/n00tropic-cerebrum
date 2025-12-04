@@ -3,13 +3,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Dict, List
-
 import argparse
 import json
 import subprocess
 import sys
+from pathlib import Path
+from typing import Dict, List
+
 import yaml
 
 DOC_ROLES = {"docs-ssot", "docs", "techdocs", "docs-only"}

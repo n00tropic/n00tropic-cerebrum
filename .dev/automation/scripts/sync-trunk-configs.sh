@@ -3,6 +3,7 @@ set -uo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
 SCRIPT="$ROOT/.dev/automation/scripts/sync-trunk.py"
+AUTO_PROMOTE=${TRUNK_SYNC_AUTO_PROMOTE:-1}
 
 if [[ ! -x $SCRIPT ]]; then
 	echo "[sync-trunk] Missing sync-trunk.py helper at $SCRIPT" >&2
@@ -27,5 +28,9 @@ for arg in "$@"; do
 		;;
 	esac
 done
+
+if [[ $AUTO_PROMOTE == "1" ]]; then
+	ARGS+=(--auto-promote)
+fi
 
 exec python3 "$SCRIPT" "${ARGS[@]}"

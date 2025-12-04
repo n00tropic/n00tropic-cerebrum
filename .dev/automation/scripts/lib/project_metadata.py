@@ -3,17 +3,17 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime
-from jsonschema import Draft202012Validator  # type: ignore[import-not-found]
-from jsonschema.exceptions import ValidationError  # type: ignore[import-not-found]
-from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
-
 import json
 import os
 import re
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
+
 import yaml  # type: ignore[import-not-found]
+from jsonschema import Draft202012Validator  # type: ignore[import-not-found]
+from jsonschema.exceptions import ValidationError  # type: ignore[import-not-found]
 
 FRONT_MATTER_PATTERN = re.compile(r"^---\s*\n(.*?)\n---\s*", re.DOTALL)
 DISPLAY_DATE_FMT = "%d-%m-%Y"

@@ -4,15 +4,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from enum import Enum
-from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
-
 import argparse
 import hashlib
 import json
 import sys
+from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 ROOT: Path = Path(__file__).resolve().parents[3]
 CANONICAL_TRUNK = (
@@ -32,6 +31,7 @@ class RepoTarget:
     path: Path
     status: str | None = None
     message: str | None = None
+    payload: str | None = None
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -82,6 +82,14 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         type=Path,
         default=CANONICAL_TRUNK,
         help="Override canonical trunk.yaml path (primarily for tests).",
+    )
+    parser.add_argument(
+        "--auto-promote",
+        action="store_true",
+        help=(
+            "In check mode, automatically promote a downstream trunk.yaml copy back to "
+            "canonical when every discovered repo shares the same contents."
+        ),
     )
     return parser.parse_args(argv)
 
@@ -152,6 +160,7 @@ def check_targets(
     failures = 0
     for target in targets:
         existing = load_text(target.path)
+        target.payload = existing
         if existing is None:
             target.status = "missing"
             target.message = "No trunk.yaml present"
@@ -171,6 +180,28 @@ def check_targets(
             failures += 1
             print(f"[sync-trunk] {target.name}: drift detected", file=sys.stderr)
     return failures, targets
+
+
+def find_uniform_payload(
+    targets: List[RepoTarget],
+) -> Tuple[Optional[str], Optional[str]]:
+    digest: Optional[str] = None
+    payload: Optional[str] = None
+    source_repo: Optional[str] = None
+    for target in targets:
+        if target.payload is None:
+            continue
+        candidate = hashlib.sha256(target.payload.encode("utf-8")).hexdigest()
+        if digest is None:
+            digest = candidate
+            payload = target.payload
+            source_repo = target.name
+            continue
+        if candidate != digest:
+            return None, None
+    if payload is None:
+        return None, None
+    return payload, source_repo
 
 
 def pull_targets(reference: str, targets: List[RepoTarget]) -> List[RepoTarget]:
@@ -295,6 +326,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         exit_status = 0 if failures == 0 else 1
         status_label = "ok" if failures == 0 else "drift"
         targets = results
+        if failures > 0 and args.auto_promote:
+            uniform_payload, source_repo = find_uniform_payload(results)
+            if uniform_payload and uniform_payload != canonical_payload:
+                origin = f" from {source_repo}" if source_repo else ""
+                print(
+                    f"[sync-trunk] auto-promoting uniform downstream trunk.yaml{origin}"
+                )
+                targets = push_targets(
+                    uniform_payload, selected_targets, canonical_path
+                )
+                canonical_payload = uniform_payload
+                exit_status = 0
+                status_label = "promoted"
     elif mode == Mode.PULL:
         if canonical_payload is None:
             print(
