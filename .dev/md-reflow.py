@@ -57,14 +57,14 @@ FENCE_OPEN_RE = re.compile(r"^(\s*)(`{3,}|~{3,}|-{4,}|\.{4,}|\+{4,})(.*)$")
 
 # closing fence must match fence char and length, ignoring trailing spaces.
 def fence_close_re(ch: str, n: int) -> re.Pattern:
-    return re.compile(rf"^\s*{re.escape(ch*n)}\s*$")
+    return re.compile(rf"^\s*{re.escape(ch * n)}\s*$")
 
 
 # List item marker (supports nested, checkboxes).
 LIST_MARKER_RE = re.compile(
     r"""
     ^(?P<indent>\s*)
-    (?P<marker>[*+-]|\d{1,9}(?:\.|\)))
+    (?P<marker>(?:[*+-])|(?:\d{1,9}[.)]))
     (?P<space>\s+)
     (?P<checkbox>\[(?:\s|x|X)\]\s+)?  # optional task list box
     """,
@@ -253,7 +253,7 @@ def _fill(text: str, width: int, initial_indent: str, subsequent_indent: str) ->
             # collapse multiple spaces to one normal space unless NBSP used
             if NBSP in w:
                 # keep NBSPs as-is (won't split), normal spaces collapse to one
-                w2 = re.sub(r" +", " ", w.replace(NBSP, NBSP))
+                w2 = re.sub(r" +", " ", w)
             else:
                 w2 = " "
         else:
