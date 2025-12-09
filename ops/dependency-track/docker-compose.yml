@@ -15,7 +15,7 @@ services:
       - ./data:/data
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.11.4
+    image: dependencytrack/frontend:4.13.6
     container_name: dtrack-frontend
     restart: unless-stopped
     ports:
