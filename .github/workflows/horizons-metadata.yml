@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: false
       - name: Try to fetch submodules (optional)
@@ -24,7 +24,7 @@ jobs:
           git submodule sync --recursive || true
           git submodule update --init --recursive || echo "Submodules failed to update — continuing without them"
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.11.14
       - name: Cache uv downloads

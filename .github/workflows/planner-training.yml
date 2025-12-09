@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           submodules: false
       - name: Try to fetch submodules (optional)
@@ -59,7 +59,7 @@ jobs:
             echo "n00-school submodule not present; skipping planner-training run"
           fi
       - name: Upload planner run artefacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: planner-training-run
           path: n00-school/runs/planner-v1
