@@ -4,4 +4,4 @@
 -r mcp/docs_server/requirements.txt
 
 # Lightweight utilities that aid automation checks without pulling full Jupyter stack
-pip-audit==2.9.0
+pip-audit==2.10.0
