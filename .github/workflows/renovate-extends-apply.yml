@@ -57,7 +57,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.apply.outputs.CHANGED == 'true'
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore(renovate): apply workspace preset extends to subrepos"
