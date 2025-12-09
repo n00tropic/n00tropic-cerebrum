@@ -1,7 +1,7 @@
 # AGENT_HOOK: dependency-management
 services:
   dtrack-apiserver:
-    image: dependencytrack/apiserver:4.11.4
+    image: dependencytrack/apiserver:4.13.6
     container_name: dtrack-apiserver
     restart: unless-stopped
     ports:
