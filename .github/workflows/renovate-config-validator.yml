@@ -1,0 +1,31 @@
+name: Renovate config validator
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - renovate.json
+      - renovate.json5
+      - .renovaterc*
+      - renovate-presets/**
+  pull_request:
+    paths:
+      - renovate.json
+      - renovate.json5
+      - .renovaterc*
+      - renovate-presets/**
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Validate Renovate config
+        run: npx --yes --package renovate -- renovate-config-validator --strict
