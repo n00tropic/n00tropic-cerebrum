@@ -1,7 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Workspace Renovate config (uses central preset + local surfacing rules). AGENT_HOOK: dependency-management",
-  "extends": ["file:renovate-presets/workspace.json"],
+  "extends": [
+    "github>n00tropic/n00tropic-cerebrum//renovate-presets/workspace.json"
+  ],
   "packageRules": [
     {
       "description": "Surface esbuild majors with dedicated label",
