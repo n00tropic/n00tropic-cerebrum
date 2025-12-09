@@ -24,7 +24,7 @@
     "jsdom": "27.2.0",
     "madge": "^8.0.0",
     "markdownlint-cli2": "0.19.1",
-    "stylelint": "16.26.0",
+    "stylelint": "16.26.1",
     "tsup": "^8.5.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
