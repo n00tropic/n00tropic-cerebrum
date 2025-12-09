@@ -55,7 +55,7 @@ services:
       - pull-only
 
   redis-cache:
-    image: redis:7
+    image: redis:8
     entrypoint:
       - /bin/sh
       - -c
@@ -64,7 +64,7 @@ services:
       - pull-only
 
   redis-queue:
-    image: redis:7
+    image: redis:8
     entrypoint:
       - /bin/sh
       - -c
@@ -73,7 +73,7 @@ services:
       - pull-only
 
   redis-socketio:
-    image: redis:7
+    image: redis:8
     entrypoint:
       - /bin/sh
       - -c
