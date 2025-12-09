@@ -44,7 +44,7 @@ services:
       - pull-only
 
   mariadb:
-    image: mariadb:10.11
+    image: mariadb:12.1
     environment:
       - MYSQL_ROOT_PASSWORD=${ERP_DB_ROOT_PASSWORD:-dev}
     entrypoint:
