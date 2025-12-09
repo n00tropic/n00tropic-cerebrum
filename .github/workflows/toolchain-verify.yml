@@ -16,12 +16,12 @@ jobs:
       ALLOW_SUBREPO_PNPM_INSTALL: "1"
     steps:
       - name: Checkout repo (with submodules)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
       - name: Setup Node (LTS from .nvmrc)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: pnpm

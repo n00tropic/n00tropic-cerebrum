@@ -23,7 +23,7 @@ jobs:
       TYPESENSE_PORT: ${{ secrets.TYPESENSE_PORT || '8108' }}
       TYPESENSE_COLLECTION: ${{ secrets.TYPESENSE_COLLECTION || 'n00-docs' }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: false
       - name: Try to fetch submodules (optional)

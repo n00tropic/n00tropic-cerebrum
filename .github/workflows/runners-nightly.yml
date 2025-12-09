@@ -17,7 +17,7 @@ jobs:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK || '' }}
       REQUIRED_RUNNER_LABELS: ${{ secrets.REQUIRED_RUNNER_LABELS || 'self-hosted,linux,x64,pnpm,uv' }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: false
       - name: Set up pnpm
