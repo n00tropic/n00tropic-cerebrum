@@ -2,6 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Workspace Renovate config (uses central preset + local surfacing rules). AGENT_HOOK: dependency-management",
   "extends": [
+    "config:recommended",
     "github>n00tropic/n00tropic-cerebrum//renovate-presets/workspace.json"
   ],
   "packageRules": [
