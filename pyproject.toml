@@ -1,3 +1,10 @@
+[project]
+name = "n00tropic-cerebrum"
+version = "0.0.0"
+description = "Workspace meta project placeholder for Renovate/uv tooling."
+requires-python = ">=3.11"
+dependencies = []
+
 [tool.black]
 line-length = 88
 # Python 3.11+ across the workspace
