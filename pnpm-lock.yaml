@@ -9,7 +9,7 @@ overrides:
   eslint-plugin-react-native: 5.0.0
   esbuild: 0.27.0
   fast-json-patch: 3.1.1
-  tmp: 0.2.4
+  tmp: 0.2.5
   body-parser: 2.2.1
 
 importers:
@@ -5142,8 +5142,8 @@ packages:
     resolution: {integrity: sha512-8PWx8tvC4jDB39BQw1m4x8y5MH1BcQ5xHeL2n7UVFulMPH/3Q0uiamahFJ3lXA0zO2SUyRXuVVbWSDmstlt9YA==}
     hasBin: true
 
-  tmp@0.2.4:
-    resolution: {integrity: sha512-UdiSoX6ypifLmrfQ/XfiawN6hkjSBpCjhKxxZcWlUUmoXLaCKQU0bx4HF/tdDK2uzRuchf1txGvrWBzYREssoQ==}
+  tmp@0.2.5:
+    resolution: {integrity: sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow==}
     engines: {node: '>=14.14'}
 
   to-buffer@1.2.2:
@@ -6399,7 +6399,7 @@ snapshots:
       lighthouse-logger: 1.2.0
       open: 7.4.2
       proxy-agent: 6.5.0
-      tmp: 0.2.4
+      tmp: 0.2.5
       uuid: 8.3.2
       yargs: 15.4.1
       yargs-parser: 13.1.2
@@ -8743,7 +8743,7 @@ snapshots:
     dependencies:
       chardet: 0.7.0
       iconv-lite: 0.4.24
-      tmp: 0.2.4
+      tmp: 0.2.5
 
   extract-zip@2.0.1:
     dependencies:
@@ -11352,7 +11352,7 @@ snapshots:
     dependencies:
       tldts-core: 7.0.19
 
-  tmp@0.2.4: {}
+  tmp@0.2.5: {}
 
   to-buffer@1.2.2:
     dependencies:
