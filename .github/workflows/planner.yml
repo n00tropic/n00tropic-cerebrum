@@ -70,7 +70,7 @@ jobs:
           done < plan-targets.txt
       - name: Upload planner artifacts
         if: steps.targets.outputs.count != '0'
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: planner-artifacts
           path: .dev/automation/artifacts/plans
