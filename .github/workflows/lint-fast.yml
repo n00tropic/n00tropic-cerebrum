@@ -20,7 +20,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.25.0
+          version: 10.26.1
 
       - name: Install trunk (cached)
         uses: trunk-io/trunk-action@v1
