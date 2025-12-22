@@ -14,11 +14,14 @@ jobs:
   apply-renovate-extends:
     name: Run & apply 'update-renovate-extends.py'
     runs-on: ubuntu-latest
+    env:
+      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN || secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ env.SUBMODULES_TOKEN }}
 
       - name: Setup Python
         uses: actions/setup-python@v6

@@ -11,11 +11,14 @@ permissions:
 jobs:
   trunk-check:
     runs-on: ubuntu-latest
+    env:
+      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN || secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ env.SUBMODULES_TOKEN }}
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4

@@ -14,11 +14,14 @@ jobs:
     permissions: # Minimal permissions to avoid write-all permissions flagged by some security checks
       contents: read
     runs-on: ubuntu-latest
+    env:
+      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN || secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ env.SUBMODULES_TOKEN }}
 
       - name: Setup Python
         uses: actions/setup-python@v6

@@ -11,8 +11,12 @@ permissions:
 jobs:
   health:
     runs-on: ubuntu-latest
+    env:
+      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN || secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          token: ${{ env.SUBMODULES_TOKEN }}
       - name: Ensure pinned Node
         run: |
           source scripts/ensure-nvm-node.sh
