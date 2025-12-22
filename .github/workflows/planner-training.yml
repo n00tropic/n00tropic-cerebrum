@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: 3.14.2
       - name: Cache uv downloads
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .cache/uv
           key: ${{ runner.os }}-uv-${{ hashFiles('n00-school/requirements.txt') }}
@@ -59,7 +59,7 @@ jobs:
             echo "n00-school submodule not present; skipping planner-training run"
           fi
       - name: Upload planner run artefacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: planner-training-run
           path: n00-school/runs/planner-v1

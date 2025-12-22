@@ -27,7 +27,7 @@ jobs:
           .dev/automation/scripts/deps-drift.py --format both --output artifacts/deps-drift/latest.json --table-output artifacts/deps-drift/latest.md --plan-output artifacts/deps-drift/plan.json --fail-on any
 
       - name: Upload drift report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: deps-drift-${{ github.sha }}
           path: |
