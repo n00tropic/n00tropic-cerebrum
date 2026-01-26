@@ -21,7 +21,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.26.1
+          version: 10.28.2
 
       - name: Run trunk upgrades (auto-init missing)
         env:
