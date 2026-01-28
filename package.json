@@ -21,7 +21,7 @@
     "dependency-cruiser": "^17.3.1",
     "glob": "13.0.0",
     "js-yaml": "^4.1.1",
-    "jsdom": "27.3.0",
+    "jsdom": "27.4.0",
     "madge": "^8.0.0",
     "markdownlint-cli2": "0.20.0",
     "stylelint": "16.26.1",
