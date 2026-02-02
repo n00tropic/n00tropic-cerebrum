@@ -30,8 +30,8 @@ importers:
         specifier: 3.1.14
         version: 3.1.14
       '@antora/lunr-extension':
-        specifier: 1.0.0-alpha.12
-        version: 1.0.0-alpha.12
+        specifier: 1.0.0-alpha.13
+        version: 1.0.0-alpha.13
       '@antora/site-generator':
         specifier: 3.1.14
         version: 3.1.14
@@ -214,8 +214,8 @@ packages:
     resolution: {integrity: sha512-kVEeGqZbXR903hPIm+BlN97fLdQ3LoUzE/BOPZ6vRp9m9Mmbnm67Kg7fSYkfTMLB0S2UWpAPFg22RdsU5ZoAzA==}
     engines: {node: '>=16.0.0'}
 
-  '@antora/lunr-extension@1.0.0-alpha.12':
-    resolution: {integrity: sha512-iiEXpJae8tCH22ao7kZ4I+eyQ/3IeFIFK1G5I9QLpkCezaVPotI8eLFY7e0xDI+zsqJEfCOsfoZGYXso6xCYlA==}
+  '@antora/lunr-extension@1.0.0-alpha.13':
+    resolution: {integrity: sha512-u8n8XLB6elMmXbW0bdeL5jG8UBJi6PSiz1zaMn+wIIIu/bnxotRBW4kEWSge+zTfdF4rEYMcJ9LvkAOamMyuKQ==}
     engines: {node: '>=16.0.0'}
 
   '@antora/navigation-builder@3.1.14':
@@ -5577,7 +5577,7 @@ snapshots:
       pino-pretty: 11.2.2
       sonic-boom: 4.0.1
 
-  '@antora/lunr-extension@1.0.0-alpha.12':
+  '@antora/lunr-extension@1.0.0-alpha.13':
     dependencies:
       htmlparser2: 9.1.0
       lunr: 2.3.9
