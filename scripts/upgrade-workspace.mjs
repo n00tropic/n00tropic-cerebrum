@@ -55,7 +55,7 @@ async function main() {
 	// 3a. Penpot
 	const penpotScript = join(
 		ROOT,
-		"n00plicate/scripts/update-penpot-images.mjs",
+		"platform/n00plicate/scripts/update-penpot-images.mjs",
 	);
 	if (existsSync(penpotScript)) {
 		log("Upgrading Penpot images...");
@@ -65,7 +65,7 @@ async function main() {
 	// 3b. ERPNext
 	const erpComposeDir = join(
 		ROOT,
-		"n00tropic_HQ/12-Platform-Ops/erpnext-docker",
+		"platform/n00tropic_HQ/12-Platform-Ops/erpnext-docker",
 	);
 	if (existsSync(erpComposeDir)) {
 		log("Pulling latest ERPNext images...");

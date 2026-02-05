@@ -32,7 +32,7 @@ install_hook "$root_dir"
 
 # Install in primary subrepos (edit list as needed)
 for sub in n00-frontiers n00-cortex n00-horizons n00t n00-school n00menon n00plicate n00tropic n00clear-fusion; do
-	if [[ -d "$root_dir/$sub" ]]; then
-		install_hook "$root_dir/$sub"
+	if [[ -d "$root_dir/platform/$sub" ]]; then
+		install_hook "$root_dir/platform/$sub"
 	fi
 done

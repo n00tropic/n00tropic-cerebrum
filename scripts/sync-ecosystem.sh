@@ -19,13 +19,13 @@ run() {
 	fi
 }
 
-run "cd '$ROOT/n00-frontiers' && python3 tools/export_cortex_assets.py"
-run "cd '$ROOT/n00clear-fusion' && python3 scripts/export_cortex.py"
-run "pnpm -C '$ROOT/n00-cortex' run ingest:frontiers"
-run "pnpm -C '$ROOT/n00-cortex' run ingest:frontiers -- --update-lock --update-fusion-lock"
-run "pnpm -C '$ROOT/n00-cortex' run export:assets"
-run "pnpm -C '$ROOT/n00-cortex' run graph:build"
-run "pnpm -C '$ROOT/n00-cortex' test"
+run "cd '$ROOT/platform/n00-frontiers' && python3 tools/export_cortex_assets.py"
+run "cd '$ROOT/platform/n00clear-fusion' && python3 scripts/export_cortex.py"
+run "pnpm -C '$ROOT/platform/n00-cortex' run ingest:frontiers"
+run "pnpm -C '$ROOT/platform/n00-cortex' run ingest:frontiers -- --update-lock --update-fusion-lock"
+run "pnpm -C '$ROOT/platform/n00-cortex' run export:assets"
+run "pnpm -C '$ROOT/platform/n00-cortex' run graph:build"
+run "pnpm -C '$ROOT/platform/n00-cortex' test"
 
 if [ "$status" != "ok" ]; then
 	message="failed step in sync; see logs above"

@@ -37,3 +37,7 @@ n00tropic_HQ/12-Platform-Ops/erpnext-docker/local.env
 docs/search/.env
 .venv-planner/
 /actions-runner
+
+# Auto-generated documentation files
+triage-log.md
+script_index.md

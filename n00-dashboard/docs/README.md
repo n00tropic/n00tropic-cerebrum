@@ -1,3 +1,0 @@
-# Docs
-
-Workspace docs placeholder.

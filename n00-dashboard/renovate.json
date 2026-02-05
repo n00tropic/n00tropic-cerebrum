@@ -1,8 +1,0 @@
-{
-	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"description": "Repo-level Renovate config for n00-dashboard.",
-	"extends": [
-		"config:recommended",
-		"github>n00tropic/n00tropic-cerebrum//renovate-presets/workspace.json"
-	]
-}

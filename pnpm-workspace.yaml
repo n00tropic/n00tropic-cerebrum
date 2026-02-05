@@ -1,12 +1,10 @@
 ---
 packages:
   - .dev/automation/mcp-server
-  - ui/**
   - apps/**
-  - packages/**
-  - stuff/**
-  - n00*/**
-  - n00*
+  - ui/**
+  - platform/**
+  - resources/**
   - "!**/templates/**"
   - "!**/cookiecutter/**"
 
