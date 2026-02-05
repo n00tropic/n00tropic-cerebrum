@@ -26,6 +26,7 @@ run "pnpm -C '$ROOT/platform/n00-cortex' run ingest:frontiers -- --update-lock -
 run "pnpm -C '$ROOT/platform/n00-cortex' run export:assets"
 run "pnpm -C '$ROOT/platform/n00-cortex' run graph:build"
 run "pnpm -C '$ROOT/platform/n00-cortex' test"
+run "pnpm -C '$ROOT/platform/n00menon' run docs:sync"
 
 if [ "$status" != "ok" ]; then
 	message="failed step in sync; see logs above"

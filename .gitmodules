@@ -34,3 +34,6 @@
 	path = platform/n00menon
 	url = https://github.com/n00tropic/n00menon.git
 	branch = docs
+[submodule "platform/n00man"]
+	path = platform/n00man
+	url = https://github.com/n00tropic/n00man.git
