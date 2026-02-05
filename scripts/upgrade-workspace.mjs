@@ -72,6 +72,16 @@ async function main() {
 		run("docker", ["compose", "pull"], { cwd: erpComposeDir });
 	}
 
+	// 3c. Sync Python Virtual Environments
+	log("Phase 3c: Syncing Python Virtual Environments...");
+	const syncVenvsScript = join(ROOT, "scripts/sync-venvs.py");
+	if (existsSync(syncVenvsScript)) {
+		log("Provisioning uv environments...");
+		run("python3", [syncVenvsScript, "--all", "--mode", "install"]);
+	} else {
+		console.warn("scripts/sync-venvs.py not found, skipping.");
+	}
+
 	// 4. Re-install and Build
 	log("Phase 4: Re-installing and Verifying Build...");
 	run("pnpm", ["install"], { env: { ALLOW_SUBREPO_PNPM_INSTALL: "1" } });
@@ -79,6 +89,21 @@ async function main() {
 
 	// 5. Final Health Check
 	log("Phase 5: Final Health Check...");
+
+	// 5a. Skeleton Validation
+	const skeletonScript = join(ROOT, ".dev/automation/scripts/check-workspace-skeleton.py");
+	if (existsSync(skeletonScript)) {
+		log("Validating workspace skeleton...");
+		// Run without --apply to just check
+		const res = spawnSync("python3", [skeletonScript], { encoding: 'utf-8', cwd: ROOT });
+		if (res.status !== 0) {
+			console.warn("\x1b[33m[WARN] Workspace skeleton issues detected (run check-workspace-skeleton.py for details).\x1b[0m");
+		} else {
+			log("✔ Workspace skeleton compliant.");
+		}
+	}
+
+	// 5b. General Health
 	if (existsSync(join(ROOT, "scripts/health-check.mjs"))) {
 		run("node", ["scripts/health-check.mjs"]);
 	}
