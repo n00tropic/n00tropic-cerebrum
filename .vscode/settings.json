@@ -1,7 +1,6 @@
 {
 	"npm.packageManager": "pnpm",
 	"vitest.disableWorkspaceWarning": true,
-
 	"files.exclude": {
 		"**/.git": true,
 		"**/.DS_Store": true,
@@ -25,13 +24,11 @@
 	},
 	"explorer.excludeGitIgnore": true,
 	"search.useIgnoreFiles": true,
-
 	"git.autoRepositoryDetection": "true",
 	"git.autofetch": true,
 	"git.enableSmartCommit": false,
 	"git.showInlineOpenFileAction": "auto",
 	"git.branchProtection": {},
-
 	"gitlens.statusBar.enabled": true,
 	"gitlens.views.repositories.enabled": true,
 	"gitlens.views.repositories.showBranches": true,
@@ -40,9 +37,7 @@
 	"gitlens.advanced.repositorySearchDepth": 2,
 	"gitlens.currentLine.scrollable": false,
 	"gitlens.codeLens.enabled": false,
-
 	"python.terminal.useEnvFile": true,
-
 	"mcp": {
 		"servers": {
 			"ai-workflow": {
@@ -61,15 +56,32 @@
 					"/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-cortex/mcp-server/index.js"
 				],
 				"cwd": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-cortex"
+			},
+			"github": {
+				"command": "npx",
+				"args": ["-y", "@modelcontextprotocol/server-github"],
+				"env": {
+					"GITHUB_PERSONAL_ACCESS_TOKEN": "<REPLACE_WITH_YOUR_TOKEN>"
+				}
+			},
+			"memory": {
+				"command": "npx",
+				"args": ["-y", "@modelcontextprotocol/server-memory"]
+			},
+			"filesystem": {
+				"command": "npx",
+				"args": [
+					"-y",
+					"@modelcontextprotocol/server-filesystem",
+					"/Volumes/APFS Space/n00tropic"
+				]
 			}
 		}
 	},
-
 	"sonarlint.connectedMode.project": {
 		"connectionId": "n00tropic",
 		"projectKey": "n00tropic_n00-cerebrum"
 	},
-
 	"chatgpt.openOnStartup": true,
 	"python-envs.pythonProjects": [
 		{

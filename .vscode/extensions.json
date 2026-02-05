@@ -1,4 +1,22 @@
 {
-	"recommendations": ["eamodio.gitlens", "mhutchie.git-graph"],
+	"recommendations": [
+		"biomejs.biome",
+		"editorconfig.editorconfig",
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode",
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+		"charliermarsh.ruff",
+		"unifiedjs.vscode-mdx",
+		"asciidoctor.asciidoctor-vscode",
+		"bradlc.vscode-tailwindcss",
+		"ms-azuretools.vscode-docker",
+		"usernamehw.errorlens",
+		"yoavbls.pretty-ts-errors",
+		"eamodio.gitlens",
+		"mhutchie.git-graph",
+		"tamasfe.even-better-toml",
+		"streetsidesoftware.code-spell-checker"
+	],
 	"unwantedRecommendations": []
 }

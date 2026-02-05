@@ -62,6 +62,68 @@ for repo in n00-frontiers n00-cortex n00-horizons n00-school n00plicate n00t n00
 	[[ -d "$ROOT/$repo" ]] && update_nvmrc "$ROOT/$repo"
 done
 
+update_package_jsons() {
+	echo "[sync-node] Updating package.json engines..."
+
+	local py_script
+	py_script="$ROOT/.sync_node_script.py"
+
+	cat >"$py_script" <<'PY'
+import sys
+import json
+import os
+
+target_version = f">={sys.argv[1]}"
+
+def detect_indent(content):
+    for line in content.splitlines():
+        if line.startswith('\t'): return '\t'
+        if line.startswith('  '): return '  ' # simplistic, usually 2 or 4 spaces
+    return '\t' # default
+
+for file_path in sys.argv[2:]:
+    # print(f"Processing {file_path}", file=sys.stderr)
+    try:
+        with open(file_path, 'r') as f:
+            content = f.read()
+            data = json.loads(content)
+
+        changed = False
+
+        # Update engines.node
+        if "engines" not in data:
+            data["engines"] = {}
+
+        current_engine = data["engines"].get("node")
+        if current_engine != target_version:
+            data["engines"]["node"] = target_version
+            changed = True
+
+        if changed:
+            indent = detect_indent(content)
+            print(f"Updating {file_path}...")
+            with open(file_path, 'w') as f:
+                json.dump(data, f, indent=indent)
+                f.write("\n")
+    except Exception as e:
+        print(f"Skipping {file_path}: {e}", file=sys.stderr)
+PY
+
+	# Find all package.json files, excluding node_modules, ignored dirs
+	find "$ROOT" -name "package.json" \
+		-not -path "*/node_modules/*" \
+		-not -path "*/.venv*/*" \
+		-not -path "*/dist/*" \
+		-not -path "*/build/*" \
+		-not -path "*/.git/*" \
+		-not -path "*/.mypy_cache/*" \
+		-print0 | xargs -0 python3 "$py_script" "$VERSION"
+
+	rm -f "$py_script"
+}
+
+update_package_jsons
+
 # Update toolchain manifest
 python3 - "$TOOLCHAIN" "$VERSION" <<'PY'
 import json, sys
