@@ -1,0 +1,10 @@
+#!/bin/sh
+# ERROR if in detached HEAD state
+if ! git symbolic-ref -q HEAD > /dev/null; then
+  echo "\033[31mError: You are in a 'detached HEAD' state.\033[0m"
+  echo "Please check out a branch before committing."
+  exit 1
+fi
+
+npx lint-staged
+pnpm test

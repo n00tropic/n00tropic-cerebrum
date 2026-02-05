@@ -1,58 +1,58 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "workspace: trunk upgrade (all repos)",
-      "type": "shell",
-      "command": "python3",
-      "args": ["cli.py", "trunk-upgrade"],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "group": "build",
-      "detail": "Run trunk upgrade everywhere the automation script finds a .trunk/trunk.yaml."
-    },
-    {
-      "label": "workspace: trunk upgrade (prompt repos)",
-      "type": "shell",
-      "command": "bash",
-      "args": [
-        "-lc",
-        "if [ -z \"${input:workspaceTrunkRepos}\" ]; then python3 cli.py trunk-upgrade; else python3 cli.py trunk-upgrade --repos ${input:workspaceTrunkRepos}; fi"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "group": "build",
-      "detail": "Prompt for repo names (space-delimited) before chaining trunk upgrades."
-    },
-    {
-      "label": "swift: build (prompted target)",
-      "type": "shell",
-      "command": "swift",
-      "args": ["build", "--build-tests"],
-      "options": {
-        "cwd": "${input:workspaceSwiftTarget}",
-        "env": {
-          "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
-        }
-      },
-      "group": "build",
-      "detail": "White-label Swift builder - defaults to n00-dashboard but can point to any future app."
-    }
-  ],
-  "inputs": [
-    {
-      "id": "workspaceTrunkRepos",
-      "type": "promptString",
-      "description": "Space-delimited repo names (workspace, n00-cortex, n00t, etc.). Leave empty to run everywhere.",
-      "default": ""
-    },
-    {
-      "id": "workspaceSwiftTarget",
-      "type": "promptString",
-      "description": "Absolute or workspace-relative path to the Swift package root.",
-      "default": "${workspaceFolder}/n00-dashboard"
-    }
-  ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "workspace: trunk upgrade (all repos)",
+			"type": "shell",
+			"command": "python3",
+			"args": ["cli.py", "trunk-upgrade"],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"group": "build",
+			"detail": "Run trunk upgrade everywhere the automation script finds a .trunk/trunk.yaml."
+		},
+		{
+			"label": "workspace: trunk upgrade (prompt repos)",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"if [ -z \"${input:workspaceTrunkRepos}\" ]; then python3 cli.py trunk-upgrade; else python3 cli.py trunk-upgrade --repos ${input:workspaceTrunkRepos}; fi"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"group": "build",
+			"detail": "Prompt for repo names (space-delimited) before chaining trunk upgrades."
+		},
+		{
+			"label": "swift: build (prompted target)",
+			"type": "shell",
+			"command": "swift",
+			"args": ["build", "--build-tests"],
+			"options": {
+				"cwd": "${input:workspaceSwiftTarget}",
+				"env": {
+					"DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+				}
+			},
+			"group": "build",
+			"detail": "White-label Swift builder - defaults to n00-dashboard but can point to any future app."
+		}
+	],
+	"inputs": [
+		{
+			"id": "workspaceTrunkRepos",
+			"type": "promptString",
+			"description": "Space-delimited repo names (workspace, n00-cortex, n00t, etc.). Leave empty to run everywhere.",
+			"default": ""
+		},
+		{
+			"id": "workspaceSwiftTarget",
+			"type": "promptString",
+			"description": "Absolute or workspace-relative path to the Swift package root.",
+			"default": "${workspaceFolder}/n00-dashboard"
+		}
+	]
 }

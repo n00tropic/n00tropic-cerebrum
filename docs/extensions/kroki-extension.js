@@ -6,9 +6,9 @@
  */
 
 module.exports.register = function () {
-  // Register the asciidoctor-kroki extension
-  this.once("contextStarted", ({ playbook }) => {
-    // The extension will be auto-registered when required
-    require("asciidoctor-kroki");
-  });
+	// Register the asciidoctor-kroki extension
+	this.once("contextStarted", ({ playbook: _playbook }) => {
+		// The extension will be auto-registered when required
+		require("asciidoctor-kroki");
+	});
 };

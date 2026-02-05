@@ -96,8 +96,8 @@ jobs:
         run: |
           # Ensure trunk definitions are synced from the workspace base to subrepos
           pnpm run trunk:sync-defs || true
-          chmod +x .dev/automation/scripts/run-trunk-subrepos.sh
-          .dev/automation/scripts/run-trunk-subrepos.sh --fmt || true
+          pnpm run lint:workspace || true
+          pnpm -r --filter '!n00plicate' lint || true
       - name: Enforce doc tags across all repos
         run: bash scripts/tag-propagate.sh && pnpm run docs:tag-suggest --apply
       - name: Typesense freshness (info)

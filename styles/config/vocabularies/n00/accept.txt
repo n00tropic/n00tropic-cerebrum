@@ -78,3 +78,12 @@ READMEs
 middleware
 config
 hoc
+Subproject
+subproject
+uv
+pytest
+mypy
+cookiecutter
+qa
+superproject
+Renovate

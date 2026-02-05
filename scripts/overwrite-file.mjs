@@ -2,8 +2,8 @@ import { writeFileSync } from "node:fs";
 import process from "node:process";
 
 if (process.argv.length < 3) {
-  console.error("Usage: node scripts/overwrite-file.mjs <path>");
-  process.exit(2);
+	console.error("Usage: node scripts/overwrite-file.mjs <path>");
+	process.exit(2);
 }
 const file = process.argv[2];
 const content = `# Vale local development guide

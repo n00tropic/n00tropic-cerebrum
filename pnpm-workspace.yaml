@@ -5,6 +5,10 @@ packages:
   - apps/**
   - packages/**
   - stuff/**
+  - n00*/**
+  - n00*
+  - "!**/templates/**"
+  - "!**/cookiecutter/**"
 
 # Workspace settings that help centralize installs
 sharedWorkspaceLockfile: true

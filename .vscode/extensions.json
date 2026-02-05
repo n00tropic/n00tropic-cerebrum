@@ -1,4 +1,4 @@
 {
-  "recommendations": ["eamodio.gitlens", "mhutchie.git-graph"],
-  "unwantedRecommendations": []
+	"recommendations": ["eamodio.gitlens", "mhutchie.git-graph"],
+	"unwantedRecommendations": []
 }

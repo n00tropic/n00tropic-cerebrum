@@ -13,6 +13,11 @@ fi
 INPUT_PATH="$1"
 DATASET_ID="${2-}"
 
+if [[ ! -e "${INPUT_PATH}" ]]; then
+	echo "Error: Input path '${INPUT_PATH}' does not exist." >&2
+	exit 1
+fi
+
 export PYTHONPATH="${FUSION_DIR}"
 source "${FUSION_DIR}/.venv/bin/activate" 2>/dev/null || true
 
