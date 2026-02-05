@@ -26,6 +26,8 @@
 		"@n00plicate/shared-utils": "workspace:*"
 	},
 	"engines": {
-		"node": ">=24.0.0"
-	}
+		"node": ">=25.5.0",
+		"pnpm": ">=10.28.2"
+	},
+	"packageManager": "pnpm@10.28.2"
 }

@@ -4,8 +4,8 @@
 	"private": true,
 	"packageManager": "pnpm@10.28.2",
 	"engines": {
-		"node": ">=24.11.0",
-		"pnpm": ">=10.23.0"
+		"node": ">=25.5.0",
+		"pnpm": ">=10.28.2"
 	},
 	"devDependencies": {
 		"@antora/cli": "3.1.14",
