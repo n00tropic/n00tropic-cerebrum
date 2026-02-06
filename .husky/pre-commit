@@ -6,5 +6,11 @@ if ! git symbolic-ref -q HEAD > /dev/null; then
   exit 1
 fi
 
-pnpm exec lint-staged
+
+# Workaround for system permission errors
+export TMPDIR="$(pwd)/.tmp"
+export XDG_CACHE_HOME="$(pwd)/.cache_local"
+mkdir -p "$TMPDIR" "$XDG_CACHE_HOME"
+
+pnpm exec trunk check
 pnpm test

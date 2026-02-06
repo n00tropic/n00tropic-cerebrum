@@ -41,3 +41,5 @@ docs/search/.env
 # Auto-generated documentation files
 triage-log.md
 script_index.md
+.tmp/
+.cache_local/
