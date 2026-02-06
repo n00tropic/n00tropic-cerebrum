@@ -2,36 +2,62 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Workspace Renovate config (uses central preset + local surfacing rules). AGENT_HOOK: dependency-management",
   "extends": [
-    "config:recommended",
-    "github>n00tropic/n00tropic-cerebrum//renovate-presets/workspace.json"
+    "config:best-practices",
+    "local>renovate-presets/workspace.json"
   ],
   "packageRules": [
     {
       "description": "Surface esbuild majors with dedicated label",
-      "matchPackageNames": ["esbuild"],
-      "matchUpdateTypes": ["major"],
-      "labels": ["dep:esbuild"],
+      "matchPackageNames": [
+        "esbuild"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dep:esbuild"
+      ],
       "prPriority": 80
     },
     {
       "description": "Surface Storybook majors with dedicated label",
-      "matchPackageNames": ["storybook", "@storybook/*"],
-      "matchUpdateTypes": ["major"],
-      "labels": ["dep:storybook"],
+      "matchPackageNames": [
+        "storybook",
+        "@storybook/*"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dep:storybook"
+      ],
       "prPriority": 75
     },
     {
       "description": "Track vitest majors",
-      "matchPackageNames": ["vitest", "@vitest/*"],
-      "matchUpdateTypes": ["major"],
-      "labels": ["dep:vitest"],
+      "matchPackageNames": [
+        "vitest",
+        "@vitest/*"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dep:vitest"
+      ],
       "prPriority": 70
     },
     {
       "description": "Track tsup majors",
-      "matchPackageNames": ["tsup"],
-      "matchUpdateTypes": ["major"],
-      "labels": ["dep:tsup"],
+      "matchPackageNames": [
+        "tsup"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dep:tsup"
+      ],
       "prPriority": 65
     }
   ]

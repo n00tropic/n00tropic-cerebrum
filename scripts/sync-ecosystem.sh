@@ -19,6 +19,8 @@ run() {
 	fi
 }
 
+run "bash scripts/tidy-submodules.sh"
+
 run "cd '$ROOT/platform/n00-frontiers' && python3 tools/export_cortex_assets.py"
 run "cd '$ROOT/platform/n00clear-fusion' && python3 scripts/export_cortex.py"
 run "pnpm -C '$ROOT/platform/n00-cortex' run ingest:frontiers"

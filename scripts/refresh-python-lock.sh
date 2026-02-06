@@ -48,6 +48,10 @@ if ! command -v uv >/dev/null 2>&1; then
 fi
 
 UV_COMPILE_ARGS=${UV_COMPILE_ARGS:---prerelease=allow}
+CONSTRAINTS_FILE="${ROOT_DIR}/workspace-constraints.txt"
+if [[ -f ${CONSTRAINTS_FILE} ]]; then
+	UV_COMPILE_ARGS="${UV_COMPILE_ARGS} --constraint ${CONSTRAINTS_FILE}"
+fi
 
 rewrite_header() {
 	local file="$1"

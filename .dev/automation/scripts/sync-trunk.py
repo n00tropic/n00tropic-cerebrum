@@ -15,7 +15,14 @@ from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 ROOT: Path = Path(__file__).resolve().parents[3]
 CANONICAL_TRUNK = (
-    ROOT / "n00-cortex" / "data" / "trunk" / "base" / ".trunk" / "trunk.yaml"
+    ROOT
+    / "platform"
+    / "n00-cortex"
+    / "data"
+    / "trunk"
+    / "base"
+    / ".trunk"
+    / "trunk.yaml"
 )
 
 
@@ -107,7 +114,9 @@ def write_text(path: Path, payload: str) -> None:
 
 
 def _load_manifest() -> Dict:
-    manifest_path = ROOT / "n00-cortex" / "data" / "toolchain-manifest.json"
+    manifest_path = (
+        ROOT / "platform" / "n00-cortex" / "data" / "toolchain-manifest.json"
+    )
     try:
         return json.loads(manifest_path.read_text(encoding="utf-8"))
     except FileNotFoundError:

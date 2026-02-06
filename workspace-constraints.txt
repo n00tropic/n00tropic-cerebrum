@@ -1,0 +1,7 @@
+# Workspace-wide Python constraints
+# Use this file to surgically pin transitive dependencies or force downgrades.
+# Format: package==version
+# Usage: uv pip compile --constraint constraints.txt ...
+
+# Example:
+# numpy==1.26.4

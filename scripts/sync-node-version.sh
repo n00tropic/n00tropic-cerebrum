@@ -5,9 +5,9 @@ set -euo pipefail
 # Source of truth is ROOT/.nvmrc unless overridden with --version <v>.
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-CANONICAL_TRUNK="$ROOT/n00-cortex/data/trunk/base/.trunk/trunk.yaml"
+CANONICAL_TRUNK="$ROOT/platform/n00-cortex/data/trunk/base/.trunk/trunk.yaml"
 ROOT_TRUNK="$ROOT/.trunk/trunk.yaml"
-TOOLCHAIN="$ROOT/n00-cortex/data/toolchain-manifest.json"
+TOOLCHAIN="$ROOT/platform/n00-cortex/data/toolchain-manifest.json"
 
 VERSION=""
 while [[ $# -gt 0 ]]; do
@@ -57,9 +57,13 @@ update_nvmrc() {
 }
 
 # Update root and common subrepos
+
+# Update root and all platform subrepos
 update_nvmrc "$ROOT"
-for repo in n00-frontiers n00-cortex n00-horizons n00-school n00plicate n00t n00tropic n00menon; do
-	[[ -d "$ROOT/$repo" ]] && update_nvmrc "$ROOT/$repo"
+for repo_dir in "${ROOT}/platform"/*; do
+	if [[ -d $repo_dir && -f "${repo_dir}/package.json" ]]; then
+		update_nvmrc "$repo_dir"
+	fi
 done
 
 update_package_jsons() {
