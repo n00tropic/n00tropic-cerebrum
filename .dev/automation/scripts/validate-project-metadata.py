@@ -65,10 +65,19 @@ def main() -> int:
     args = parse_args()
     _, workspace_root, org_root = resolve_roots()
     schema_path = (
-        workspace_root / "n00-cortex" / "schemas" / "project-metadata.schema.json"
+        workspace_root
+        / "platform"
+        / "n00-cortex"
+        / "schemas"
+        / "project-metadata.schema.json"
     )
     taxonomy_path = (
-        workspace_root / "n00-cortex" / "data" / "catalog" / "project-tags.yaml"
+        workspace_root
+        / "platform"
+        / "n00-cortex"
+        / "data"
+        / "catalog"
+        / "project-tags.yaml"
     )
 
     validator = load_schema(schema_path)

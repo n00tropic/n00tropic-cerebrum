@@ -1,5 +1,7 @@
 # Pending Work Items
 
+> **Status Dashboard**: See [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) for component-level status.
+
 This document tracks active and pending work items extracted from the workspace.
 
 ## Active Tasks (from Next_Steps.md)

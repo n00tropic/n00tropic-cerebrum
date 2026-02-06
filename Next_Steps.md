@@ -3,6 +3,8 @@
 Active and pending tasks for workspace maintenance and development.
 
 > **Note**: Completed task logs have been archived to `1. Cerebrum Docs/archives/`. For pending work items, see [`PENDING_WORK.md`](./PENDING_WORK.md).
+>
+> **Project Status**: See [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) for a high-level dashboard of component states.
 
 ## Active Tasks
 

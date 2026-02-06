@@ -503,6 +503,15 @@ def build_parser() -> argparse.ArgumentParser:
     doctor_parser.add_argument(
         "--strict", action="store_true", help="Fail on advisory findings."
     )
+
+    project_parser = subparsers.add_parser(
+        "project", help="Unified project management suite."
+    )
+    project_parser.add_argument(
+        "subcommand",
+        nargs=argparse.REMAINDER,
+        help="Subcommands passed to project-cli.py (list, status, audit, files).",
+    )
     subparsers.add_parser(
         "repo-context", help="Generate workspace repo context artifact."
     )
@@ -912,6 +921,11 @@ def generate_repo_context_artifact() -> Path:
     return ctx_path
 
 
+def handle_project_unified(args: argparse.Namespace) -> None:
+    """Delegate project management commands to the project-cli.py script."""
+    run_script("project-cli.py", *args.subcommand)
+
+
 COMMAND_HANDLERS = {
     "radar": handle_radar,
     "preflight": handle_preflight,
@@ -947,6 +961,7 @@ COMMAND_HANDLERS = {
     "runner-upgrade": lambda _: run_workspace_script("runner-upgrade.sh"),
     "runner-prune-backups": lambda _: run_workspace_script("runner-prune-backups.sh"),
     "n00menon-verify": lambda _: run_workspace_script("n00menon-verify.sh"),
+    "project": handle_project_unified,
 }
 
 

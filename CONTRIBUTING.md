@@ -7,6 +7,7 @@ This workspace stitches together multiple submodules (cortex, frontiers, horizon
 - Submodules must stay on their declared branch from `.gitmodules` (default `main`, `docs` for `n00menon`). Do **not** commit detached HEADs.
 - After committing inside a submodule, push upstream immediately, then update the superrepo pointer and commit it. No “pending” local commits.
 - Run `pnpm run qa:workspace:full` before merging; it enforces pointer sync, cross-repo drift, Trunk lint, and schema checks.
+- **Commit Messages**: Include the Project ID (e.g., `[idea-006]`) in your commit message if the change relates to a registered project. This populates the `touched_files` view in `n00t project`.
 
 ## Tooling & runtimes
 

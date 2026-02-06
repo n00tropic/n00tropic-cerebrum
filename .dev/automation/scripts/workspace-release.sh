@@ -85,11 +85,11 @@ write_manifest_entry() {
 
 log "Verifying cleanliness"
 if [[ $DRY_RUN -eq 0 ]]; then
-	require_clean_tree "n00-frontiers"
-	require_clean_tree "n00-cortex"
-	require_clean_tree "n00t"
-	require_clean_tree "n00tropic"
-	require_clean_tree "n00plicate"
+	require_clean_tree "platform/n00-frontiers"
+	require_clean_tree "platform/n00-cortex"
+	require_clean_tree "platform/n00t"
+	require_clean_tree "platform/n00tropic"
+	require_clean_tree "platform/n00plicate"
 else
 	log "Dry-run: skipping clean-tree enforcement"
 fi
@@ -102,11 +102,11 @@ else
 fi
 
 log "Collecting release tags"
-frontiers_tag=$(get_latest_tag "n00-frontiers")
-cortex_tag=$(get_latest_tag "n00-cortex")
-n00t_tag=$(get_latest_tag "n00t")
-n00tropic_tag=$(get_latest_tag "n00tropic")
-n00plicate_tag=$(get_latest_tag "n00plicate")
+frontiers_tag=$(get_latest_tag "platform/n00-frontiers")
+cortex_tag=$(get_latest_tag "platform/n00-cortex")
+n00t_tag=$(get_latest_tag "platform/n00t")
+n00tropic_tag=$(get_latest_tag "platform/n00tropic")
+n00plicate_tag=$(get_latest_tag "platform/n00plicate")
 
 release_version=${1:-"$(date +%Y.%m.%d)"}
 if [[ -n $RELEASE_VERSION ]]; then
