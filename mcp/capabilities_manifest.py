@@ -10,12 +10,14 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 DEFAULT_ENTRYPOINT_ROOTS: tuple[str, ...] = (
     ".dev/automation/scripts",
     "scripts",
-    "n00clear-fusion",
-    "n00-horizons",
-    "n00-frontiers",
-    "n00-cortex",
-    "n00-school",
-    "n00t",
+    "platform/n00clear-fusion",
+    "platform/n00-horizons",
+    "platform/n00-frontiers",
+    "platform/n00-cortex",
+    "platform/n00-school",
+    "platform/n00t",
+    "platform/n00plicate",
+    "platform/n00tropic",
 )
 DEFAULT_ALLOWED_ENV: tuple[str, ...] = ("PATH", "PYTHONPATH", "HOME")
 
@@ -75,11 +77,27 @@ class Guardrails(BaseModel):
         return self
 
 
+from enum import Enum
+
+
+class CapabilityCategory(str, Enum):
+    AUTOMATION = "automation"
+    DEPLOYMENT = "deployment"
+    OBSERVABILITY = "observability"
+    MAINTENANCE = "maintenance"
+    GENERATION = "generation"
+    ANALYSIS = "analysis"
+    CORE = "core"
+
+
 class CapabilityMetadata(BaseModel):
     owner: str | None = Field(
         None, description="Primary maintainer or distribution list"
     )
     tags: List[str] = Field(default_factory=list)
+    category: CapabilityCategory = Field(
+        ..., description="Functional category for this capability"
+    )
     docs: str | None = None
 
 
@@ -106,11 +124,15 @@ class Capability(BaseModel):
         return self
 
     def resolved_entrypoint(self, repo_root: Path, manifest_dir: Path) -> Path:
-        entry_path = Path(self.entrypoint)
-        if entry_path.is_absolute():
-            raw_path = entry_path
+        if "${WORKSPACE_ROOT}" in self.entrypoint:
+            expanded = self.entrypoint.replace("${WORKSPACE_ROOT}", str(repo_root))
+            raw_path = Path(expanded)
         else:
-            raw_path = (manifest_dir / entry_path).resolve()
+            entry_path = Path(self.entrypoint)
+            if entry_path.is_absolute():
+                raw_path = entry_path
+            else:
+                raw_path = (manifest_dir / entry_path).resolve()
         if not raw_path.exists():
             msg = f"Capability {self.id} entrypoint missing: {raw_path}"
             raise FileNotFoundError(msg)

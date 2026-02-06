@@ -12,33 +12,48 @@
     },
     "memory": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
     },
     "docs": {
       "command": "${workspaceFolder}/.venv/bin/python",
-      "args": ["${workspaceFolder}/mcp/docs_server/server.py"],
+      "args": [
+        "${workspaceFolder}/mcp/docs_server/server.py"
+      ],
       "env": {
         "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}"
       }
     },
     "n00t-capabilities": {
       "command": "${workspaceFolder}/.venv/bin/python",
-      "args": ["${workspaceFolder}/mcp/capabilities_server.py"],
+      "args": [
+        "${workspaceFolder}/mcp/capabilities_server.py"
+      ],
       "env": {
         "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}"
       }
     }
     // Optional (uncomment as needed):
-    // "ai-workflow": {
-    //   "command": "node",
-    //   "args": ["${workspaceFolder}/.dev/automation/mcp-server/index.js"],
-    //   "options": { "cwd": "${workspaceFolder}" }
-    // },
-    // "cortex-catalog": {
-    //   "command": "node",
-    //   "args": ["${workspaceFolder}/n00-cortex/mcp-server/index.js"],
-    //   "options": { "cwd": "${workspaceFolder}/n00-cortex" }
-    // },
+    "ai-workflow": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/.dev/automation/mcp-server/index.js"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    "cortex-catalog": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/n00-cortex/mcp-server/index.js"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/n00-cortex"
+      }
+    },
     // "cortex-graph": {
     //   "transport": "http",
     //   "url": "http://localhost:8787/mcp"

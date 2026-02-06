@@ -1,0 +1,115 @@
+{
+  "$defs": {
+    "FederatedModule": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "manifest": {
+          "title": "Manifest",
+          "type": "string"
+        },
+        "repoRoot": {
+          "default": ".",
+          "title": "Reporoot",
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "includeInRoot": {
+          "default": true,
+          "title": "Includeinroot",
+          "type": "boolean"
+        },
+        "health": {
+          "$ref": "#/$defs/ModuleHealth"
+        }
+      },
+      "required": [
+        "id",
+        "summary",
+        "manifest"
+      ],
+      "title": "FederatedModule",
+      "type": "object"
+    },
+    "HealthCommand": {
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "command": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Command",
+          "type": "array"
+        },
+        "env": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Env",
+          "type": "object"
+        },
+        "timeoutSeconds": {
+          "default": 60,
+          "maximum": 1800,
+          "minimum": 5,
+          "title": "Timeoutseconds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "label",
+        "command"
+      ],
+      "title": "HealthCommand",
+      "type": "object"
+    },
+    "ModuleHealth": {
+      "properties": {
+        "commands": {
+          "items": {
+            "$ref": "#/$defs/HealthCommand"
+          },
+          "title": "Commands",
+          "type": "array"
+        }
+      },
+      "title": "ModuleHealth",
+      "type": "object"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "modules": {
+      "items": {
+        "$ref": "#/$defs/FederatedModule"
+      },
+      "title": "Modules",
+      "type": "array"
+    }
+  },
+  "required": [
+    "version",
+    "modules"
+  ],
+  "title": "FederationManifest",
+  "type": "object"
+}

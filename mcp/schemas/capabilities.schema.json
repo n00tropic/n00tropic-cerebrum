@@ -1,0 +1,218 @@
+{
+  "$defs": {
+    "Capability": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "entrypoint": {
+          "title": "Entrypoint",
+          "type": "string"
+        },
+        "inputs": {
+          "additionalProperties": true,
+          "title": "Inputs",
+          "type": "object"
+        },
+        "outputs": {
+          "additionalProperties": true,
+          "title": "Outputs",
+          "type": "object"
+        },
+        "metadata": {
+          "$ref": "#/$defs/CapabilityMetadata"
+        },
+        "agent": {
+          "additionalProperties": true,
+          "title": "Agent",
+          "type": "object"
+        },
+        "guardrails": {
+          "$ref": "#/$defs/Guardrails"
+        }
+      },
+      "required": [
+        "id",
+        "summary",
+        "entrypoint"
+      ],
+      "title": "Capability",
+      "type": "object"
+    },
+    "CapabilityCategory": {
+      "enum": [
+        "automation",
+        "deployment",
+        "observability",
+        "maintenance",
+        "generation",
+        "analysis",
+        "core"
+      ],
+      "title": "CapabilityCategory",
+      "type": "string"
+    },
+    "CapabilityMetadata": {
+      "properties": {
+        "owner": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Primary maintainer or distribution list",
+          "title": "Owner"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "category": {
+          "$ref": "#/$defs/CapabilityCategory",
+          "description": "Functional category for this capability"
+        },
+        "docs": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Docs"
+        }
+      },
+      "required": [
+        "category"
+      ],
+      "title": "CapabilityMetadata",
+      "type": "object"
+    },
+    "Guardrails": {
+      "properties": {
+        "max_runtime_seconds": {
+          "default": 900,
+          "maximum": 7200,
+          "minimum": 30,
+          "title": "Max Runtime Seconds",
+          "type": "integer"
+        },
+        "allowed_exit_codes": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Allowed Exit Codes",
+          "type": "array"
+        },
+        "allowed_env": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Env",
+          "type": "array"
+        },
+        "allowed_entrypoint_roots": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Entrypoint Roots",
+          "type": "array"
+        },
+        "allow_network": {
+          "default": false,
+          "title": "Allow Network",
+          "type": "boolean"
+        },
+        "max_concurrency": {
+          "default": 1,
+          "description": "Maximum concurrent executions of this capability",
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Max Concurrency",
+          "type": "integer"
+        },
+        "stdout_max_bytes": {
+          "default": 8000,
+          "description": "Upper bound for captured stdout per run",
+          "maximum": 65536,
+          "minimum": 256,
+          "title": "Stdout Max Bytes",
+          "type": "integer"
+        },
+        "stderr_max_bytes": {
+          "default": 8000,
+          "description": "Upper bound for captured stderr per run",
+          "maximum": 65536,
+          "minimum": 256,
+          "title": "Stderr Max Bytes",
+          "type": "integer"
+        },
+        "redact_patterns": {
+          "description": "Regex patterns to redact from stdout/stderr",
+          "items": {
+            "type": "string"
+          },
+          "title": "Redact Patterns",
+          "type": "array"
+        },
+        "redact_replacement": {
+          "default": "[redacted]",
+          "description": "Replacement token for redacted stdout/stderr text",
+          "minLength": 3,
+          "title": "Redact Replacement",
+          "type": "string"
+        },
+        "telemetry_tags": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Key/value tags appended to capability telemetry records",
+          "title": "Telemetry Tags",
+          "type": "object"
+        }
+      },
+      "title": "Guardrails",
+      "type": "object"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "agentFramework": {
+      "additionalProperties": true,
+      "title": "Agentframework",
+      "type": "object"
+    },
+    "capabilities": {
+      "items": {
+        "$ref": "#/$defs/Capability"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    }
+  },
+  "required": [
+    "version",
+    "capabilities"
+  ],
+  "title": "CapabilityManifest",
+  "type": "object"
+}

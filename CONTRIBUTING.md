@@ -51,3 +51,20 @@ This workspace stitches together multiple submodules (cortex, frontiers, horizon
 - Python: run `coverage run -m pytest && coverage report` (or `python -m pytest --cov` if configured) and keep modules touched ≥85%.
 - Mixed repos: run both JS and Python coverage where applicable. Document coverage deltas in PR descriptions.
 - If coverage dips below 85%, add tests before merge or file a waiver with a remediation plan (tests in the next PR).
+
+## Troubleshooting
+
+### `trunk` permission errors (mkstemp)
+
+If you encounter `mkstemp: Operation not permitted` errors from `trunk` hooks during commit/push:
+
+1. Try cleaning the cache: `trunk cache clean`
+2. If persistent, bypass hooks temporarily: `git commit --no-verify` / `git push --no-verify`
+3. **Note:** This bypasses lint/schema checks, so run `pnpm run qa:workspace:full` manually to ensure quality.
+
+## New CLI Tools
+
+- **Project Management**: Use the unified `project` command for metadata tasks.
+  - `n00t project capture`: New project intake
+  - `n00t project sync`: Sync with GitHub/ERPNext
+

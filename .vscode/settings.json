@@ -59,14 +59,20 @@
 			},
 			"github": {
 				"command": "npx",
-				"args": ["-y", "@modelcontextprotocol/server-github"],
+				"args": [
+					"-y",
+					"@modelcontextprotocol/server-github"
+				],
 				"env": {
 					"GITHUB_PERSONAL_ACCESS_TOKEN": "<REPLACE_WITH_YOUR_TOKEN>"
 				}
 			},
 			"memory": {
 				"command": "npx",
-				"args": ["-y", "@modelcontextprotocol/server-memory"]
+				"args": [
+					"-y",
+					"@modelcontextprotocol/server-memory"
+				]
 			},
 			"filesystem": {
 				"command": "npx",
@@ -88,6 +94,20 @@
 			"path": "",
 			"envManager": "ms-python.python:venv",
 			"packageManager": "ms-python.python:pip"
+		}
+	],
+	"json.schemas": [
+		{
+			"fileMatch": [
+				"**/capabilities_manifest.json"
+			],
+			"url": "./mcp/schemas/capabilities.schema.json"
+		},
+		{
+			"fileMatch": [
+				"**/federation_manifest.json"
+			],
+			"url": "./mcp/schemas/federation.schema.json"
 		}
 	]
 }

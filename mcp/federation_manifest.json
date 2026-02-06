@@ -4,9 +4,12 @@
 		{
 			"id": "n00t-core",
 			"summary": "Core automation and delivery capabilities from the n00t workspace",
-			"manifest": "n00t/capabilities/manifest.json",
+			"manifest": "platform/n00t/capabilities/manifest.json",
 			"repoRoot": ".",
-			"tags": ["automation", "core"],
+			"tags": [
+				"automation",
+				"core"
+			],
 			"health": {
 				"commands": [
 					{
@@ -26,9 +29,13 @@
 		{
 			"id": "n00-horizons",
 			"summary": "Horizons governance and lifecycle capabilities",
-			"manifest": "n00-horizons/mcp/capabilities_manifest.json",
-			"repoRoot": "n00-horizons",
-			"tags": ["horizons", "governance", "jobs"],
+			"manifest": "platform/n00-horizons/mcp/capabilities_manifest.json",
+			"repoRoot": "platform/n00-horizons",
+			"tags": [
+				"horizons",
+				"governance",
+				"jobs"
+			],
 			"includeInRoot": true,
 			"health": {
 				"commands": [
@@ -51,9 +58,13 @@
 		{
 			"id": "n00-frontiers",
 			"summary": "Frontiers template and smoketest automation",
-			"manifest": "n00-frontiers/mcp/capabilities_manifest.json",
-			"repoRoot": "n00-frontiers",
-			"tags": ["frontiers", "templates", "validation"],
+			"manifest": "platform/n00-frontiers/mcp/capabilities_manifest.json",
+			"repoRoot": "platform/n00-frontiers",
+			"tags": [
+				"frontiers",
+				"templates",
+				"validation"
+			],
 			"includeInRoot": true,
 			"health": {
 				"commands": [
@@ -76,9 +87,13 @@
 		{
 			"id": "n00-cortex",
 			"summary": "Cortex schema, export, and catalog automation",
-			"manifest": "n00-cortex/mcp/capabilities_manifest.json",
-			"repoRoot": "n00-cortex",
-			"tags": ["cortex", "schemas", "exports"],
+			"manifest": "platform/n00-cortex/mcp/capabilities_manifest.json",
+			"repoRoot": "platform/n00-cortex",
+			"tags": [
+				"cortex",
+				"schemas",
+				"exports"
+			],
 			"includeInRoot": true,
 			"health": {
 				"commands": [
@@ -101,9 +116,13 @@
 		{
 			"id": "n00tropic",
 			"summary": "n00tropic AI design generator + publishing flows",
-			"manifest": "n00tropic/mcp/capabilities_manifest.json",
-			"repoRoot": "n00tropic",
-			"tags": ["n00tropic", "design", "generator"],
+			"manifest": "platform/n00tropic/mcp/capabilities_manifest.json",
+			"repoRoot": "platform/n00tropic",
+			"tags": [
+				"n00tropic",
+				"design",
+				"generator"
+			],
 			"includeInRoot": true,
 			"health": {
 				"commands": [
@@ -112,6 +131,146 @@
 						"command": [
 							"python",
 							"../mcp/validate_manifest.py",
+							"--manifest",
+							"mcp/capabilities_manifest.json",
+							"--repo-root",
+							".",
+							"--json"
+						],
+						"timeoutSeconds": 60
+					}
+				]
+			}
+		},
+		{
+			"id": "n00plicate",
+			"summary": "n00plicate design system orchestrator",
+			"manifest": "platform/n00plicate/mcp/capabilities_manifest.json",
+			"repoRoot": "platform/n00plicate",
+			"tags": [
+				"design",
+				"tokens"
+			],
+			"includeInRoot": true,
+			"health": {
+				"commands": [
+					{
+						"label": "validate-n00plicate-manifest",
+						"command": [
+							"python",
+							"../../mcp/validate_manifest.py",
+							"--manifest",
+							"mcp/capabilities_manifest.json",
+							"--repo-root",
+							".",
+							"--json"
+						],
+						"timeoutSeconds": 60
+					}
+				]
+			}
+		},
+		{
+			"id": "n00clear-fusion",
+			"summary": "n00clear-fusion document ingestion pipeline",
+			"manifest": "platform/n00clear-fusion/mcp/capabilities_manifest.json",
+			"repoRoot": "platform/n00clear-fusion",
+			"tags": [
+				"ingestion",
+				"ocr"
+			],
+			"includeInRoot": true,
+			"health": {
+				"commands": [
+					{
+						"label": "validate-fusion-manifest",
+						"command": [
+							"python",
+							"../../mcp/validate_manifest.py",
+							"--manifest",
+							"mcp/capabilities_manifest.json",
+							"--repo-root",
+							".",
+							"--json"
+						],
+						"timeoutSeconds": 60
+					}
+				]
+			}
+		},
+		{
+			"id": "n00-school",
+			"summary": "n00-school model training lab",
+			"manifest": "platform/n00-school/mcp/capabilities_manifest.json",
+			"repoRoot": "platform/n00-school",
+			"tags": [
+				"training",
+				"models"
+			],
+			"includeInRoot": true,
+			"health": {
+				"commands": [
+					{
+						"label": "validate-school-manifest",
+						"command": [
+							"python",
+							"../../mcp/validate_manifest.py",
+							"--manifest",
+							"mcp/capabilities_manifest.json",
+							"--repo-root",
+							".",
+							"--json"
+						],
+						"timeoutSeconds": 60
+					}
+				]
+			}
+		},
+		{
+			"id": "n00menon",
+			"summary": "n00menon document curation hub",
+			"manifest": "platform/n00menon/mcp/capabilities_manifest.json",
+			"repoRoot": "platform/n00menon",
+			"tags": [
+				"docs",
+				"curation"
+			],
+			"includeInRoot": true,
+			"health": {
+				"commands": [
+					{
+						"label": "validate-n00menon-manifest",
+						"command": [
+							"python",
+							"../../mcp/validate_manifest.py",
+							"--manifest",
+							"mcp/capabilities_manifest.json",
+							"--repo-root",
+							".",
+							"--json"
+						],
+						"timeoutSeconds": 60
+					}
+				]
+			}
+		},
+		{
+			"id": "n00man",
+			"summary": "n00man agent foundry",
+			"manifest": "platform/n00man/mcp/capabilities_manifest.json",
+			"repoRoot": "platform/n00man",
+			"tags": [
+				"agents",
+				"scaffold"
+			],
+			"includeInRoot": true,
+			"health": {
+				"commands": [
+					{
+						"label": "validate-n00man-manifest",
+						"command": [
+							"python",
+							"../../mcp/validate_manifest.py",
 							"--manifest",
 							"mcp/capabilities_manifest.json",
 							"--repo-root",

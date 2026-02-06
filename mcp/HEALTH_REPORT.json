@@ -1,0 +1,365 @@
+[
+  {
+    "title": "MCP Health: Missing owner for horizons.preflight (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for horizons.radar (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for horizons.orchestrate (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for horizons.agentFoundry (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for fusion.ingest (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for fusion.embed (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for fusion.generate (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for workspace.trunkUpgrade (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for workspace.release (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for dependencies.check (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for dependencies.dashboard (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for cortex.frontiersIngest (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for school.trainingRun (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for school.generateCurriculum (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for ai.workflow.planning (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for ai.workflow.architecture (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for ai.workflow.coding (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for ai.workflow.debugging (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for ai.workflow.review (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for ai.workflow.runner (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for erpnext.exportData (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for erpnext.verifyExports (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.capture (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.sync.github (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.sync.erpnext (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.preflight (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.batchPreflight (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.recordIdea (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.recordJob (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.ingestMarkdown (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.lifecycleRadar (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for project.autofixLinks (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  },
+  {
+    "title": "MCP Health: Missing owner for workspace.repair (n00t-core)",
+    "body": "**Module**: `n00t-core`\n**Severity**: MEDIUM\n\nCapability is missing 'owner'.",
+    "labels": [
+      "mcp",
+      "health-check",
+      "severity/medium"
+    ],
+    "module": "n00t-core",
+    "severity": "medium"
+  }
+]
