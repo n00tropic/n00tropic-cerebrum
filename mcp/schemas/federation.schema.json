@@ -35,11 +35,7 @@
           "$ref": "#/$defs/ModuleHealth"
         }
       },
-      "required": [
-        "id",
-        "summary",
-        "manifest"
-      ],
+      "required": ["id", "summary", "manifest"],
       "title": "FederatedModule",
       "type": "object"
     },
@@ -71,10 +67,7 @@
           "type": "integer"
         }
       },
-      "required": [
-        "label",
-        "command"
-      ],
+      "required": ["label", "command"],
       "title": "HealthCommand",
       "type": "object"
     },
@@ -106,10 +99,7 @@
       "type": "array"
     }
   },
-  "required": [
-    "version",
-    "modules"
-  ],
+  "required": ["version", "modules"],
   "title": "FederationManifest",
   "type": "object"
 }

@@ -37,11 +37,7 @@
           "$ref": "#/$defs/Guardrails"
         }
       },
-      "required": [
-        "id",
-        "summary",
-        "entrypoint"
-      ],
+      "required": ["id", "summary", "entrypoint"],
       "title": "Capability",
       "type": "object"
     },
@@ -97,9 +93,7 @@
           "title": "Docs"
         }
       },
-      "required": [
-        "category"
-      ],
+      "required": ["category"],
       "title": "CapabilityMetadata",
       "type": "object"
     },
@@ -209,10 +203,7 @@
       "type": "array"
     }
   },
-  "required": [
-    "version",
-    "capabilities"
-  ],
+  "required": ["version", "capabilities"],
   "title": "CapabilityManifest",
   "type": "object"
 }

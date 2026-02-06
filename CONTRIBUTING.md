@@ -67,4 +67,3 @@ If you encounter `mkstemp: Operation not permitted` errors from `trunk` hooks du
 - **Project Management**: Use the unified `project` command for metadata tasks.
   - `n00t project capture`: New project intake
   - `n00t project sync`: Sync with GitHub/ERPNext
-

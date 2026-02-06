@@ -5,7 +5,7 @@ import json
 import re
 from pathlib import Path
 from dataclasses import dataclass
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional  # noqa: F401
 
 # Constants
 DEFAULT_COVERAGE_THRESHOLD = 75
@@ -149,9 +149,6 @@ def main():
             if d.is_dir() and not d.name.startswith(".")
         ]
 
-    results = []
-    failed = False
-
     print(
         f"Running quality gates for {len(targets)} modules (Threshold: {args.threshold}%)\n"
     )
@@ -183,7 +180,10 @@ def main():
             if not res.passed or res.coverage < args.threshold:
                 failed = True
                 if res.message:
-                    print(f"  Error:\n{res.message[:500]}...")  # Truncate log
+                    # pylint: disable=unsubscriptable-object
+                    msg = str(res.message)
+                    truncated_msg = f"{msg:.500}"
+                    print(f"  Error:\n{truncated_msg}...")  # Truncate log
 
             print("-" * 40)
 

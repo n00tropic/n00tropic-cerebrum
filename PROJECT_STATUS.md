@@ -3,7 +3,9 @@
 Generated on 2026-02-06
 
 ## Discover
+
 ### Unified Project Management Orchestration (`idea-006`)
+
 - **Status**: proposed
 - **Owner**: product-office
 - **ERPNext**: PM-UNIFIED
@@ -11,6 +13,7 @@ Generated on 2026-02-06
   - [charter](n00tropic_HQ/98. Internal-Projects/IP-2-unified-project-management-system/IP-2-unified-project-management-system.md)
 
 ### Frontier Ops Control Plane (`None`)
+
 - **Status**: proposed
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -19,6 +22,7 @@ Generated on 2026-02-06
   - [learning-log](../../learning-log/LL-14-01-25-frontier-ops-control-plane-enablement.md)
 
 ### Frontier Ops Control Plane Enablement (`learn-14-01-2025-fops`)
+
 - **Status**: recorded
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -27,6 +31,7 @@ Generated on 2026-02-06
   - [project](n00tropic_HQ/98. Internal-Projects/IP-3-frontier-ops-control-plane/IP-3-frontier-ops-control-plane.md)
 
 ### Control Tower Automation Hardening (`idea-control-tower-automation-hardening`)
+
 - **Status**: proposed
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -40,6 +45,7 @@ Generated on 2026-02-06
   - [project](n00tropic_HQ/98. Internal-Projects/IP-3-frontier-ops-control-plane/IP-3-frontier-ops-control-plane.md)
 
 ### Frontier Ops Control Plane (`idea-frontier-ops-control-plane`)
+
 - **Status**: proposed
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -48,6 +54,7 @@ Generated on 2026-02-06
   - [learning-log](n00tropic-cerebrum/n00-horizons/learning-log/LL-14-01-25-frontier-ops-control-plane-enablement.md)
 
 ### Unified Project Management System Spike (`learn-14-01-2025-upms`)
+
 - **Status**: recorded
 - **Owner**: codex-assist
 - **ERPNext**: PM-UNIFIED
@@ -55,7 +62,9 @@ Generated on 2026-02-06
   - [project](n00tropic_HQ/98. Internal-Projects/IP-2-unified-project-management-system/IP-2-unified-project-management-system.md)
 
 ## Shape
+
 ### Unified Project Management & Execution System (`project-ip-002`)
+
 - **Status**: in-definition
 - **Owner**: product-office
 - **ERPNext**: PM-UNIFIED
@@ -66,6 +75,7 @@ Generated on 2026-02-06
   - [runbook](n00tropic-cerebrum/n00t/START HERE/PROJECT_ORCHESTRATION.md)
 
 ### Frontier Ops Control Plane – One Pager (`project-frontier-ops-control-plane`)
+
 - **Status**: in-definition
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -75,6 +85,7 @@ Generated on 2026-02-06
   - [learning-log](n00tropic-cerebrum/n00-horizons/learning-log/LL-14-01-25-frontier-ops-control-plane-enablement.md)
 
 ### Frontier Ops Control Plane – Phase B Planning (`project-ip-003b-planning`)
+
 - **Status**: in-definition
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -84,7 +95,9 @@ Generated on 2026-02-06
   - [project](n00tropic_HQ/98. Internal-Projects/IP-3-frontier-ops-control-plane/IP-3-frontier-ops-control-plane.md)
 
 ## Deliver
+
 ### Control Tower – Registry & Lifecycle Audits (`job-control-tower-audits`)
+
 - **Status**: queued
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -93,6 +106,7 @@ Generated on 2026-02-06
   - [doc](n00tropic-cerebrum/n00-horizons/docs/job-pipeline.md)
 
 ### Capability Contract Test Harness (`job-capability-contract-tests`)
+
 - **Status**: queued
 - **Owner**: platform-ops
 - **ERPNext**: PM-UNIFIED
@@ -101,6 +115,7 @@ Generated on 2026-02-06
   - [doc](n00tropic-cerebrum/n00t/capabilities/manifest.json)
 
 ### Schema ↔ Template Parity Auditor (`job-schema-template-parity`)
+
 - **Status**: queued
 - **Owner**: frontiers-core
 - **ERPNext**: PM-BASELINE
@@ -109,6 +124,7 @@ Generated on 2026-02-06
   - [doc](n00tropic-cerebrum/n00-frontiers/docs/overview)
 
 ### ERPNext Export Resilience Guardrails (`job-erpnext-export-resilience`)
+
 - **Status**: queued
 - **Owner**: platform-ops
 - **ERPNext**: PM-UNIFIED
@@ -116,6 +132,7 @@ Generated on 2026-02-06
   - [doc](n00tropic_HQ/12-Platform-Ops/README.md)
 
 ### Automation Telemetry Indexer & SLO Dashboard (`job-automation-telemetry-indexer`)
+
 - **Status**: queued
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -124,6 +141,7 @@ Generated on 2026-02-06
   - [doc](n00tropic_HQ/12-Platform-Ops/telemetry)
 
 ### HQ ↔ Generator Link Auditor (`job-hq-link-auditor`)
+
 - **Status**: queued
 - **Owner**: frontiers-core
 - **ERPNext**: PM-BASELINE
@@ -132,6 +150,7 @@ Generated on 2026-02-06
   - [doc](n00tropic_HQ/START HERE/README.md)
 
 ### Job Card Template Hardening & Reference Pack (`job-your-slug`)
+
 - **Status**: queued
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -141,6 +160,7 @@ Generated on 2026-02-06
   - [project](n00tropic_HQ/98. Internal-Projects/IP-3-frontier-ops-control-plane/IP-3-frontier-ops-control-plane.md)
 
 ### project.autofixLinks Capability (`job-project-autofix-links`)
+
 - **Status**: in-progress
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -148,6 +168,7 @@ Generated on 2026-02-06
   - [idea](n00tropic-cerebrum/n00-horizons/ideas/idea-control-tower-automation-hardening/README.md)
 
 ### Lifecycle Radar Consolidation & Panel Surfacing (`job-lifecycle-radar-consolidation`)
+
 - **Status**: queued
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -155,6 +176,7 @@ Generated on 2026-02-06
   - [idea](n00tropic-cerebrum/n00-horizons/ideas/idea-control-tower-automation-hardening/README.md)
 
 ### Capability Playbook Upgrades (`job-capability-playbooks`)
+
 - **Status**: queued
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -162,6 +184,7 @@ Generated on 2026-02-06
   - [idea](n00tropic-cerebrum/n00-horizons/ideas/idea-control-tower-automation-hardening/README.md)
 
 ### Control Tower Swift Companion – Milestone 1 (`job-control-tower-swift-m1`)
+
 - **Status**: queued
 - **Owner**: frontiers-core
 - **ERPNext**: PM-FOPS-CTRL
@@ -169,6 +192,7 @@ Generated on 2026-02-06
   - [idea](n00tropic-cerebrum/n00-horizons/ideas/idea-control-tower-automation-hardening/README.md)
 
 ### Project & Task Intake Template Hardening (`job-intake-template-hardening`)
+
 - **Status**: queued
 - **Owner**: platform-ops
 - **ERPNext**: PM-FOPS-CTRL
@@ -176,6 +200,7 @@ Generated on 2026-02-06
   - [idea](n00tropic-cerebrum/n00-horizons/ideas/idea-control-tower-automation-hardening/README.md)
 
 ### Control panel telemetry upgrade (`job-control-panel-upgrade`)
+
 - **Status**: queued
 - **Owner**: ops-team
 - **ERPNext**: PM-CONTROL
@@ -183,6 +208,7 @@ Generated on 2026-02-06
   - [experiment](n00tropic-cerebrum/n00-horizons/docs/experiments/control-panel-upgrade.md)
 
 ### Docs migration completion (`job-docs-migration`)
+
 - **Status**: queued
 - **Owner**: docs-guild
 - **ERPNext**: PM-DOCS
@@ -190,6 +216,7 @@ Generated on 2026-02-06
   - [experiment](n00tropic-cerebrum/n00-horizons/docs/experiments/antora-typesense-completion.md)
 
 ### Planner telemetry publication (`job-planner-telemetry`)
+
 - **Status**: queued
 - **Owner**: ops-team
 - **ERPNext**: PM-TELEMETRY

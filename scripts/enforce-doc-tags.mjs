@@ -15,53 +15,53 @@ const root = rootArg ? rootArg.split("=")[1] : ".";
 const today = new Date().toISOString().slice(0, 10);
 
 const files = globSync(`${root}/docs/**/*.adoc`, {
-	ignore: [
-		"**/partials/**",
-		"**/build/**",
-		"**/logs/**",
-		"**/.cache/**",
-		"**/node_modules/**",
-	],
+  ignore: [
+    "**/partials/**",
+    "**/build/**",
+    "**/logs/**",
+    "**/.cache/**",
+    "**/node_modules/**",
+  ],
 });
 
 let changed = 0;
 for (const file of files) {
-	const lines = fs.readFileSync(file, "utf8").split("\n");
-	const hasTags = lines.some((l) => l.startsWith(":page-tags:"));
-	const hasReviewed = lines.some((l) => l.startsWith(":reviewed:"));
+  const lines = fs.readFileSync(file, "utf8").split("\n");
+  const hasTags = lines.some((l) => l.startsWith(":page-tags:"));
+  const hasReviewed = lines.some((l) => l.startsWith(":reviewed:"));
 
-	const insertAt = lines.findIndex((l) => l.trim().startsWith("="));
-	if (insertAt === -1) continue;
+  const insertAt = lines.findIndex((l) => l.trim().startsWith("="));
+  if (insertAt === -1) continue;
 
-	const inserts = [];
-	if (!hasTags) {
-		inserts.push(
-			`:page-tags: diataxis:reference, domain:platform, audience:contrib, stability:beta`,
-		);
-	}
-	if (!hasReviewed) {
-		inserts.push(`:reviewed: ${today}`);
-	}
+  const inserts = [];
+  if (!hasTags) {
+    inserts.push(
+      `:page-tags: diataxis:reference, domain:platform, audience:contrib, stability:beta`,
+    );
+  }
+  if (!hasReviewed) {
+    inserts.push(`:reviewed: ${today}`);
+  }
 
-	if (inserts.length === 0) continue;
+  if (inserts.length === 0) continue;
 
-	const nextLines = [
-		...lines.slice(0, insertAt),
-		...inserts,
-		...lines.slice(insertAt),
-	];
+  const nextLines = [
+    ...lines.slice(0, insertAt),
+    ...inserts,
+    ...lines.slice(insertAt),
+  ];
 
-	if (dryRun) {
-		console.log(
-			`[dry-run] Would patch ${file} -> add ${inserts.length} fields`,
-		);
-	} else {
-		fs.writeFileSync(file, nextLines.join("\n"), "utf8");
-		console.log(`[patched] ${file} (+${inserts.length} fields)`);
-		changed++;
-	}
+  if (dryRun) {
+    console.log(
+      `[dry-run] Would patch ${file} -> add ${inserts.length} fields`,
+    );
+  } else {
+    fs.writeFileSync(file, nextLines.join("\n"), "utf8");
+    console.log(`[patched] ${file} (+${inserts.length} fields)`);
+    changed++;
+  }
 }
 
 console.log(
-	`enforce-doc-tags: changed ${changed} file(s)${dryRun ? " (dry)" : ""}`,
+  `enforce-doc-tags: changed ${changed} file(s)${dryRun ? " (dry)" : ""}`,
 );

@@ -8,36 +8,36 @@ const pkgPath = join(root, "n00plicate", "package.json");
 
 const current = process.versions.node;
 const nvmrc = existsSync(nvmrcPath)
-	? readFileSync(nvmrcPath, "utf8").trim()
-	: null;
+  ? readFileSync(nvmrcPath, "utf8").trim()
+  : null;
 let engine = null;
 try {
-	const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
-	engine = pkg.engines?.node ?? null;
+  const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+  engine = pkg.engines?.node ?? null;
 } catch {}
 
 const expected = nvmrc || engine;
 
 if (!expected) {
-	console.warn("No .nvmrc or engines.node found; skipping Node version check.");
-	process.exit(0);
+  console.warn("No .nvmrc or engines.node found; skipping Node version check.");
+  process.exit(0);
 }
 
 function _noSpan(_name, fn) {
-	return fn(undefined);
+  return fn(undefined);
 }
 const normalize = (v) => v.replace(/^v/, "").trim();
 
 const parse = (v) => {
-	const m = normalize(v).match(/^(\d+)\.(\d+)\.(\d+)/);
-	if (!m) return null;
-	return { major: Number(m[1]), minor: Number(m[2]), patch: Number(m[3]) };
+  const m = normalize(v).match(/^(\d+)\.(\d+)\.(\d+)/);
+  if (!m) return null;
+  return { major: Number(m[1]), minor: Number(m[2]), patch: Number(m[3]) };
 };
 
 const gte = (a, b) => {
-	if (a.major !== b.major) return a.major > b.major;
-	if (a.minor !== b.minor) return a.minor > b.minor;
-	return a.patch >= b.patch;
+  if (a.major !== b.major) return a.major > b.major;
+  if (a.minor !== b.minor) return a.minor > b.minor;
+  return a.patch >= b.patch;
 };
 
 const actualSemver = parse(current);
@@ -49,41 +49,41 @@ let ok = false;
 let wantDisplay = wantRaw;
 
 if (wantIsLts) {
-	// For .nvmrc set to lts/* or node, use engines lower bound if available, else current LTS major
-	const min =
-		engine && engine.startsWith(">=")
-			? parse(engine.replace(/^>=\s*/, ""))
-			: null;
-	if (actualSemver && min) {
-		ok = gte(actualSemver, min);
-		wantDisplay = `>= ${min.major}.${min.minor}.${min.patch} (LTS)`;
-	} else {
-		ok = true; // best effort
-	}
+  // For .nvmrc set to lts/* or node, use engines lower bound if available, else current LTS major
+  const min =
+    engine && engine.startsWith(">=")
+      ? parse(engine.replace(/^>=\s*/, ""))
+      : null;
+  if (actualSemver && min) {
+    ok = gte(actualSemver, min);
+    wantDisplay = `>= ${min.major}.${min.minor}.${min.patch} (LTS)`;
+  } else {
+    ok = true; // best effort
+  }
 } else if (wantRange) {
-	const min = parse(wantRaw.replace(/^>=\s*/, ""));
-	if (actualSemver && min) {
-		ok = gte(actualSemver, min);
-		wantDisplay = `>= ${min.major}.${min.minor}.${min.patch}`;
-	}
+  const min = parse(wantRaw.replace(/^>=\s*/, ""));
+  if (actualSemver && min) {
+    ok = gte(actualSemver, min);
+    wantDisplay = `>= ${min.major}.${min.minor}.${min.patch}`;
+  }
 } else {
-	const target = parse(wantRaw);
-	if (actualSemver && target) {
-		ok =
-			actualSemver.major === target.major &&
-			actualSemver.minor === target.minor &&
-			actualSemver.patch === target.patch;
-	}
+  const target = parse(wantRaw);
+  if (actualSemver && target) {
+    ok =
+      actualSemver.major === target.major &&
+      actualSemver.minor === target.minor &&
+      actualSemver.patch === target.patch;
+  }
 }
 
 if (!ok) {
-	console.error(
-		`❌ Node version mismatch: running ${current}, expected ${wantDisplay}.`,
-	);
-	if (nvmrc) {
-		console.error("   Try: nvm use --lts");
-	}
-	process.exit(1);
+  console.error(
+    `❌ Node version mismatch: running ${current}, expected ${wantDisplay}.`,
+  );
+  if (nvmrc) {
+    console.error("   Try: nvm use --lts");
+  }
+  process.exit(1);
 } else {
-	console.log(`✅ Node version OK (${current}) meets ${wantDisplay}`);
+  console.log(`✅ Node version OK (${current}) meets ${wantDisplay}`);
 }
