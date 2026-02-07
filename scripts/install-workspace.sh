@@ -41,26 +41,26 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
-if [[ ! -f "$ROOT_DIR/package.json" ]]; then
-	echo "[install-workspace] package.json not found at $ROOT_DIR" >&2
+if [[ ! -f "${ROOT_DIR}/package.json" ]]; then
+	echo "[install-workspace] package.json not found at ${ROOT_DIR}" >&2
 	exit 1
 fi
 
-if [[ -x "$ROOT_DIR/scripts/pnpm-install-safe.sh" ]]; then
-	ALLOW_SUBREPO_PNPM_INSTALL=1 "$ROOT_DIR/scripts/pnpm-install-safe.sh" "$MODE"
-	if [[ $MODE == "install" ]]; then
+if [[ -x "${ROOT_DIR}/scripts/pnpm-install-safe.sh" ]]; then
+	ALLOW_SUBREPO_PNPM_INSTALL=1 "${ROOT_DIR}/scripts/pnpm-install-safe.sh" "${MODE}"
+	if [[ ${MODE} == "install" ]]; then
 		echo "[install-workspace] install complete"
 	fi
-	if [[ $MODE == "update" ]]; then
+	if [[ ${MODE} == "update" ]]; then
 		echo "[install-workspace] update complete"
 	fi
 	exit 0
 fi
 
 echo "[install-workspace] pnpm-install-safe.sh missing; falling back to pnpm" >&2
-cd "$ROOT_DIR"
+cd "${ROOT_DIR}"
 
-case "$MODE" in
+case "${MODE}" in
 install)
 	pnpm install
 	;;

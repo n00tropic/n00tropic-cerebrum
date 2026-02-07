@@ -51,8 +51,8 @@ if [[ -z $VERSION ]]; then
 	exit 1
 fi
 
-if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.]+)?$ ]]; then
-	echo "Invalid Node version: $VERSION" >&2
+if ! [[ ${VERSION} =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.]+)?$ ]]; then
+	echo "Invalid Node version: ${VERSION}" >&2
 	exit 1
 fi
 
@@ -129,7 +129,7 @@ PY
 	# Find all package.json files, excluding node_modules, ignored dirs
 	local package_files=()
 	while IFS= read -r -d '' file; do
-		package_files+=("$file")
+		package_files+=("${file}")
 	done < <(
 		find "$ROOT" -name "package.json" \
 			-not -path "*/node_modules/*" \
@@ -146,7 +146,7 @@ PY
 		return 0
 	fi
 
-	python3 "$py_script" "$VERSION" "${package_files[@]}"
+	python3 "$py_script" "${VERSION}" "${package_files[@]}"
 }
 
 update_package_jsons
