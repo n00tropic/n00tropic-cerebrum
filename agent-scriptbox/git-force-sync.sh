@@ -22,25 +22,25 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # Function to sync a directory
 sync_dir() {
-    local dir=$1
-    local name=$(basename "$dir")
+	local dir=$1
+	local name=$(basename "$dir")
 
-    echo -e "\n${BLUE}Processing: $name${NC}"
-    cd "$dir"
+	echo -e "\n${BLUE}Processing: $name${NC}"
+	cd "$dir"
 
-    # Check for changes
-    if [[ -n $(git status -s) ]]; then
-        echo "Found changes. Committing..."
-        git add .
-        git commit --no-verify -m "chore: force sync via agent scriptbox" || echo "Commit failed or empty"
+	# Check for changes
+	if [[ -n $(git status -s) ]]; then
+		echo "Found changes. Committing..."
+		git add .
+		git commit --no-verify -m "chore: force sync via agent scriptbox" || echo "Commit failed or empty"
 
-        echo "Pushing..."
-        git push origin main --no-verify
-    else
-        echo "No changes in $name."
-        # Attempt push anyway in case ahead of remote
-        git push origin main --no-verify || true
-    fi
+		echo "Pushing..."
+		git push origin main --no-verify
+	else
+		echo "No changes in $name."
+		# Attempt push anyway in case ahead of remote
+		git push origin main --no-verify || true
+	fi
 }
 
 # 1. Sync Submodules

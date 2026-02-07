@@ -63,7 +63,11 @@ TRUNK_NONINTERACTIVE=1 "${TRUNK_BIN}" upgrade || {
 }
 
 echo "Syncing canonical trunk configs into subrepos..."
-node scripts/sync-trunk-defs.mjs --pull
+if command -v node >/dev/null 2>&1; then
+	node scripts/sync-trunk-defs.mjs --pull
+else
+	echo "node not found; skipping sync-trunk-defs." >&2
+fi
 
 if [[ ${DO_CHECK} == true ]]; then
 	echo "Running trunk checks across subrepos..."

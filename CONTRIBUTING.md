@@ -11,8 +11,8 @@ This workspace stitches together multiple submodules (cortex, frontiers, horizon
 
 ## Tooling & runtimes
 
-- Node: `24.11.0` via `.nvmrc` and `scripts/sync-node-version.sh`; pnpm: `10.23.0` via corepack.
-- Python: `3.11.8` for Trunk runtimes and sample contexts.
+- Node: `24.11.0` via `.nvmrc` and `scripts/sync-node-version.sh`; pnpm: `10.28.2` via corepack.
+- Python: `3.11.9` for Trunk runtimes and sample contexts.
 - Prefer subproject-local CI: `pnpm run validate` (Node/TS) or `uv run pytest/ruff/mypy` (Python). Use `pnpm run qa:workspace:full` only for sweeping upgrades.
 
 ## Lint/format policy

@@ -1,4 +1,4 @@
-# Common workspace commands (Node 24.11.1 via .nvmrc)
+# Common workspace commands (Node 24.11.0 via .nvmrc)
 
 set shell := ['bash', '-cu']
 

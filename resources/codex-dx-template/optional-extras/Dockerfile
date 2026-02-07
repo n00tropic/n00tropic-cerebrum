@@ -5,7 +5,7 @@ FROM node:25-alpine
 WORKDIR /app
 
 # Install pnpm globally
-RUN corepack enable && corepack prepare pnpm@10.23.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
 
 # Copy package files
 COPY package.json pnpm-lock.yaml* ./

@@ -5,7 +5,7 @@ cd "$ROOT"
 
 if command -v corepack >/dev/null 2>&1; then
 	corepack enable || true
-	corepack prepare pnpm@10.23.0 --activate || true
+	corepack prepare pnpm@10.28.2 --activate || true
 fi
 
 echo "[n00menon-verify] installing deps via workspace filter"

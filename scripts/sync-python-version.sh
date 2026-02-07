@@ -9,6 +9,11 @@ if [[ ! -f $MANIFEST ]]; then
 	exit 1
 fi
 
+if ! command -v python3 >/dev/null 2>&1; then
+	echo "python3 is required to read the toolchain manifest" >&2
+	exit 1
+fi
+
 # Extract python version from manifest
 VERSION=$(
 	python3 - "${MANIFEST}" <<'PY'
@@ -19,8 +24,15 @@ print(val if isinstance(val, str) else val.get("version", ""))
 PY
 )
 
+VERSION=${VERSION#v}
+
 if [[ -z ${VERSION} ]]; then
 	echo "Could not find python version in manifest" >&2
+	exit 1
+fi
+
+if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.]+)?$ ]]; then
+	echo "Invalid Python version: $VERSION" >&2
 	exit 1
 fi
 

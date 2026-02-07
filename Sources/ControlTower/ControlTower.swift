@@ -32,7 +32,7 @@ struct ControlTower {
         case "status":
             printStatus()
         case "validate-cortex":
-            runCortex(["npx", "pnpm@10.23.0", "run", "validate:schemas"])
+            runCortex(["npx", "pnpm@10.28.2", "run", "validate:schemas"])
         case "graph-live":
             runCortex(["node", "scripts/build-graph.mjs"])
         case "graph-stub":

@@ -385,7 +385,7 @@ def _discover_all_workflows() -> Iterable[Path]:
 
 
 def _extract_pnpm_versions_in_file(path: Path) -> Iterable[str]:
-    # Matches 'corepack prepare pnpm@10.23.0', 'npx -y pnpm@10.23.0', 'npm i -g pnpm@10.23.0'
+    # Matches 'corepack prepare pnpm@10.28.2', 'npx -y pnpm@10.28.2', 'npm i -g pnpm@10.28.2'
     pattern = re.compile(r"pnpm@(\d+(?:\.\d+)*)")
     with path.open("r", encoding="utf-8", errors="ignore") as handle:
         content = handle.read()

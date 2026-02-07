@@ -38,7 +38,7 @@ jobs:
 
       - name: Check pnpm store pin
         run: |
-          PIN=10.23.0 scripts/check-pnpm-store-version.sh
+          PIN=10.28.2 scripts/check-pnpm-store-version.sh
 
       - name: Summary
         if: always()

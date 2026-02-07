@@ -4,7 +4,7 @@ set -euo pipefail
 echo "Centralizing pnpm store and hoisting workspace dependencies"
 
 if ! command -v pnpm &>/dev/null; then
-	echo "pnpm not found, try: corepack enable && corepack prepare pnpm@10.23.0 --activate"
+	echo "pnpm not found, try: corepack enable && corepack prepare pnpm@10.28.2 --activate"
 	exit 1
 fi
 

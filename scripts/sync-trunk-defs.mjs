@@ -6,16 +6,13 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(new URL(import.meta.url)));
 const root = path.resolve(here, "..");
-const helper = path.join(
-  root,
-  ".dev",
-  "automation",
-  "scripts",
-  "sync-trunk-configs.sh",
-);
+const helper = process.env.SYNC_TRUNK_HELPER
+  ? path.resolve(process.env.SYNC_TRUNK_HELPER)
+  : path.join(root, ".dev", "automation", "scripts", "sync-trunk-configs.sh");
 
 if (!fs.existsSync(helper)) {
   console.error(`[sync-trunk-defs] Missing helper: ${helper}`);
+  console.error("Set SYNC_TRUNK_HELPER to override the helper path.");
   process.exit(2);
 }
 

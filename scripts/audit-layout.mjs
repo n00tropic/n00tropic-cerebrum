@@ -21,7 +21,7 @@ const REQUIRED_DIRS = [
 const REQUIRED_SCRIPTS = ["build", "test", "lint", "format", "dev"];
 
 const REQUIRED_ENGINES = {
-  node: ">=24.1.0",
+  node: ">=24.11.0",
   pnpm: ">=10.28.2",
 };
 

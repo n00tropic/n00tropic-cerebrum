@@ -384,7 +384,7 @@ Use `pnpm` for local development of the Antora documentation and workspace scrip
 
    ```bash
    corepack enable
-   corepack prepare pnpm@10.23.0 --activate
+   corepack prepare pnpm@10.28.2 --activate
    ```
 
 2. Install workspace packages from the root folder:

@@ -11,7 +11,7 @@ tidy-submodules: ## Sync and update submodules, run manifest gate and skeleton c
 
 docs: ## Build Antora documentation
 	@echo "Building Antora documentation..."
-	@pnpm -v >/dev/null 2>&1 || (corepack prepare pnpm@10.23.0 --activate)
+	@pnpm -v >/dev/null 2>&1 || (corepack prepare pnpm@10.28.2 --activate)
 	pnpm exec antora antora-playbook.yml --stacktrace
 
 antora-local: ## Build Antora docs by cloning remote components into a temp dir and running a local playbook

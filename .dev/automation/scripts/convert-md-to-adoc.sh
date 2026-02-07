@@ -76,38 +76,38 @@ fix_adoc_headers() {
 
 SOURCES=("$@")
 if [[ ${#SOURCES[@]} -eq 0 ]]; then
-    # Default to globbing docs if no args provided (and not passed processed flags)
-    # We need to handle the case where flags were consumed.
-    # Actually, the shift logic above removed flags from $@.
-    SOURCES=(docs/index.md docs/**/*.md)
+	# Default to globbing docs if no args provided (and not passed processed flags)
+	# We need to handle the case where flags were consumed.
+	# Actually, the shift logic above removed flags from $@.
+	SOURCES=(docs/index.md docs/**/*.md)
 fi
 
 for pattern in "${SOURCES[@]}"; do
-    # Expand globs if they passed literally (zsh/bash differences)
-    # or just iterate if the shell already expanded them.
-    # In bash, if no match, it stays as literal unless nullglob is set.
-    # Let's enable nullglob to be safe?
-    # Actually, just looping is safer if we assume the caller or shell handles it.
-    # But if we want default behavior:
+	# Expand globs if they passed literally (zsh/bash differences)
+	# or just iterate if the shell already expanded them.
+	# In bash, if no match, it stays as literal unless nullglob is set.
+	# Let's enable nullglob to be safe?
+	# Actually, just looping is safer if we assume the caller or shell handles it.
+	# But if we want default behavior:
 
-    # If using zsh or bash with globstar on, this works.
-    # Let's assume standard expansion.
+	# If using zsh or bash with globstar on, this works.
+	# Let's assume standard expansion.
 
-    # Check if it is a directory, if so, glob inside.
-    if [[ -d "$pattern" ]]; then
-       # It's a dir, look for markdown inside
-       files=("$pattern"/**/*.md)
-    else
-       # It's a file pattern or file
-       # Use compgen or just let loop handle expanded list
-       files=($pattern)
-    fi
+	# Check if it is a directory, if so, glob inside.
+	if [[ -d $pattern ]]; then
+		# It's a dir, look for markdown inside
+		files=("$pattern"/**/*.md)
+	else
+		# It's a file pattern or file
+		# Use compgen or just let loop handle expanded list
+		files=($pattern)
+	fi
 
-    for file in "${files[@]}"; do
-        if [[ -f $file ]]; then
-            convert "$file"
-        fi
-    done
+	for file in "${files[@]}"; do
+		if [[ -f $file ]]; then
+			convert "$file"
+		fi
+	done
 done
 
 if [[ $FIX == true ]]; then

@@ -15,7 +15,7 @@
  * @license MIT
  */
 
-import { readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
@@ -23,11 +23,27 @@ import { execSync } from "child_process";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const REPO_ROOT = join(__dirname, "..");
-const MANIFEST_PATH = join(REPO_ROOT, "platform", "n00-cortex", "data", "toolchain-manifest.json");
+const MANIFEST_PATH = join(
+  REPO_ROOT,
+  "platform",
+  "n00-cortex",
+  "data",
+  "toolchain-manifest.json",
+);
 
 function loadManifest() {
-  const content = readFileSync(MANIFEST_PATH, "utf-8");
-  return JSON.parse(content);
+  if (!existsSync(MANIFEST_PATH)) {
+    console.error(`❌ Missing manifest at ${MANIFEST_PATH}`);
+    process.exit(1);
+  }
+
+  try {
+    const content = readFileSync(MANIFEST_PATH, "utf-8");
+    return JSON.parse(content);
+  } catch (error) {
+    console.error(`❌ Failed to read manifest: ${error.message}`);
+    process.exit(1);
+  }
 }
 
 function saveManifest(manifest) {
@@ -58,6 +74,10 @@ function listToolchains(manifest) {
   console.log("");
 }
 
+function normalizeVersion(version) {
+  return version.startsWith("v") ? version.slice(1) : version;
+}
+
 function validateVersion(version) {
   // Basic semver validation
   const semverPattern = /^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?(\+[a-zA-Z0-9.]+)?$/;
@@ -65,7 +85,8 @@ function validateVersion(version) {
 }
 
 function updateToolchain(manifest, toolName, newVersion) {
-  if (!validateVersion(newVersion)) {
+  const normalizedVersion = normalizeVersion(newVersion);
+  if (!validateVersion(normalizedVersion)) {
     console.error(`❌ Invalid version format: ${newVersion}`);
     console.error("   Expected format: X.Y.Z (e.g., 24.11.0)");
     process.exit(1);
@@ -86,18 +107,29 @@ function updateToolchain(manifest, toolName, newVersion) {
   const currentVersion =
     typeof current === "string" ? current : current.version;
 
-  if (currentVersion === newVersion) {
-    console.log(`ℹ️ ${toolName} is already at version ${newVersion}`);
+  if (currentVersion === normalizedVersion) {
+    console.log(`ℹ️ ${toolName} is already at version ${normalizedVersion}`);
     return false;
   }
 
-  console.log(`\n🔄 Updating ${toolName}: ${currentVersion} → ${newVersion}`);
+  console.log(
+    `\n🔄 Updating ${toolName}: ${currentVersion} → ${normalizedVersion}`,
+  );
 
   // Update main toolchain entry
   if (typeof current === "string") {
-    toolchains[toolName] = newVersion;
+    toolchains[toolName] = normalizedVersion;
   } else {
-    toolchains[toolName].version = newVersion;
+    toolchains[toolName].version = normalizedVersion;
+    if (Array.isArray(toolchains[toolName].supported)) {
+      toolchains[toolName].supported = Array.from(
+        new Set(
+          toolchains[toolName].supported.map((entry) =>
+            entry === currentVersion ? normalizedVersion : entry,
+          ),
+        ),
+      );
+    }
   }
 
   // Update per-repo entries that reference this toolchain
@@ -105,7 +137,7 @@ function updateToolchain(manifest, toolName, newVersion) {
   for (const [repoName, config] of Object.entries(repos)) {
     if (config[toolName] && config[toolName] === currentVersion) {
       console.log(`   📁 Updating ${repoName}/${toolName}`);
-      config[toolName] = newVersion;
+      config[toolName] = normalizedVersion;
     }
   }
 
@@ -115,22 +147,34 @@ function updateToolchain(manifest, toolName, newVersion) {
 function propagateVersions(manifest) {
   console.log("\n📡 Propagating versions across workspace...\n");
   try {
-    const nodeVersion = manifest.toolchains.node.version;
-    // Python might be string or object
-    const pyInfo = manifest.toolchains.python;
-    // const pythonVersion = typeof pyInfo === "string" ? pyInfo : pyInfo.version;
+    const toolchains = manifest.toolchains || {};
+    const nodeVersion = toolchains.node?.version || toolchains.node;
+    const pythonVersion =
+      typeof toolchains.python === "string"
+        ? toolchains.python
+        : toolchains.python?.version;
 
-    console.log(`   Running sync-node-version.sh --version ${nodeVersion}`);
-    execSync(`bash scripts/sync-node-version.sh --version ${nodeVersion}`, {
-      cwd: REPO_ROOT,
-      stdio: "inherit",
-    });
+    if (nodeVersion) {
+      console.log(`   Running sync-node-version.sh --version ${nodeVersion}`);
+      execSync(`bash scripts/sync-node-version.sh --version ${nodeVersion}`, {
+        cwd: REPO_ROOT,
+        stdio: "inherit",
+      });
+    } else {
+      console.warn("⚠️  Missing node version in toolchain manifest; skipping.");
+    }
 
-    console.log(`   Running sync-python-version.sh`);
-    execSync(`bash scripts/sync-python-version.sh`, {
-      cwd: REPO_ROOT,
-      stdio: "inherit",
-    });
+    if (pythonVersion) {
+      console.log("   Running sync-python-version.sh");
+      execSync(`bash scripts/sync-python-version.sh`, {
+        cwd: REPO_ROOT,
+        stdio: "inherit",
+      });
+    } else {
+      console.warn(
+        "⚠️  Missing python version in toolchain manifest; skipping.",
+      );
+    }
 
     return true;
   } catch (error) {

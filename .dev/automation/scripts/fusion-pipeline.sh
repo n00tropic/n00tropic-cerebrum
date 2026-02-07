@@ -13,7 +13,7 @@ fi
 INPUT_PATH="$1"
 DATASET_ID="${2-}"
 
-if [[ ! -e "${INPUT_PATH}" ]]; then
+if [[ ! -e ${INPUT_PATH} ]]; then
 	echo "Error: Input path '${INPUT_PATH}' does not exist." >&2
 	exit 1
 fi

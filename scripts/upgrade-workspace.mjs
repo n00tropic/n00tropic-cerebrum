@@ -6,6 +6,16 @@ import { join, resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dirname, "..");
 
+const args = new Set(process.argv.slice(2));
+const flags = {
+  skipNodeSync: args.has("--skip-node-sync"),
+  skipDeps: args.has("--skip-deps"),
+  skipContainers: args.has("--skip-containers"),
+  skipVenvs: args.has("--skip-venvs"),
+  skipBuild: args.has("--skip-build"),
+  skipHealth: args.has("--skip-health"),
+};
+
 function log(msg) {
   console.log(`\n\x1b[34m[upgrade-workspace]\x1b[0m ${msg}`);
 }
@@ -30,90 +40,138 @@ function run(cmd, args, options = {}) {
   }
 }
 
+function hasCommand(cmd) {
+  const result = spawnSync(cmd, ["--version"], {
+    stdio: "ignore",
+    encoding: "utf-8",
+  });
+  return result.status === 0;
+}
+
 async function main() {
   log("Starting full workspace upgrade...");
 
   // 1. Sync Node Version
-  log("Phase 1: Syncing Node.js versions...");
-  if (existsSync(join(ROOT, "scripts/sync-node-version.sh"))) {
-    run("bash", ["scripts/sync-node-version.sh"]);
+  if (!flags.skipNodeSync) {
+    log("Phase 1: Syncing Node.js versions...");
+    if (existsSync(join(ROOT, "scripts/sync-node-version.sh"))) {
+      run("bash", ["scripts/sync-node-version.sh"]);
+    } else {
+      console.warn("scripts/sync-node-version.sh not found, skipping.");
+    }
   } else {
-    console.warn("scripts/sync-node-version.sh not found, skipping.");
+    log("Phase 1: Skipping Node.js sync (--skip-node-sync)");
   }
 
   // 2. Recursive Dependency Update
-  log("Phase 2: Updating NPM dependencies recursively...");
-  // Interactive mode might be too much for automation, defaulting to --latest
-  // Using -i (interactive) if run manually, but for script we use automated
-  run("pnpm", ["update", "-r", "--latest"], {
-    env: { ALLOW_SUBREPO_PNPM_INSTALL: "1" },
-  });
-
-  // 3. Container Upgrades
-  log("Phase 3: Upgrading Container Images...");
-
-  // 3a. Penpot
-  const penpotScript = join(
-    ROOT,
-    "platform/n00plicate/scripts/update-penpot-images.mjs",
-  );
-  if (existsSync(penpotScript)) {
-    log("Upgrading Penpot images...");
-    run("node", [penpotScript]);
+  if (!flags.skipDeps) {
+    log("Phase 2: Updating NPM dependencies recursively...");
+    if (existsSync(join(ROOT, "scripts/pnpm-install-safe.sh"))) {
+      run("bash", ["scripts/pnpm-install-safe.sh", "update"], {
+        env: { ALLOW_SUBREPO_PNPM_INSTALL: "1" },
+      });
+    } else if (hasCommand("pnpm")) {
+      // Interactive mode might be too much for automation, defaulting to --latest
+      run("pnpm", ["update", "-r", "--latest"], {
+        env: { ALLOW_SUBREPO_PNPM_INSTALL: "1" },
+      });
+    } else {
+      console.warn("pnpm not available; skipping dependency update.");
+    }
+  } else {
+    log("Phase 2: Skipping dependency updates (--skip-deps)");
   }
 
-  // 3b. ERPNext
-  const erpComposeDir = join(
-    ROOT,
-    "platform/n00tropic_HQ/12-Platform-Ops/erpnext-docker",
-  );
-  if (existsSync(erpComposeDir)) {
-    log("Pulling latest ERPNext images...");
-    run("docker", ["compose", "pull"], { cwd: erpComposeDir });
+  // 3. Container Upgrades
+  if (!flags.skipContainers) {
+    log("Phase 3: Upgrading Container Images...");
+
+    // 3a. Penpot
+    const penpotScript = join(
+      ROOT,
+      "platform/n00plicate/scripts/update-penpot-images.mjs",
+    );
+    if (existsSync(penpotScript)) {
+      log("Upgrading Penpot images...");
+      run("node", [penpotScript]);
+    }
+
+    // 3b. ERPNext
+    const erpComposeDir = join(
+      ROOT,
+      "platform/n00tropic_HQ/12-Platform-Ops/erpnext-docker",
+    );
+    if (existsSync(erpComposeDir)) {
+      log("Pulling latest ERPNext images...");
+      run("docker", ["compose", "pull"], { cwd: erpComposeDir });
+    }
+  } else {
+    log("Phase 3: Skipping container upgrades (--skip-containers)");
   }
 
   // 3c. Sync Python Virtual Environments
-  log("Phase 3c: Syncing Python Virtual Environments...");
-  const syncVenvsScript = join(ROOT, "scripts/sync-venvs.py");
-  if (existsSync(syncVenvsScript)) {
-    log("Provisioning uv environments...");
-    run("python3", [syncVenvsScript, "--all", "--mode", "install"]);
+  if (!flags.skipVenvs) {
+    log("Phase 3c: Syncing Python Virtual Environments...");
+    const syncVenvsScript = join(ROOT, "scripts/sync-venvs.py");
+    if (existsSync(syncVenvsScript)) {
+      log("Provisioning uv environments...");
+      run("python3", [syncVenvsScript, "--all", "--mode", "install"]);
+    } else {
+      console.warn("scripts/sync-venvs.py not found, skipping.");
+    }
   } else {
-    console.warn("scripts/sync-venvs.py not found, skipping.");
+    log("Phase 3c: Skipping venv sync (--skip-venvs)");
   }
 
   // 4. Re-install and Build
-  log("Phase 4: Re-installing and Verifying Build...");
-  run("pnpm", ["install"], { env: { ALLOW_SUBREPO_PNPM_INSTALL: "1" } });
-  run("pnpm", ["run", "build:ordered"]);
-
-  // 5. Final Health Check
-  log("Phase 5: Final Health Check...");
-
-  // 5a. Skeleton Validation
-  const skeletonScript = join(
-    ROOT,
-    ".dev/automation/scripts/check-workspace-skeleton.py",
-  );
-  if (existsSync(skeletonScript)) {
-    log("Validating workspace skeleton...");
-    // Run without --apply to just check
-    const res = spawnSync("python3", [skeletonScript], {
-      encoding: "utf-8",
-      cwd: ROOT,
-    });
-    if (res.status !== 0) {
-      console.warn(
-        "\x1b[33m[WARN] Workspace skeleton issues detected (run check-workspace-skeleton.py for details).\x1b[0m",
-      );
+  if (!flags.skipBuild) {
+    log("Phase 4: Re-installing and Verifying Build...");
+    if (existsSync(join(ROOT, "scripts/pnpm-install-safe.sh"))) {
+      run("bash", ["scripts/pnpm-install-safe.sh", "install"], {
+        env: { ALLOW_SUBREPO_PNPM_INSTALL: "1" },
+      });
+      run("pnpm", ["run", "build:ordered"]);
+    } else if (hasCommand("pnpm")) {
+      run("pnpm", ["install"], { env: { ALLOW_SUBREPO_PNPM_INSTALL: "1" } });
+      run("pnpm", ["run", "build:ordered"]);
     } else {
-      log("✔ Workspace skeleton compliant.");
+      console.warn("pnpm not available; skipping build phase.");
     }
+  } else {
+    log("Phase 4: Skipping build phase (--skip-build)");
   }
 
-  // 5b. General Health
-  if (existsSync(join(ROOT, "scripts/health-check.mjs"))) {
-    run("node", ["scripts/health-check.mjs"]);
+  // 5. Final Health Check
+  if (!flags.skipHealth) {
+    log("Phase 5: Final Health Check...");
+
+    // 5a. Skeleton Validation
+    const skeletonScript = join(
+      ROOT,
+      ".dev/automation/scripts/check-workspace-skeleton.py",
+    );
+    if (existsSync(skeletonScript)) {
+      log("Validating workspace skeleton...");
+      // Run without --apply to just check
+      const res = spawnSync("python3", [skeletonScript], {
+        encoding: "utf-8",
+        cwd: ROOT,
+      });
+      if (res.status !== 0) {
+        console.warn(
+          "\x1b[33m[WARN] Workspace skeleton issues detected (run check-workspace-skeleton.py for details).\x1b[0m",
+        );
+      } else {
+        log("✔ Workspace skeleton compliant.");
+      }
+    }
+
+    // 5b. General Health
+    if (existsSync(join(ROOT, "scripts/health-check.mjs"))) {
+      run("node", ["scripts/health-check.mjs"]);
+    }
+  } else {
+    log("Phase 5: Skipping health checks (--skip-health)");
   }
 
   log("✅ Workspace upgrade complete!");

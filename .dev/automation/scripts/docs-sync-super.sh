@@ -27,9 +27,9 @@ log "Refreshing docs submodules"
 git submodule update --init --recursive --remote n00-frontiers n00-cortex n00t || true
 
 if command -v corepack >/dev/null 2>&1; then
-	log "Enabling corepack and pinning pnpm 10.23.0"
+	log "Enabling corepack and pinning pnpm 10.28.2"
 	corepack enable || true
-	corepack prepare pnpm@10.23.0 --activate || true
+	corepack prepare pnpm@10.28.2 --activate || true
 fi
 
 log "Installing n00menon dependencies (frozen if possible)"

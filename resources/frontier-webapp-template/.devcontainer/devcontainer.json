@@ -1,10 +1,10 @@
 {
-	"name": "frontier-web",
-	"build": { "dockerfile": "../Dockerfile" },
-	"customizations": {
-		"vscode": {
-			"extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
-		}
-	},
-	"postCreateCommand": "cd apps/web && corepack enable && corepack prepare pnpm@10.23.0 --activate && pnpm install --frozen-lockfile"
+  "name": "frontier-web",
+  "build": { "dockerfile": "../Dockerfile" },
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+    }
+  },
+  "postCreateCommand": "cd apps/web && corepack enable && corepack prepare pnpm@10.28.2 --activate && pnpm install --frozen-lockfile"
 }

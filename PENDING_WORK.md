@@ -7,8 +7,8 @@ This document tracks active and pending work items extracted from the workspace.
 ## Active Tasks (from Next_Steps.md)
 
 - [ ] Restore pnpm toolchain + external Trunk binary (owner: codex, due: 2025-02-05)
-  - Run `scripts/setup-pnpm.sh` (corepack prepare pnpm@10.23.0; npm global fallback added) and `pnpm install` at workspace root.
-  - Install trunk CLI v1.25.4 to `~/.cache/trunk/bin/trunk` (or another runner-level location) and export `TRUNK_BIN`; the workspace no longer ships `.trunk/trunk.yaml`, so runners must source lint configs from `n00-cortex/data/trunk/base/.trunk/` or downstream repos directly.
+  - Run `scripts/setup-pnpm.sh` (corepack prepare pnpm@10.28.2; npm global fallback added) and `pnpm install` at workspace root.
+  - Install trunk CLI v1.25.0 to `~/.cache/trunk/bin/trunk` (or another runner-level location) and export `TRUNK_BIN`; the workspace no longer ships `.trunk/trunk.yaml`, so runners must source lint configs from `n00-cortex/data/trunk/base/.trunk/` or downstream repos directly.
   - Trunk defs sync script restored at `scripts/sync-trunk-defs.mjs`; invoked automatically by `.dev/automation/scripts/run-trunk-subrepos.sh` against the canonical configs under `n00-cortex/data/trunk/base/.trunk/`.
 
 - [ ] Repair workspace health sync for ephemeral agents (owner: codex)

@@ -1,0 +1,4 @@
+# Dependencies allowed to skip preflight checks.
+# One package name per line.
+# Example:
+# @private/some-lib

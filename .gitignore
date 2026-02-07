@@ -21,6 +21,7 @@ __pycache__/
 
 # Node / tooling
 node_modules/
+.pnpm-store/
 # Trunk config is tracked (hooks disabled); keep cache dirs ignored separately.
 dist/
 build/
@@ -28,6 +29,9 @@ build/
 
 # Local envs
 .venv/
+
+# Local data
+n00trino.db
 venv/
 env/
 .env
@@ -43,3 +47,4 @@ triage-log.md
 script_index.md
 .tmp/
 .cache_local/
+.dev/

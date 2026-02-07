@@ -5,6 +5,7 @@ packages:
   - ui/**
   - platform/**
   - resources/**
+  - "!platform/n00-frontiers/**/examples/**"
   - "!**/templates/**"
   - "!**/cookiecutter/**"
 
@@ -20,3 +21,15 @@ hoistPattern:
 preferWorkspacePackages: true
 saveWorkspaceProtocol: rolling
 nodeLinker: hoisted
+onlyBuiltDependencies:
+  [
+    "@swc/core",
+    "aws-sdk",
+    "better-sqlite3",
+    "core-js",
+    "esbuild",
+    "protobufjs",
+    "sharp",
+    "unrs-resolver",
+    "workerd",
+  ]

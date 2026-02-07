@@ -44,8 +44,20 @@ if [[ -z $VERSION ]]; then
 	fi
 fi
 
+VERSION=${VERSION#v}
+
 if [[ -z $VERSION ]]; then
 	echo "Could not determine Node version" >&2
+	exit 1
+fi
+
+if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.]+)?$ ]]; then
+	echo "Invalid Node version: $VERSION" >&2
+	exit 1
+fi
+
+if ! command -v python3 >/dev/null 2>&1; then
+	echo "python3 is required for manifest updates" >&2
 	exit 1
 fi
 
@@ -70,7 +82,8 @@ update_package_jsons() {
 	echo "[sync-node] Updating package.json engines..."
 
 	local py_script
-	py_script="$ROOT/.sync_node_script.py"
+	py_script=$(mktemp -t sync-node-script.XXXXXX.py)
+	trap 'rm -f "$py_script"' EXIT
 
 	cat >"$py_script" <<'PY'
 import sys
@@ -114,16 +127,26 @@ for file_path in sys.argv[2:]:
 PY
 
 	# Find all package.json files, excluding node_modules, ignored dirs
-	find "$ROOT" -name "package.json" \
-		-not -path "*/node_modules/*" \
-		-not -path "*/.venv*/*" \
-		-not -path "*/dist/*" \
-		-not -path "*/build/*" \
-		-not -path "*/.git/*" \
-		-not -path "*/.mypy_cache/*" \
-		-print0 | xargs -0 python3 "$py_script" "$VERSION"
+	local package_files=()
+	while IFS= read -r -d '' file; do
+		package_files+=("$file")
+	done < <(
+		find "$ROOT" -name "package.json" \
+			-not -path "*/node_modules/*" \
+			-not -path "*/.venv*/*" \
+			-not -path "*/dist/*" \
+			-not -path "*/build/*" \
+			-not -path "*/.git/*" \
+			-not -path "*/.mypy_cache/*" \
+			-print0
+	)
 
-	rm -f "$py_script"
+	if [[ ${#package_files[@]} -eq 0 ]]; then
+		echo "[sync-node] No package.json files found; skipping engines update."
+		return 0
+	fi
+
+	python3 "$py_script" "$VERSION" "${package_files[@]}"
 }
 
 update_package_jsons

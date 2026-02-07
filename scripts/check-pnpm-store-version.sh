@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PIN=${PIN:-10.23.0}
+PIN=${PIN:-10.28.2}
 STORE=".pnpm-store"
 
 if [[ ! -d $STORE ]]; then

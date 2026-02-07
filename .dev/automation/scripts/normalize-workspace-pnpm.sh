@@ -65,7 +65,7 @@ if [[ -f "n00-cortex/data/toolchain-manifest.json" ]]; then
 	PNPM_VERSION=$(jq -r '.toolchains.pnpm.version' n00-cortex/data/toolchain-manifest.json)
 fi
 if [[ -z ${PNPM_VERSION} || ${PNPM_VERSION} == "null" ]]; then
-	PNPM_VERSION="10.23.0"
+	PNPM_VERSION="10.28.2"
 fi
 
 # Sanity check Node pin vs workspace .nvmrc so we don't reinstall with mismatched runtime

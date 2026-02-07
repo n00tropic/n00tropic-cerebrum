@@ -43,7 +43,7 @@ jobs:
 
       - name: Install dependencies (if JS/TS project)
         run: |
-          corepack enable && corepack prepare pnpm@10.23.0 --activate && pnpm install --frozen-lockfile
+          corepack enable && corepack prepare pnpm@10.28.2 --activate && pnpm install --frozen-lockfile
 
       - name: Run Codex (guard-railed)
         uses: openai/codex-action@main

@@ -8,7 +8,7 @@ Use short‑lived, least‑privilege tokens. Store them in your runner/agent env
   ```bash
   export GH_SUBMODULE_TOKEN=ghp_yourtoken
   ```
-- `TRUNK_BIN`: absolute path to the trunk CLI (v1.25.4) installed outside the repo. Example:
+- `TRUNK_BIN`: absolute path to the trunk CLI (v1.25.0) installed outside the repo. Example:
   ```bash
   export TRUNK_BIN="$HOME/.cache/trunk/bin/trunk"
   ```
