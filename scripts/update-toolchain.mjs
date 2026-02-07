@@ -78,7 +78,11 @@ function normalizeVersion(version) {
   return version.startsWith("v") ? version.slice(1) : version;
 }
 
-function validateVersion(version) {
+function validateVersionForTool(toolName, version) {
+  if (toolName === "ecmascript") {
+    return /^ES(Next|20\d{2})$/.test(version);
+  }
+
   // Basic semver validation
   const semverPattern = /^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?(\+[a-zA-Z0-9.]+)?$/;
   return semverPattern.test(version);
@@ -86,9 +90,13 @@ function validateVersion(version) {
 
 function updateToolchain(manifest, toolName, newVersion) {
   const normalizedVersion = normalizeVersion(newVersion);
-  if (!validateVersion(normalizedVersion)) {
+  if (!validateVersionForTool(toolName, normalizedVersion)) {
     console.error(`❌ Invalid version format: ${newVersion}`);
-    console.error("   Expected format: X.Y.Z (e.g., 24.11.0)");
+    if (toolName === "ecmascript") {
+      console.error("   Expected format: ESNext or ES2024");
+    } else {
+      console.error("   Expected format: X.Y.Z (e.g., 24.11.0)");
+    }
     process.exit(1);
   }
 
@@ -153,6 +161,18 @@ function propagateVersions(manifest) {
       typeof toolchains.python === "string"
         ? toolchains.python
         : toolchains.python?.version;
+    const typescriptVersion =
+      typeof toolchains.typescript === "string"
+        ? toolchains.typescript
+        : toolchains.typescript?.version;
+    const ecmascriptTarget =
+      typeof toolchains.ecmascript === "string"
+        ? toolchains.ecmascript
+        : toolchains.ecmascript?.version;
+    const storybookVersion =
+      typeof toolchains.storybook === "string"
+        ? toolchains.storybook
+        : toolchains.storybook?.version;
 
     if (nodeVersion) {
       console.log(`   Running sync-node-version.sh --version ${nodeVersion}`);
@@ -173,6 +193,48 @@ function propagateVersions(manifest) {
     } else {
       console.warn(
         "⚠️  Missing python version in toolchain manifest; skipping.",
+      );
+    }
+
+    if (typescriptVersion) {
+      console.log(
+        `   Running sync-typescript-version.mjs (${typescriptVersion})`,
+      );
+      execSync(`node scripts/sync-typescript-version.mjs`, {
+        cwd: REPO_ROOT,
+        stdio: "inherit",
+      });
+    } else {
+      console.warn(
+        "⚠️  Missing typescript version in toolchain manifest; skipping.",
+      );
+    }
+
+    if (ecmascriptTarget) {
+      console.log(
+        `   Running sync-ecmascript-target.mjs (${ecmascriptTarget})`,
+      );
+      execSync(`node scripts/sync-ecmascript-target.mjs`, {
+        cwd: REPO_ROOT,
+        stdio: "inherit",
+      });
+    } else {
+      console.warn(
+        "⚠️  Missing ecmascript target in toolchain manifest; skipping.",
+      );
+    }
+
+    if (storybookVersion) {
+      console.log(
+        `   Running sync-storybook-version.mjs (${storybookVersion})`,
+      );
+      execSync(`node scripts/sync-storybook-version.mjs`, {
+        cwd: REPO_ROOT,
+        stdio: "inherit",
+      });
+    } else {
+      console.warn(
+        "⚠️  Missing storybook version in toolchain manifest; skipping.",
       );
     }
 
@@ -206,7 +268,7 @@ Examples:
   node update-toolchain.mjs python 3.12.0
 
 Supported Toolchains:
-  node, pnpm, python, go, trunk
+  node, pnpm, python, go, trunk, typescript, ecmascript, storybook
 `);
     process.exit(0);
   }

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Sync the workspace Node.js version across nvm, toolchain manifest, and Trunk configs.
-# Source of truth is ROOT/.nvmrc unless overridden with --version <v>.
+# Source of truth is ROOT/.nvmrc unless overridden with --version <v> or --from-system.
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 CANONICAL_TRUNK="$ROOT/platform/n00-cortex/data/trunk/base/.trunk/trunk.yaml"
@@ -10,17 +10,23 @@ ROOT_TRUNK="$ROOT/.trunk/trunk.yaml"
 TOOLCHAIN="$ROOT/platform/n00-cortex/data/toolchain-manifest.json"
 
 VERSION=""
+USE_SYSTEM=0
 while [[ $# -gt 0 ]]; do
 	case "$1" in
 	--version)
 		VERSION="$2"
 		shift 2
 		;;
+	--from-system)
+		USE_SYSTEM=1
+		shift 1
+		;;
 	-h | --help)
 		cat <<'USAGE'
-Usage: scripts/sync-node-version.sh [--version <semver>]
+Usage: scripts/sync-node-version.sh [--version <semver>] [--from-system]
 
-Reads the desired Node.js version from ROOT/.nvmrc (or --version) and applies it to:
+Reads the desired Node.js version from ROOT/.nvmrc, --version, or the active system Node
+when using --from-system, and applies it to:
   - ROOT/.nvmrc and subrepo .nvmrc files
   - n00-cortex/data/toolchain-manifest.json (toolchains.node + repo pins)
   - Canonical Trunk configs (node runtime + definition)
@@ -34,6 +40,19 @@ USAGE
 		;;
 	esac
 done
+
+if [[ $USE_SYSTEM -eq 1 && -n $VERSION ]]; then
+	echo "Use either --version or --from-system, not both." >&2
+	exit 2
+fi
+
+if [[ $USE_SYSTEM -eq 1 ]]; then
+	if ! command -v node >/dev/null 2>&1; then
+		echo "node is required for --from-system" >&2
+		exit 1
+	fi
+	VERSION=$(node --version)
+fi
 
 if [[ -z $VERSION ]]; then
 	if [[ -f "$ROOT/.nvmrc" ]]; then
@@ -83,7 +102,6 @@ update_package_jsons() {
 
 	local py_script
 	py_script=$(mktemp -t sync-node-script.XXXXXX.py)
-	trap 'rm -f "$py_script"' EXIT
 
 	cat >"$py_script" <<'PY'
 import sys
@@ -133,9 +151,18 @@ PY
 	done < <(
 		find "$ROOT" -name "package.json" \
 			-not -path "*/node_modules/*" \
+			-not -path "*/.uv-cache/*" \
+			-not -path "*/.uv/*" \
+			-not -path "*/.cache_local/*" \
+			-not -path "*/.next/*" \
+			-not -path "*/.turbo/*" \
+			-not -path "*/.pnpm-store/*" \
 			-not -path "*/.venv*/*" \
 			-not -path "*/dist/*" \
 			-not -path "*/build/*" \
+			-not -path "*/artifacts/*" \
+			-not -path "*/.tmp/*" \
+			-not -path "*/tmp/*" \
 			-not -path "*/.git/*" \
 			-not -path "*/.mypy_cache/*" \
 			-print0
@@ -147,6 +174,7 @@ PY
 	fi
 
 	python3 "$py_script" "${VERSION}" "${package_files[@]}"
+	rm -f "$py_script"
 }
 
 update_package_jsons

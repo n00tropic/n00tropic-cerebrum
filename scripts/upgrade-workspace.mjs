@@ -8,7 +8,10 @@ const ROOT = resolve(import.meta.dirname, "..");
 
 const args = new Set(process.argv.slice(2));
 const flags = {
+  withApproveBuilds: args.has("--with-approve-builds"),
+  withPrune: args.has("--with-prune"),
   skipNodeSync: args.has("--skip-node-sync"),
+  skipCompilerSync: args.has("--skip-compiler-sync"),
   skipDeps: args.has("--skip-deps"),
   skipContainers: args.has("--skip-containers"),
   skipVenvs: args.has("--skip-venvs"),
@@ -48,19 +51,84 @@ function hasCommand(cmd) {
   return result.status === 0;
 }
 
+function getLatestNpmVersion(pkg) {
+  const result = spawnSync("pnpm", ["view", pkg, "version"], {
+    encoding: "utf-8",
+  });
+  if (result.status !== 0) {
+    return null;
+  }
+  return String(result.stdout || "").trim();
+}
+
 async function main() {
   log("Starting full workspace upgrade...");
+
+  // 0. Optional pnpm prep
+  if (flags.withApproveBuilds || flags.withPrune) {
+    log("Phase 0: Running optional pnpm prep...");
+    if (hasCommand("pnpm")) {
+      if (flags.withApproveBuilds) {
+        run("pnpm", ["approve-builds"]);
+      }
+      if (flags.withPrune) {
+        run("pnpm", ["prune"]);
+      }
+    } else {
+      console.warn("pnpm not available; skipping approve/prune.");
+    }
+  }
 
   // 1. Sync Node Version
   if (!flags.skipNodeSync) {
     log("Phase 1: Syncing Node.js versions...");
     if (existsSync(join(ROOT, "scripts/sync-node-version.sh"))) {
-      run("bash", ["scripts/sync-node-version.sh"]);
+      run("bash", ["scripts/sync-node-version.sh", "--from-system"]);
     } else {
       console.warn("scripts/sync-node-version.sh not found, skipping.");
     }
   } else {
     log("Phase 1: Skipping Node.js sync (--skip-node-sync)");
+  }
+
+  // 1b. Sync compiler/toolchain baselines
+  if (!flags.skipCompilerSync) {
+    log("Phase 1b: Syncing compiler baselines...");
+    if (hasCommand("pnpm")) {
+      const latestTs = getLatestNpmVersion("typescript");
+      const latestStorybook = getLatestNpmVersion("storybook");
+      if (latestTs) {
+        run("node", [
+          "scripts/update-toolchain.mjs",
+          "typescript",
+          latestTs,
+          "--propagate",
+        ]);
+        run("node", ["scripts/sync-typescript-version.mjs"]);
+      } else {
+        console.warn("pnpm view typescript failed; skipping TS bump.");
+      }
+
+      if (latestStorybook) {
+        run("node", [
+          "scripts/update-toolchain.mjs",
+          "storybook",
+          latestStorybook,
+          "--propagate",
+        ]);
+        run("node", ["scripts/sync-storybook-version.mjs"]);
+      } else {
+        console.warn("pnpm view storybook failed; skipping Storybook bump.");
+      }
+    } else {
+      console.warn("pnpm not available; skipping compiler sync.");
+    }
+
+    if (existsSync(join(ROOT, "scripts/sync-ecmascript-target.mjs"))) {
+      run("node", ["scripts/sync-ecmascript-target.mjs"]);
+    }
+  } else {
+    log("Phase 1b: Skipping compiler sync (--skip-compiler-sync)");
   }
 
   // 2. Recursive Dependency Update

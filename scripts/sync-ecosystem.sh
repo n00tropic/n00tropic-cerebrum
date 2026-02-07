@@ -21,6 +21,8 @@ run() {
 
 run "bash scripts/tidy-submodules.sh"
 
+run "bash scripts/sync-frontier-template-exports.sh"
+
 run "cd '$ROOT/platform/n00-frontiers' && python3 tools/export_cortex_assets.py"
 run "cd '$ROOT/platform/n00clear-fusion' && python3 scripts/export_cortex.py"
 run "pnpm -C '$ROOT/platform/n00-cortex' run ingest:frontiers"
@@ -29,6 +31,7 @@ run "pnpm -C '$ROOT/platform/n00-cortex' run export:assets"
 run "pnpm -C '$ROOT/platform/n00-cortex' run graph:build"
 run "pnpm -C '$ROOT/platform/n00-cortex' test"
 run "pnpm -C '$ROOT/platform/n00menon' run docs:sync"
+run "node scripts/check-tsconfig-consistency.mjs"
 
 if [ "$status" != "ok" ]; then
 	message="failed step in sync; see logs above"

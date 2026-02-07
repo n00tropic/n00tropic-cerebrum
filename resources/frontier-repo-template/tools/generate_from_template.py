@@ -1,45 +1,54 @@
 #!/usr/bin/env python3
-"""
-A tiny generator that can create the directory tree described in templates/template.json or template.yaml.
-Usage:
-    python tools/generate_from_template.py --source templates/template.json --dest ../my-new-project
-"""
+"""Generate directory trees from template specs."""
+
+from __future__ import annotations
+
 import argparse
 import json
-import pathlib
+import sys
+from pathlib import Path
+from typing import Any
 
 try:
     import yaml  # optional
-except Exception:
+except ImportError:
     yaml = None
 
 
-def load_spec(path):
-    text = open(path, "r", encoding="utf-8").read()
-    if path.endswith((".yaml", ".yml")):
+def _emit(message: str) -> None:
+    """Provide CLI feedback without relying on print()."""
+    sys.stdout.write(f"{message}\n")
+
+
+def load_spec(path: Path) -> dict[str, Any]:
+    """Load a JSON or YAML template specification into memory."""
+    text = path.read_text(encoding="utf-8")
+    if path.suffix in {".yaml", ".yml"}:
         if not yaml:
-            raise SystemExit("PyYAML not installed")
+            message = "PyYAML not installed"
+            raise SystemExit(message)
         return yaml.safe_load(text)
     return json.loads(text)
 
 
-def main():
+def main() -> None:
+    """Render the requested template structure onto disk."""
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", default="templates/template.json")
     ap.add_argument("--dest", required=True)
     args = ap.parse_args()
-    spec = load_spec(args.source)
-    dest = pathlib.Path(args.dest)
+    spec = load_spec(Path(args.source))
+    dest = Path(args.dest)
     dest.mkdir(parents=True, exist_ok=True)
     for item in spec["structure"]:
-        p = dest / item["path"]
+        path = dest / item["path"]
         if item["type"] == "dir":
-            p.mkdir(parents=True, exist_ok=True)
+            path.mkdir(parents=True, exist_ok=True)
         elif item["type"] == "file":
-            p.parent.mkdir(parents=True, exist_ok=True)
-            if not p.exists():
-                p.write_text("", encoding="utf-8")
-    print(f"Generated skeleton at {dest}")
+            path.parent.mkdir(parents=True, exist_ok=True)
+            if not path.exists():
+                path.write_text("", encoding="utf-8")
+    _emit(f"Generated skeleton at {dest}")
 
 
 if __name__ == "__main__":

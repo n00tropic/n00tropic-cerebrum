@@ -1,113 +1,124 @@
 {
-	"npm.packageManager": "pnpm",
-	"vitest.disableWorkspaceWarning": true,
-	"files.exclude": {
-		"**/.git": true,
-		"**/.DS_Store": true,
-		"**/.idea": true,
-		"**/.trunk/**": true,
-		"**/.cache/**": true,
-		"**/.turbo/**": true,
-		"**/node_modules/**": true,
-		"**/dist/**": true,
-		"**/build/**": true,
-		"vendor/**": true
-	},
-	"files.watcherExclude": {
-		"**/node_modules/**": true,
-		"**/.venv-*/**": true,
-		"**/.pnpm/**": true,
-		"**/.trunk/**": true,
-		"**/dist/**": true,
-		"**/build/**": true,
-		"vendor/**": true
-	},
-	"explorer.excludeGitIgnore": true,
-	"search.useIgnoreFiles": true,
-	"git.autoRepositoryDetection": "true",
-	"git.autofetch": true,
-	"git.enableSmartCommit": false,
-	"git.showInlineOpenFileAction": "auto",
-	"git.branchProtection": {},
-	"gitlens.statusBar.enabled": true,
-	"gitlens.views.repositories.enabled": true,
-	"gitlens.views.repositories.showBranches": true,
-	"gitlens.views.repositories.showRemotes": true,
-	"gitlens.views.repositories.showSubmodules": true,
-	"gitlens.advanced.repositorySearchDepth": 2,
-	"gitlens.currentLine.scrollable": false,
-	"gitlens.codeLens.enabled": false,
-	"python.terminal.useEnvFile": true,
-	"mcp": {
-		"servers": {
-			"ai-workflow": {
-				"command": "node",
-				"args": [
-					"/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00tropic/.dev/automation/mcp-server/index.js"
-				],
-				"cwd": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00tropic",
-				"env": {
-					"NODE_ENV": "development"
-				}
-			},
-			"cortex": {
-				"command": "node",
-				"args": [
-					"/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-cortex/mcp-server/index.js"
-				],
-				"cwd": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-cortex"
-			},
-			"github": {
-				"command": "npx",
-				"args": [
-					"-y",
-					"@modelcontextprotocol/server-github"
-				],
-				"env": {
-					"GITHUB_PERSONAL_ACCESS_TOKEN": "<REPLACE_WITH_YOUR_TOKEN>"
-				}
-			},
-			"memory": {
-				"command": "npx",
-				"args": [
-					"-y",
-					"@modelcontextprotocol/server-memory"
-				]
-			},
-			"filesystem": {
-				"command": "npx",
-				"args": [
-					"-y",
-					"@modelcontextprotocol/server-filesystem",
-					"/Volumes/APFS Space/n00tropic"
-				]
-			}
-		}
-	},
-	"sonarlint.connectedMode.project": {
-		"connectionId": "n00tropic",
-		"projectKey": "n00tropic_n00-cerebrum"
-	},
-	"chatgpt.openOnStartup": true,
-	"python-envs.pythonProjects": [
-		{
-			"path": "",
-			"envManager": "ms-python.python:venv",
-			"packageManager": "ms-python.python:pip"
-		}
-	],
-	"json.schemas": [
-		{
-			"fileMatch": [
-				"**/capabilities_manifest.json"
-			],
-			"url": "./mcp/schemas/capabilities.schema.json"
-		},
-		{
-			"fileMatch": [
-				"**/federation_manifest.json"
-			],
-			"url": "./mcp/schemas/federation.schema.json"
-		}
-	]
+  "npm.packageManager": "pnpm",
+  "vitest.disableWorkspaceWarning": true,
+  "vitest.maximumConfigs": 12,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/.idea": true,
+    "**/.trunk/**": true,
+    "**/.cache/**": true,
+    "**/.turbo/**": true,
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "vendor/**": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.venv-*/**": true,
+    "**/.pnpm/**": true,
+    "**/.trunk/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "vendor/**": true
+  },
+  "typescript.tsserver.exclude": [
+    "**/node_modules/**",
+    "**/.pnpm/**",
+    "**/.pnpm-store/**",
+    "resources/**",
+    "resources/**/node_modules/**",
+    "resources/**/templates/**",
+    "platform/n00-frontiers/**/templates/**",
+    "platform/n00-frontiers/applications/scaffolder/templates/**"
+  ],
+  "javascript.tsserver.exclude": [
+    "**/node_modules/**",
+    "**/.pnpm/**",
+    "**/.pnpm-store/**",
+    "resources/**",
+    "resources/**/node_modules/**",
+    "resources/**/templates/**",
+    "platform/n00-frontiers/**/templates/**",
+    "platform/n00-frontiers/applications/scaffolder/templates/**"
+  ],
+  "explorer.excludeGitIgnore": true,
+  "search.useIgnoreFiles": true,
+  "git.autoRepositoryDetection": "true",
+  "git.autofetch": true,
+  "git.enableSmartCommit": false,
+  "git.showInlineOpenFileAction": "auto",
+  "git.branchProtection": {},
+  "gitlens.statusBar.enabled": true,
+  "gitlens.views.repositories.enabled": true,
+  "gitlens.views.repositories.showBranches": true,
+  "gitlens.views.repositories.showRemotes": true,
+  "gitlens.views.repositories.showSubmodules": true,
+  "gitlens.advanced.repositorySearchDepth": 2,
+  "gitlens.currentLine.scrollable": false,
+  "gitlens.codeLens.enabled": false,
+  "python.terminal.useEnvFile": true,
+  "mcp": {
+    "servers": {
+      "ai-workflow": {
+        "command": "node",
+        "args": [
+          "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00tropic/.dev/automation/mcp-server/index.js"
+        ],
+        "cwd": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00tropic",
+        "env": {
+          "NODE_ENV": "development"
+        }
+      },
+      "cortex": {
+        "command": "node",
+        "args": [
+          "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-cortex/mcp-server/index.js"
+        ],
+        "cwd": "/Volumes/APFS Space/n00tropic/n00tropic-cerebrum/n00-cortex"
+      },
+      "github": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-github"],
+        "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "<REPLACE_WITH_YOUR_TOKEN>"
+        }
+      },
+      "memory": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-memory"]
+      },
+      "filesystem": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-filesystem",
+          "/Volumes/APFS Space/n00tropic"
+        ]
+      }
+    }
+  },
+  "sonarlint.connectedMode.project": {
+    "connectionId": "n00tropic",
+    "projectKey": "n00tropic_n00-cerebrum"
+  },
+  "chatgpt.openOnStartup": true,
+  "python-envs.pythonProjects": [
+    {
+      "path": "",
+      "envManager": "ms-python.python:venv",
+      "packageManager": "ms-python.python:pip"
+    }
+  ],
+  "json.schemas": [
+    {
+      "fileMatch": ["**/capabilities_manifest.json"],
+      "url": "./mcp/schemas/capabilities.schema.json"
+    },
+    {
+      "fileMatch": ["**/federation_manifest.json"],
+      "url": "./mcp/schemas/federation.schema.json"
+    }
+  ]
 }

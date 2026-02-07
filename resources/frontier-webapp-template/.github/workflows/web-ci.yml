@@ -3,34 +3,31 @@ on:
   pull_request:
   push:
     branches: [main]
-permissions:
-  contents: read
-  id-token: write
 jobs:
   build-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v6
-        with: { node-version: 25.2.1 }
+        with: { node-version: "24.11.0" }
       - name: Install deps
-        run: cd apps/web && corepack enable && corepack prepare pnpm@10.28.2 --activate && pnpm install --frozen-lockfile || true
+        run: corepack enable && corepack prepare pnpm@10.28.2 --activate && pnpm --filter apps/web install --frozen-lockfile
       - name: Lint
-        run: cd apps/web && pnpm run lint
+        run: pnpm --filter apps/web run lint
       - name: Unit tests
-        run: cd apps/web && pnpm run test -- --run
+        run: pnpm --filter apps/web run test
       - name: Build
-        run: cd apps/web && pnpm run build
+        run: pnpm --filter apps/web run build
 
   lighthouse:
     needs: build-test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v6
-        with: { node-version: 25.2.1 }
+        with: { node-version: "24.11.0" }
       - name: Install deps
-        run: cd apps/web && corepack enable && corepack prepare pnpm@10.28.2 --activate && pnpm install --frozen-lockfile || true
+        run: corepack enable && corepack prepare pnpm@10.28.2 --activate && pnpm --filter apps/web install --frozen-lockfile
       - name: Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
         with:
