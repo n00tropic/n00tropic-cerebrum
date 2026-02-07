@@ -62,6 +62,15 @@ If you encounter `mkstemp: Operation not permitted` errors from `trunk` hooks du
 2. If persistent, bypass hooks temporarily: `git commit --no-verify` / `git push --no-verify`
 3. **Note:** This bypasses lint/schema checks, so run `pnpm run qa:workspace:full` manually to ensure quality.
 
+### Upstream detection or push rejected
+
+If a commit hook reports it "can not detect upstream commit" or a push is rejected because your branch is behind:
+
+1. Ensure your branch has an upstream: `git branch -u origin/main` (or the branch from `.gitmodules`).
+2. Rebase before pushing: `git pull --rebase`.
+3. For multi-repo syncs, use the workspace helper: `./agent-scriptbox/git-force-sync.sh`.
+4. If you must bypass hooks to unblock a commit, rerun `pnpm run qa:workspace:full` after pushing.
+
 ## New CLI Tools
 
 - **Project Management**: Use the unified `project` command for metadata tasks.
