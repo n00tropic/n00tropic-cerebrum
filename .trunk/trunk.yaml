@@ -15,9 +15,12 @@ runtimes:
     - rust@1.82.0
     - go@1.21.0
     - node@24.1.0
-    - python@3.11.8
+    - python@3.11.9
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
+  ignore:
+    - linters: [ALL]
+      paths: [.dev]
   definitions:
     - name: isort
       commands:
@@ -50,7 +53,7 @@ lint:
     - taplo@0.10.0
     - tflint@0.60.0
     - trufflehog@3.93.1
-    - vale@3.13.0
+    - vale@3.13.1
     - yamllint@1.38.0
 actions:
   enabled:
