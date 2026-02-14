@@ -1,4 +1,4 @@
-name: workspace-health
+name: workspace-health-pr-push
 
 on:
   pull_request:

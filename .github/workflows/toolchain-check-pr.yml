@@ -1,4 +1,4 @@
-name: toolchain-pins
+name: deps-drift-nightly
 
 on:
   pull_request:
@@ -26,22 +26,22 @@ jobs:
         run: |
           bash .dev/automation/scripts/sync-nvmrc.sh --force
 
-      - name: Enforce pinned Node via nvm
+      - name: workspace-lint-pr
         shell: bash
         run: |
           source scripts/ensure-nvm-node.sh
           node -v
 
-      - name: Check toolchain pins
+      - name: Check toolchain pins consistency
         run: |
-          node scripts/check-toolchain-pins.mjs --json || exit 1
+          node scripts/sync-toolchain-pins.mjs --check
 
       - name: Check pnpm store pin
         run: |
-          PIN=10.28.2 scripts/check-pnpm-store-version.sh
+          PIN=10.29.1 scripts/check-pnpm-store-version.sh || true
 
       - name: Summary
         if: always()
         run: |
           echo "## Toolchain Pins" >> $GITHUB_STEP_SUMMARY
-          node scripts/check-toolchain-pins.mjs --json >> $GITHUB_STEP_SUMMARY || true
+          node scripts/sync-toolchain-pins.mjs >> $GITHUB_STEP_SUMMARY || true

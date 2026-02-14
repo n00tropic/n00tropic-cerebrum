@@ -2,7 +2,7 @@
   "name": "n00hq",
   "private": true,
   "version": "0.1.0",
-  "packageManager": "pnpm@10.28.2",
+  "packageManager": "pnpm@10.29.1",
   "description": "HQ / Swift Apps",
   "scripts": {
     "build": "swift build || echo 'Swift build failed'",
@@ -13,6 +13,6 @@
   },
   "engines": {
     "node": ">=25.6.0",
-    "pnpm": ">=10.28.2"
+    "pnpm": ">=10.29.1"
   }
 }

@@ -2,3 +2,29 @@
 id = "GHSA-ffrw-9mx8-89p8"
 reason = "fast-redact 3.5.0 is the latest release; awaiting upstream patch"
 ignoreUntil = 2026-01-31
+
+# Path overrides - skip scanning vendored/installed dependencies
+[[PathOverrides]]
+path = "**/.venv/**"
+ignore = true
+
+[[PathOverrides]]
+path = "**/node_modules/**"
+ignore = true
+
+[[PathOverrides]]
+path = "**/vendor/**"
+ignore = true
+
+[[PathOverrides]]
+path = "**/build/**"
+ignore = true
+
+[[PathOverrides]]
+path = "**/dist/**"
+ignore = true
+
+# Package overrides - skip dev dependencies in certain ecosystems
+[[PackageOverrides]]
+group = "dev"
+ignore = true

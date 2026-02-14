@@ -20,6 +20,26 @@ Planned features:
 - Automation control integration
 - Dashboard shell
 
+## Ecosystem Role
+
+```text
+n00-cortex (schemas/data) → n00HQ (UI shell) → Workspace operators
+                              ↓
+                     Control Tower integration
+```
+
+- **Consumes**: Workspace graph and capability data from `n00-cortex`.
+- **Produces**: SwiftUI dashboards for workspace visualization.
+- **Integrates**: Control Tower patterns from `n00-dashboard`.
+
+## Key Files
+
+| Path                        | Purpose                       |
+| --------------------------- | ----------------------------- |
+| `n00HQ.swift`               | Main app entry point          |
+| `Views/DashboardView.swift` | Dashboard UI components       |
+| `Views/GraphView.swift`     | Workspace graph visualization |
+
 ## Build & Run
 
 ### Prerequisites

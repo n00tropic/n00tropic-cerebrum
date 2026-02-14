@@ -1,0 +1,178 @@
+name: docs
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/**
+      - n00menon/docs/**
+      - n00menon/modules/**/*.adoc
+      - n00-frontiers/docs/**
+      - n00-cortex/docs/**
+      - n00t/docs/**
+      - antora-playbook.yml
+      - antora-playbook.ci.yml
+      - Makefile
+      - scripts/**
+  pull_request:
+    paths:
+      - docs/**
+      - n00menon/docs/**
+      - n00menon/modules/**/*.adoc
+      - n00-frontiers/docs/**
+      - n00-cortex/docs/**
+      - n00t/docs/**
+      - antora-playbook.yml
+      - antora-playbook.ci.yml
+      - Makefile
+      - scripts/**
+permissions: {}
+jobs:
+  build-validate:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    env:
+      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN || secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: false
+          token: ${{ env.SUBMODULES_TOKEN }}
+      - name: Try to fetch submodules (optional)
+        run: |
+          set -eux
+          git submodule sync --recursive || true
+          git submodule update --init --recursive || echo "Submodules failed to update — continuing without them"
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check n00menon docs sync
+        run: pnpm run docs:sync-n00menon:check
+
+      - name: Verify Antora + Danger availability
+        run: |
+          if [ -d n00plicate ]; then
+            pnpm -C n00plicate exec antora --version
+            pnpm -C n00plicate exec danger --version
+          else
+            echo "n00plicate submodule not present; skipping antora/danger verification"
+          fi
+          if [ -d n00menon ]; then
+            pnpm -C n00menon exec antora --version || true
+            # n00menon might not include Danger config; skip if not present
+          else
+            echo "n00menon not present locally; CI build may use remote git component in CI playbook"
+          fi
+      - name: Prepare pnpm and Antora
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.28.2 --activate
+          # Local antora binaries are available via pnpm exec
+      - name: Vale
+        uses: errata-ai/vale-action@v2
+        with:
+          files: docs
+      - name: Vale triage artifacts
+        run: pnpm run docs:vale-triage || true
+      - name: Upload Vale triage
+        uses: actions/upload-artifact@v6
+        with:
+          name: vale-triage
+          path: artifacts/vale-triage.json
+      - name: Generate spelling counts
+        run: pnpm run docs:generate-spelling-counts || true
+      - name: Upload spelling counts
+        uses: actions/upload-artifact@v6
+        with:
+          name: vale-spelling-counts
+          path: artifacts/vale-spelling-token-counts.json
+      - name: Link check
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >
+            --config .lychee.toml 'docs/**/*.adoc'
+            'docs/**/*.md' '**/*.html'
+      - name: Attr checks
+        run: node scripts/check-attrs.mjs
+      - name: n00menon validate (if available)
+        run: |
+          if [ -d n00menon ]; then
+            pnpm -C n00menon run validate || true
+          else
+            echo "n00menon not present; skipping validate"
+          fi
+      - name: Workspace cspell
+        run: pnpm exec cspell --config ./cspell.json 'docs/**/*' || true
+      - name: Run Danger
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DANGER_JS_USE_TS_NODE: "1"
+        run: pnpm exec danger ci
+      - name: Vale triage artifacts
+        run: pnpm run docs:vale-triage || true
+      - name: Spelling counts
+        run: pnpm run docs:generate-spelling-counts || true
+      - name: Upload spelling counts
+        uses: actions/upload-artifact@v6
+        with:
+          name: vale-spelling-counts
+          path: artifacts/vale-spelling-token-counts.json
+      - name: Build Antora (CI playbook)
+        run: |
+          if [ -d n00plicate ] || [ -d n00menon ]; then
+            cd n00plicate
+            pnpm install --frozen-lockfile
+            pnpm exec antora antora-playbook.ci.yml --stacktrace
+          else
+            echo "n00plicate submodule not present; skipping Antora build"
+          fi
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/site
+      - name: Capture Vale JSON
+        run: |
+          VALE_LOCAL=1 vale --output=JSON --ignore-syntax docs > artifacts/vale-full.json || true
+      - name: Generate Term candidates
+        run: pnpm run docs:vale-terms-candidates -- --threshold 2 --output artifacts/vale-terms-token-counts.json --json artifacts/vale-full.json --oxford || true
+      - name: Python lint (auto fix safe changes)
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.14.2
+      - name: Cache uv downloads
+        uses: actions/cache@v5
+        with:
+          path: .cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('requirements.workspace.min.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-${{ hashFiles('requirements.workspace.lock') }}
+      - name: Install uv + minimal deps
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          export UV_CACHE_DIR=${UV_CACHE_DIR:-$GITHUB_WORKSPACE/.cache/uv}
+          uv pip sync requirements.workspace.min.lock
+      - name: Run lint-python script (fix mode)
+        run: pnpm run lint:python:fix || true
+      - name: Upload terms counts
+        uses: actions/upload-artifact@v6
+        with:
+          name: vale-terms-counts
+          path: artifacts/vale-terms-token-counts.json
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build-validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
